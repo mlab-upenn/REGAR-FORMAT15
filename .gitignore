@@ -48,3 +48,5 @@ main.tcp
 *.log
 main.pdf
 *.blg
+
+*.gz
