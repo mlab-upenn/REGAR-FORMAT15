@@ -36,37 +36,37 @@
 \maketitle
 
 \begin{abstract}
-Implantable medical devices are designed to diagnose and improve certain adverse physiological conditions, thus the safety and efficacy of the devices have to be evaluated in closed-loop within their physiological context. Model-based design has enabled closed-loop verification early in the design stage and closed-loop model checking has been proposed to provide confidence in the safety and efficacy of the devices. One of the biggest challenge for model-checking is to balance the complexity and the expressiveness of the model. The Counter-Example-Guided Abstraction and Refinement (CEGAR) framework has been developed to reduce the complexity of the model using over-approximation 
+Implantable medical devices are designed to diagnose and improve certain adverse physiological conditions, thus the safety and efficacy of the devices have to be evaluated in closed-loop within their physiological context. Model-based design has enabled closed-loop verification early in the design stage and closed-loop model checking has been proposed to provide confidence in the safety and efficacy of the devices. One of the biggest challenge for model-checking is to balance the complexity and the expressiveness of the models. The Counter-Example-Guided Abstraction and Refinement (CEGAR) framework has been developed to reduce the complexity of the model using over-approximation and refine the model when false-positives are found. In system modeling, there is only one valid system, so that any behaviors in a system model that cannot be produced by the system are regarded as spurious. However in environment modeling, an environment model generally abstracts multiple environment conditions, therefore determining the validity of a closed-loop execution is not intuitive, making it difficult to apply CEGAR during environment modeling. On the other hand, the development of environment models and validation of closed-loop executions rely heavily on domain expertise. It is therefore possible to encode the domain knowledge during environment modeling and provide guidance during the refinement of the environment models. In this paper, we use implantable pacemaker as example to illustrate the challenges for applying CEGAR during environment modeling, and how to use encoded domain knowledge to guide the environment model abstraction and refinement.
 \end{abstract}
 
 \section{Introduction}
-\begin{itemize}
-	\item What are Cyber-Physical Systems?
-    \item What are the unique challenges of developing CPS compared to other systems?
-    \item How to guarantee the safety of CPS?
-    \item What is the current practice?
-    \item What is the difference between requirements and specifications?
-    \item What is closed-loop verification? Is it necessary?
-    \item What is model-based design? What are the benefits and limitations?
-    \item What are the different techniques of model-based closed-loop verification? 
-    \item In which steps during the software life cycle are those techniques used?
-    \item What is model checking? What guarantee can it provide? What are the challenges?
-    \item What are the focus difference between environment modeling and system modeling, in general and in each step?
-    \item What is model abstraction/approximation? What information are lost during this process?
-    \item How to keep track of these information? Where can they be used?
-    \item What is over-approximation? What are the limits?
-    \item What is the appropriate model complexity?
-    \item What aspects affect the required model complexity?
-    \item How to manage complexity for the system model?
-    \item Why CEGAR cannot be applied to the environment model?
-    \item How to manage the complexity of the environment model?
-    \item What are domain knowledge? Where have we used them?
-    \item How can we encode domain knowledge used during model development and abstraction?
-    \item Can we use encoded domain knowledge to manage complexity of the environment model? How?
-    \item The case study on heart model and pacemaker sounds good. Is the approach general enough?
-\end{itemize}
+%\begin{itemize}
+	%\item What are Cyber-Physical Systems?
+    %\item What are the unique challenges of developing CPS compared to other systems?
+    %\item How to guarantee the safety of CPS?
+    %\item What is the current practice?
+    %\item What is the difference between requirements and specifications?
+    %\item What is closed-loop verification? Is it necessary?
+    %\item What is model-based design? What are the benefits and limitations?
+    %\item What are the different techniques of model-based closed-loop verification? 
+    %\item In which steps during the software life cycle are those techniques used?
+    %\item What is model checking? What guarantee can it provide? What are the challenges?
+    %\item What are the focus difference between environment modeling and system modeling, in general and in each step?
+    %\item What is model abstraction/approximation? What information are lost during this process?
+    %\item How to keep track of these information? Where can they be used?
+    %\item What is over-approximation? What are the limits?
+    %\item What is the appropriate model complexity?
+    %\item What aspects affect the required model complexity?
+    %\item How to manage complexity for the system model?
+    %\item Why CEGAR cannot be applied to the environment model?
+    %\item How to manage the complexity of the environment model?
+    %\item What are domain knowledge? Where have we used them?
+    %\item How can we encode domain knowledge used during model development and abstraction?
+    %\item Can we use encoded domain knowledge to manage complexity of the environment model? How?
+    %\item The case study on heart model and pacemaker sounds good. Is the approach general enough?
+%\end{itemize}
 
-The safety and efficacy of the software component of Cyber-Physical systems like medical devices have to be guaranteed. During the software development process, there are two key documents that track the safety and efficacy of the software component, namely the \textbf{Software Requirements} and \textbf{Software Specifications}. These two terms are sometimes used interchangeably, however, requirements and specifications provides different angle of system safety and require very different verification techniques.
+Implantable medical devices like pacemakers are designed to improve certain undesired physiological conditions. Their capability of changing the physiological conditions makes the medical devices safety-critical.  During the software development process, there are two key documents that track the safety and efficacy of the software component, namely the \textbf{Software Requirements} and \textbf{Software Specifications}. These two terms are sometimes used interchangeably, however, requirements and specifications provides different angle of system safety and require very different verification techniques.
 
 A requirement states the objective of the system in design in terms of environmental conditions. For example, a requirement of a self-driving car would be: \emph{The car should not hit a pedestrian.} A specification is how the system developers propose to satisfy the requirements. For example, the specification corresponding to the requirement of a self-driving car would be: \emph{If an object is detected in front of the car and the distance to the object is less than $d$, the car should brake.} As we can see, a specification may not satisfy the corresponding requirement, thus two steps are required to guarantee the safety of the system software. The first is the conformance between the system software and the software specification. The second one is whether the software specifications can satisfy all the software requirements.
 
@@ -96,48 +96,6 @@ Model-based design has been proposed to speed up system software design and prov
 
 One of the biggest challenge for model-based design is to manage how much detail a model should have during model checking. In general the model should be abstract enough to ignore unnecessary details in order to reduce computational cost, but also detailed enough to distinguish execution paths that 1) satisfy/violate a property, and/or 2) are valid/invalid due to the extra behaviors introduced during model abstraction/approximation. These ambiguities must be removed from model to prevent false positives/negatives during model checking. 
 
-We first define the behavior space of a model as all combinations of states valuations. For a model $M$ with $n$ state variables $v_1\dots v_n$, and each state variable can take value within the domain $D(v_i)$, the size of the overall behavior space is $\Pi_{i=1}^n D(v_i)$. The actual reachable behavior space of a model $M$ is far less and can be defined by $\mathbb{B}(M)$. As a reference or ground truth for behavior space, we assume the behavior space $\mathbb{B}(S)$ for a physical system $S$ which is infinitely large. All the behavior spaces correspond to the models $\mathbb{B}(M)$ of the system are projections from $\mathbb{B}(S)$.  
-\Hao{}
-
-\textbf{None} of the models of the system can match the region of the system exactly due to lack of information. As the model becomes more abstract, the boundary defining the behavior region becomes less complex. If the abstract model covers all the system behaviors such that $\mathbb{B}(S)\subset\mathbb{B}(M)$, the model is referred to as an \emph{over-approximation} of the system. For environment model, over-approximation can also be used to \emph{generalize} different environmental conditions, i.e. in \figref{distinction}.(a) two system behaviors $\mathbb{B}(S_1)$ and $\mathbb{B}(S_2)$ are covered by a model $\mathbb{B}(M)$.
-
-A property defines a region in the behavior space within which the property is satisfied. The satisfaction region of a property $\varphi$ can be denoted as $\mathbb{B}(\varphi)$. 
-A system $S$ satisfies a property $\varphi$ if $\mathbb{B}(S)\subseteq \mathbb{B}(\varphi)$. We denote it as $S\models\varphi$. As we can see, if $M$ is an over-approximation of $S$, meaning $\mathbb{B}(S)\subseteq \mathbb{B}(M)$, and $\mathbb{B}(M)\subseteq \mathbb{B}(\varphi)$, we have $\mathbb{B}(S)\subseteq \mathbb{B}(\varphi)$, meaning $S\models\varphi$. 
-
-In most of the cases, the internal states and transitions of a system cannot be fully observable. The behavior space can thus be mapped to other observable behavior spaces with less dimensions.
-\Hao{Need to clarify/visualize the notion of observability here} 
-Note that the observability does not refer to the interface of the system, there can be multiple observable behavior spaces that correspond to different abstraction of the system. As the result, behaviors that are distinguishable in the full behavior space can be indistinguishable in a observable behavior space, causing ambiguities that can result in false-negatives and false-positives during verification. We denote one observable behavior space as $\mathbb{B}_o(S)$. 
-
-As shown in \figref{distinction}, $\mathbb{B}(M)$ and $\mathbb{B}(\varphi)$ are mapped to $\mathbb{B}_o(M')$ and $\mathbb{B}_o(\varphi')$. Three behaviors in $b_1,b_2,b_3\in\mathbb{B}$ are mapped to a single behavior $b'\in\mathbb{B}_o$. Since $b'\not\in\mathbb{B}_o(\varphi')$, it may be returned by verification tools like model checker as counter-example. In $\mathbb{B}_o$ is possible that two categories of ambiguities exist, namely \textbf{Validity ambiguity} and \textbf{Context ambiguity}. %Failure to distinguish these behaviors can cause false-negatives and/or false-positives during verification.
-
-Validity ambiguity refers to the incapability to distinguish a physically possible execution with an invalid one. In \figref{distinction}.(a), $b_3$ is an invalid behavior since it does not belong to either $S_1$ or $S_2$ but it is covered by the model $M$. 
-
-A model $M$ is compatible with an observable behavior space $\mathbb{S}^o$ if all the behaviors that can be generated by $M$ 
-
-A model is appropriate for a property if all its behaviors  
-
-
-
-A Counter-Example-Guided Abstraction and Refinement approach has been proposed to automatically derive model with appropriate amount of details. (\cite{CEGAR}) Assume we would like to check the system $S$ against the property $\varphi$. First, the most abstract model $M_0\models^a S$ is derived from the actual system $S$ based on certain abstraction rules, so that it can distinguish all execution paths that satisfy/violate $\varphi$. Then $M_0$ is verified against the property in an automated model checker. If the property is violated $M_0\not\models\varphi$, a counter-example $\delta^c$ is returned by the model checker. $\delta^c$ has to be then validated so that it can be produced by $S$. If the system can produce $\delta^c$, which can be denoted as $\delta^c\triangleleft S$, $\delta^c$ is a valid counter-example. Otherwise $\delta^c$ is regarded as \textbf{spurious} and the model has to be refined so that the $\delta^c$ is not producible by the model. The refined model $M_1\models^a M_0$ is derived by adding back the minimum amount of abstracted details that prevent $\delta^c$ from being enabled, so that $\delta^c\not\triangleleft M_1$. This process continues until either no counter-example is returned, or a counter-example is not spurious. 
-
-CEGAR works very well during system modeling in which there is only one concrete system implementation $S$. However, for closed-loop verification the objective is to check whether $E||S\models\varphi$. If the environment $E$ is also represented by a model during model checking, both $M^E$ and $M^S$ have to be unambiguous. When verifying system specifications, normally there is no constraints on the environment so that there is no spurious counter-examples due to the environment model. In this case CEGAR still works. However in the software requirements, there are constraints on the environment conditions. If these constraints are not enforced in $M^E$, the verification can yield spurious counter-examples. However, CEGAR will not work for environment modeling due to the differences between the environment and the system. In system modeling, there is only one concrete implementation $S$, so if a counter-example $\delta^c$ is returned during model checking, only $\delta^c\triangleleft S$ has to be checked. However, for the environment, there are infinite number of environmental conditions $E_i$, like different patients in the medical device domain. Details are ignored in the abstract models not only to reduce complexity, but also to \textbf{generalize} different conditions so that:
-$$\forall \delta\triangleleft E_i, i\in [1,n],\delta\triangleleft M^E$$
-Note that during the generalization process, more behaviors of the environment will be introduced into the model: 
-$$\exists\delta^s\triangleleft M^E \text{ s.t. } \delta^s\not\triangleleft E_i, i\in [1,n]$$
-In this case, if an execution path $\delta$ is returned as a counter-example during model checking on software requirement, there is no way to check whether 
-$$\exists i\in[1,n],\delta\triangleleft E_i$$ 
-as $n$ may be a large number or is unclear in the first place. As a result, the validity of the counter-example cannot be validated, and therefore the model cannot be refined by analyzing the spurious counter-example. CEGAR is not effective during environment modeling.
-
-In Cyber-Physical Systems, there are \textbf{domain experts} who understand how the environment of the system works. The \textbf{domain knowledge} is a set of environmental constraints which can be used to define different environment conditions, and determine the validity of the execution paths. However, domain knowledge are in general not formalized thus cannot be used in any automated processes. In this paper, we use closed-loop model checking on an implantable pacemaker model as example to demonstrate abstraction and refinement of the environment models using encoding domain knowledge. We use two case studies to demonstrate that although CEGAR is not applicable to the environment model, the domain knowledge can still be used to validate executions and provide potential validity violations.\Hao{Still need to formalize}
-
-The contribution of this paper is two-folds: 1) we formally specified the potential ambiguities during model abstraction and identified the difference between environment modeling and system modeling. 2) We demonstrated the potential application of encoded domain knowledge to eliminate the ambiguities during abstraction and refinement of environment models.
-\begin{itemize}
-	\item Abstraction rules for environment models 
-    \item Appropriate abstraction function check, definition clear, assumptions implicit, especially for environment models
-\end{itemize}
-
-
-
 \subsection{Outline of the paper}
 \begin{itemize}
 	\item Section 2: Basic state space formulation with transition groups
@@ -148,18 +106,9 @@ The contribution of this paper is two-folds: 1) we formally specified the potent
     \item\textcolor{red}{ Section 7: Case 2: Model refinement for eliminating potential ambiguity. With mode-switch case.} 
 \end{itemize}
 
-\section{A Simple Example}
-Imaging we are developing a high-level control algorithm for an autonomous vehicle
-\textsf{A[] (not CarCross $\&\&$ PedCross)}\\
-\textsf{E<> (CarCross)}
-\begin{figure}[!t]
-		\centering
-		\includegraphics[width=0.9\textwidth]{figs/example.png}
-		%\vspace{-5pt}
-		\caption{\small }
-		  %\vspace{-15pt}
-		\label{fig:example}
-\end{figure}
+\input{formulation}
+\input{example}
+
 \section{State Space Formulation}
 Kripke structure $<S,\Sigma,L,I>$ in which $S$ is a set of states, $\sigma(s_1,s_2)\in\Sigma\subset S^2$ is a set of transitions, $I\subset S$ is a non-empty set of initial states.
 
@@ -239,39 +188,39 @@ For system:
 $$\delta\models\delta_t,\delta_t\triangleleft M_s \text {  iff  } \delta\triangleleft M_s$$
 For environment:
 $$\delta$$
-\section{Model Abstraction With Over-approximation}
-For two models $M_1$ and $M_2$, we denote $M_2$ is an abstraction of $M_1$ as $M_1\preceq M_2$. A function $s'=h(s),s\in S_1,s'\in S_2$ is a mapping from the states in $M_1$ to states in $M_2$. 
-
-For two models $M_1$ and $M_2$ such that $M_1\preceq M_2$, we know that all the transitions are preserved:
-$$\forall \sigma(s,s') \in\Sigma_1\text{ s.t. }s,s'\in S_1,\rightarrow\sigma(h(s),h(s')) \in\Sigma_2,h(s),h(s')\in S_2$$
-Due to the mapping the transition groups in $M_2$ are changed as well. For a transition group in $M_1$:
-$$\Sigma_{\phi1}\subset\Sigma_1 \text{ s.t. }\forall\sigma(s_1,s_2)\in\Sigma_{\phi1},f(s_1,s_2)\models\phi1,s_1,s_2\in E_1$$
-In the more abstract model, the propsition is often relaxed. For certain $\phi2\supseteq\phi1$, we have:
-$$\Sigma_{\phi2}\subset\Sigma_2 \text{ s.t. }\forall\sigma(h(s_1),h(s_2))\in\Sigma_{\phi2},f(h(s_1),h(s_2))\models\phi2,s_1,s_2\in S_1$$
-
-
-Some of the transition groups are merged. For two transition groups $\Sigma_{\phi1},\Sigma_{\phi2}\subset\Sigma_1$ there exists a new relation $\Sigma_{\phi3}\subseteq\Sigma_2$ such that: $$\phi1\cup\phi2\subseteq\phi3$$
-We denote this abstraction as:
-$$\Sigma_{\phi3}=\{\Sigma_{\phi1},\Sigma_{\phi2}\}$$
-We use $\Sigma_{\phi1}\lhd\Sigma_{\phi3}$ to represent the abstraction relationship between transition groups.
-\begin{itemize}
-	\item Over-approximation and its information loss
-    \item Abstraction in terms of transition groups
-    
-\begin{itemize}
-	\item Merging
-    \item \textcolor{red}{Remove}
-\end{itemize}
-	\item Assumptions made to simplify the model and increase model behaviors
-    \item Necessity of model refinements due to information loss
-\end{itemize}
-
-\subsection{System model vs. Environment model}
-\begin{itemize}
-	\item System model achieves simplicity during abstraction
-    \item Environment model also use abstraction to achieve generalization
-    \item Validation of counter-example cannot be done on a generalized environment model
-\end{itemize}
+%\section{Model Abstraction With Over-approximation}
+%For two models $M_1$ and $M_2$, we denote $M_2$ is an abstraction of $M_1$ as $M_1\preceq M_2$. A function $s'=h(s),s\in S_1,s'\in S_2$ is a mapping from the states in $M_1$ to states in $M_2$. 
+%
+%For two models $M_1$ and $M_2$ such that $M_1\preceq M_2$, we know that all the transitions are preserved:
+%$$\forall \sigma(s,s') \in\Sigma_1\text{ s.t. }s,s'\in S_1,\rightarrow\sigma(h(s),h(s')) \in\Sigma_2,h(s),h(s')\in S_2$$
+%Due to the mapping the transition groups in $M_2$ are changed as well. For a transition group in $M_1$:
+%$$\Sigma_{\phi1}\subset\Sigma_1 \text{ s.t. }\forall\sigma(s_1,s_2)\in\Sigma_{\phi1},f(s_1,s_2)\models\phi1,s_1,s_2\in E_1$$
+%In the more abstract model, the propsition is often relaxed. For certain $\phi2\supseteq\phi1$, we have:
+%$$\Sigma_{\phi2}\subset\Sigma_2 \text{ s.t. }\forall\sigma(h(s_1),h(s_2))\in\Sigma_{\phi2},f(h(s_1),h(s_2))\models\phi2,s_1,s_2\in S_1$$
+%
+%
+%Some of the transition groups are merged. For two transition groups $\Sigma_{\phi1},\Sigma_{\phi2}\subset\Sigma_1$ there exists a new relation $\Sigma_{\phi3}\subseteq\Sigma_2$ such that: $$\phi1\cup\phi2\subseteq\phi3$$
+%We denote this abstraction as:
+%$$\Sigma_{\phi3}=\{\Sigma_{\phi1},\Sigma_{\phi2}\}$$
+%We use $\Sigma_{\phi1}\lhd\Sigma_{\phi3}$ to represent the abstraction relationship between transition groups.
+%\begin{itemize}
+	%\item Over-approximation and its information loss
+    %\item Abstraction in terms of transition groups
+    %
+%\begin{itemize}
+	%\item Merging
+    %\item \textcolor{red}{Remove}
+%\end{itemize}
+	%\item Assumptions made to simplify the model and increase model behaviors
+    %\item Necessity of model refinements due to information loss
+%\end{itemize}
+%
+%\subsection{System model vs. Environment model}
+%\begin{itemize}
+	%\item System model achieves simplicity during abstraction
+    %\item Environment model also use abstraction to achieve generalization
+    %\item Validation of counter-example cannot be done on a generalized environment model
+%\end{itemize}
 
 \section{\textcolor{red}{Requirement Encoding}}
 \begin{itemize}
@@ -317,7 +266,7 @@ Two nodes and one path. $H_2\rightarrow H_3$
 \subsection{Rule 4: Replace conduction with self-activation}
 Two nodes. $H_3\rightarrow H_4$
 
-\section{Case 1: Requirement-guided model refinement}
+\section{Case 1: Resolving Context Ambiguities Using Model Refinement}
 \subsection{Endless-loop Tachycardia}
 \subsection{\textcolor{red}{Requirement Encoding}}
 \begin{itemize}
@@ -343,7 +292,8 @@ Two nodes. $H_3\rightarrow H_4$
     \item Environment model refined to $H_3$
     \item Counter-example corresponds to real bug
 \end{itemize}
-\section{\textcolor{red}{Case 2: Model Refinement for Eliminating potential ambiguities}}
+
+\section{\textcolor{red}{Case 2: Resolving Validity Ambiguities Using Model Refinement}}
 \subsection{Atrial Tachycardia and Mode-switch}
 \subsection{Requirement Encoding}
 \begin{itemize}
