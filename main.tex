@@ -66,11 +66,37 @@ Implantable medical devices are designed to diagnose and improve certain adverse
     %\item The case study on heart model and pacemaker sounds good. Is the approach general enough?
 %\end{itemize}
 
-Implantable medical devices like pacemakers are designed to improve certain undesired physiological conditions. Their capability of changing the physiological conditions makes the medical devices safety-critical.  During the software development process, there are two key documents that track the safety and efficacy of the software component, namely the \textbf{Software Requirements} and \textbf{Software Specifications}. These two terms are sometimes used interchangeably, however, requirements and specifications provides different angle of system safety and require very different verification techniques.
+Implantable medical devices like pacemakers are designed to improve certain undesired physiological conditions with very little human interventions. Their capability of autonomously affecting the physiological conditions of the patients makes the medical devices safety-critical, and sufficient evidence on the safety and efficacy of the devices should be provided before the devices can be implanted in the patients. As more functions added to the devices, the complexity of the software component of the device is increasing dramatically, leading to more and more potential safety violations due to software bugs. To ensure the safety of medical device software, the device software not only have to conform with its design, which is specified in \emph{Software Specifications}
+\subsection{The Model Checking Problem}
+%Model-based design enables closed-loop verification at an early design stage. 
+For a model $M$ with state space $S$, we define the behavior of the model as an execution trace in $\delta\in S^*$. The reachable behavior space of model $M$ is denoted as $\mathbb{B}(M)\subset S^*$. A property $\varphi$ defines a region in the behavior space within which the property is satisfied, which can be denoted as $\mathbb{B}(\varphi)$. A model checking problem is to use mathematical tool to explore the whole reachable behaviors of a model $M$ against a property $\varphi$ such that $\mathbb{B}(M)\subseteq \mathbb{B}(\varphi)$. We denote it as $M\models\varphi$. Property violations should be returned as execution traces $\delta_v$ so that the designer can analyze and address the problem. 
 
-A requirement states the objective of the system in design in terms of environmental conditions. For example, a requirement of a self-driving car would be: \emph{The car should not hit a pedestrian.} A specification is how the system developers propose to satisfy the requirements. For example, the specification corresponding to the requirement of a self-driving car would be: \emph{If an object is detected in front of the car and the distance to the object is less than $d$, the car should brake.} As we can see, a specification may not satisfy the corresponding requirement, thus two steps are required to guarantee the safety of the system software. The first is the conformance between the system software and the software specification. The second one is whether the software specifications can satisfy all the software requirements.
+\subsection{Model Abstraction with Over-approximation}
+The behavior space of the actual system is too large for model checker to exhaustively explore. A model of the system which covers all behaviors of the system can be developed which can not only reduce complexity, but also having the suitable formalism for the model checker. An abstraction function $h$ abstracting model $M$ to $M'$ is a non-surjective function from state space $S$ to the new abstract state space $S'$ such that: 
+$$\forall s\in S, \exists s'\in S' \text{ s.t. } h(s)=s'$$
+This definition can be extended to behaviors $\delta\in \mathbb{B}(M)$, such that:
+$$\forall \delta\in \mathbb{B}(M),\exists \delta'\in\mathbb{B}(M')\text{ s.t. } h(\delta)=h(\delta')$$
+From the definition, we know that the abstract model $M'$ covers all behaviors of $M$, which is referred to as \emph{over-approximation}. We represent the over-approximation relationship as $M'\models M$, and the relationship between reachable behavior spaces as $\mathbb{B}(M)\subset_a\mathbb{B}(M')$. Then we have:
+$$\mathbb{B}(M')\subseteq_a \mathbb{B}(M),\mathbb{B}(M)\subseteq_a \mathbb{B}(\varphi)\rightarrow\mathbb{B}(M')\subseteq_a \mathbb{B}(\varphi)\rightarrow M_t\models\varphi$$
+Since the properties are preserved In general the state space of $S'$ is smaller than $S$ while still preserve the property, during model checking the more abstract model can be used to check the property. 
 
-Currently in most system design, the conformance between the software specifications and the system software are verified using extensive \textbf{open-loop} testing. The test cases are extracted from the system software using static analysis based on certain coverage criteria. The conformance between the specifications and the requirements are maintained by traceability documents, which is insufficient for safety guarantee.
+\subsubsection{Context Ambiguities}
+Since $h$ is non-surjective, certain states in $S$ will not be distinguishable in $S'$:
+$$\exists s_1,s_2\in S \text{ s.t. }h(s_1)=h(s_2)=s',s'\in S'$$
+For behaviors we have:
+$$\exists \delta_1,\delta_2\in \mathbb{B}(M) \text{ s.t. }h(\delta_1)=h(\delta_2)=\delta',\delta'\in \mathbb{B}(M')$$
+In the abstract model $\delta_1$ and $\delta_2$ are not distinguishable
+\subsubsection{Validity Ambiguities}
+However since $h$ is non-surjective, there exists behaviors in $M'$ that do not exists in the original model $M$:
+$$\exists\delta'\in\mathbb{B}(M')\text{ s.t. }h^{-1}(\delta')\not\subset\mathbb{B}(M)$$
+
+\subsubsection{System Model vs. Environment Model}
+\subsection{Closed-loop Model Checking}
+%During the software development process, there are two key documents that track the safety and efficacy of the software component, namely the \textbf{Software Requirements} and \textbf{Software Specifications}. These two terms are sometimes used interchangeably, however, requirements and specifications provides different angle of system safety and require very different verification techniques.
+%
+%A requirement states the objective of the system in design in terms of environmental conditions. For example, a requirement of a self-driving car would be: \emph{The car should not hit a pedestrian.} A specification is how the system developers propose to satisfy the requirements. For example, the specification corresponding to the requirement of a self-driving car would be: \emph{If an object is detected in front of the car and the distance to the object is less than $d$, the car should brake.} As we can see, a specification may not satisfy the corresponding requirement, thus two steps are required to guarantee the safety of the system software. The first is the conformance between the system software and the software specification. The second one is whether the software specifications can satisfy all the software requirements.
+%
+%Currently in most system design, the conformance between the software specifications and the system software are verified using extensive \textbf{open-loop} testing. The test cases are extracted from the system software using static analysis based on certain coverage criteria. The conformance between the specifications and the requirements are maintained by traceability documents, which is insufficient for safety guarantee.
 % \begin{figure}[!t]
 % 		\centering
 % 		\includegraphics[width=0.8\textwidth]{figs/SysVSEnv.png}
@@ -106,7 +132,7 @@ One of the biggest challenge for model-based design is to manage how much detail
     \item\textcolor{red}{ Section 7: Case 2: Model refinement for eliminating potential ambiguity. With mode-switch case.} 
 \end{itemize}
 
-\input{formulation}
+%\input{formulation}
 \input{example}
 
 \section{State Space Formulation}

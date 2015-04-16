@@ -1,14 +1,21 @@
 \section{Closed-loop Model Checking}
 %We first define the behavior space of a model as all combinations of states valuations. For a model $M$ with $n$ state variables $v_1\dots v_n$, and each state variable can take value within the domain $D(v_i)$, the size of the overall behavior space is $\Pi_{i=1}^n D(v_i)$. The actual reachable behavior space of a model $M$ is far less and can be defined by $\mathbb{B}(M)$. As a reference or ground truth for behavior space, we assume the behavior space $\mathbb{B}(S)$ for a physical system $S$ which is infinitely large. All the behavior spaces correspond to the models $\mathbb{B}(M)$ of the system are projections from $\mathbb{B}(S)$.  
 %\Hao{}
-For a model $M$ with state space $S$, we define the behavior of the system as an execution trace in $\delta\in S^*$. The reachable behavior space of model $M$ is denoted as $\mathbb{B}(M)\subset S^*$.
+For a model $M$ with state space $S$, we define the behavior of the system as an execution trace in $\delta\in S^*$. The reachable behavior space of model $M$ is denoted as $\mathbb{B}(M)\subset S^*$. For reference we can represent an actual system as a model $M_t$ with infinite details. A property defines a region in the behavior space within which the property is satisfied. The satisfaction region of a property $\varphi$ can be denoted as $\mathbb{B}(\varphi)$. A system $M_t$ satisfies a property $\varphi$ if $\mathbb{B}(M_t)\subseteq \mathbb{B}(\varphi)$. We denote it as $M_t\models\varphi$. 
 
-An abstraction function $h$ is a surjection from
+Models can be abstracted to potentially reduce complexity and increase coverage. An abstraction function $h$ abstracting model $M$ to $M'$ is a non-surjective function from state space $S$ to the new abstract state space $S'$ such that 
+$$\forall s\in S, \exists s'\in S' \text{ s.t. } h(s)=s'$$
+For a behavior $\delta\in \mathbb{B}(M)$
+$$\forall \delta\in \mathbb{B}(M),\exists \delta\in\mathbb{B}(M')\text{ s.t. } h(\delta)=h(\delta')$$
+The abstract model $M'$ covers all behaviors of $M$, which is referred to as \emph{over-approximation}. 
+As we can see, if $M$ is an over-approximation of $M_t$, meaning $\mathbb{B}(M_t)\subseteq \mathbb{B}(M)$, and $\mathbb{B}(M)\subseteq \mathbb{B}(\varphi)$, we have:
+ $$\mathbb{B}(M_t)\subseteq \mathbb{B}(\varphi)\rightarrow M_t\models\varphi$$ 
+Since the state space of $S'$ is smaller than $S$ while still preserve the property, during model checking the more abstract model can be used to check the property. 
 
-No models of the system can match the region of the system exactly due to lack of information. As the model becomes more abstract, the boundary defining the behavior region becomes less complex. If the abstract model covers all the system behaviors such that $\mathbb{B}(S)\subset\mathbb{B}(M)$, the model is referred to as an \emph{over-approximation} of the system. For environment model, over-approximation can also be used to \emph{generalize} different environmental conditions, i.e. in \figref{distinction}.(a) two system behaviors $\mathbb{B}(S_1)$ and $\mathbb{B}(S_2)$ are covered by a model $\mathbb{B}(M)$.
+Since $h$ is non-surjective, 
 
-A property defines a region in the behavior space within which the property is satisfied. The satisfaction region of a property $\varphi$ can be denoted as $\mathbb{B}(\varphi)$. 
-A system $S$ satisfies a property $\varphi$ if $\mathbb{B}(S)\subseteq \mathbb{B}(\varphi)$. We denote it as $S\models\varphi$. As we can see, if $M$ is an over-approximation of $S$, meaning $\mathbb{B}(S)\subseteq \mathbb{B}(M)$, and $\mathbb{B}(M)\subseteq \mathbb{B}(\varphi)$, we have $\mathbb{B}(S)\subseteq \mathbb{B}(\varphi)$, meaning $S\models\varphi$. 
+%No models of the system can match the region of the system exactly due to lack of information. As the model becomes more abstract, the boundary defining the behavior region becomes less complex. If the abstract model covers all the system behaviors such that $\mathbb{B}(S)\subset\mathbb{B}(M)$, the model is referred to as an \emph{over-approximation} of the system. For environment model, over-approximation can also be used to \emph{generalize} different environmental conditions, i.e. in \figref{distinction}.(a) two system behaviors $\mathbb{B}(S_1)$ and $\mathbb{B}(S_2)$ are covered by a model $\mathbb{B}(M)$.
+
 
 In most of the cases, the internal states and transitions of a system cannot be fully observable. The behavior space can thus be mapped to other observable behavior spaces with less dimensions.
 \Hao{Need to clarify/visualize the notion of observability here} 
