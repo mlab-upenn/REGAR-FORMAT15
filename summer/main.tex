@@ -38,15 +38,18 @@
 %
           % start of the contributions
 %
-\title{A High-Level Behavior Language for Electro-Physiology Heart Modeling}
+%\title{A Matlab Toolbox for EP Heart Modeling}
+\title{Requirement-Guided Model Refinement}
 %\titlerunning{Pacemaker Verification}  % abbreviated title (for running head)
-%\author{Zhihao Jiang,  and Rahul Mangharam}\vspace{-10pt}
+\author{Zhihao Jiang}\vspace{-10pt}
 \authorrunning{Jiang et al.} % abbreviated author list (for running head)
-%\institute{University of Pennsylvania, Philadelphia PA, USA}
+\institute{University of Pennsylvania, Philadelphia PA, USA\footnote{This document serves as the final report for Zhihao Jiang's internship at Mathworks during Summer 2014, under supervision of Pieter Mosterman from Mathworks and Prof. Rahul Mangharam from University of Pennsylvania.}}
 
 \maketitle              % typeset the title of the contribution
 \vspace{-10pt}
-
+% \begin{abstract}
+% In this report I will present a matlab toolbox 
+% \end{abstract}
 
 % \begin{figure*}
 % \centering
@@ -62,131 +65,137 @@
         
 %         	\caption{(a) System layout. (b) A sample closed-loop system}
 % \end{figure*}
+
 \section{Introduction}
-
-Generally, a model is used to solve a problem. The best model then is the one that solves your problem with minimum complexity (including time complexity).
-
-Simply using a model with great detail can be detrimental to solving the problem.
-
-Thus, in dynamic systems, it is best for the model to embody the necessary set of behaviors (and no more). 
-
-But, how do you know you have the detail included in your model such that the behaviors of interest are properly captured to solve your problem?
-
-*a tree*
-\subsection{Problem Statement}
+Medical device is a typical Cyber-Physical System and ensuring the safety and efficacy of the device requires closed-loop verification. Currently closed-loop verifications of medical devices are performed in the form of clinical trials in which the devices are tested on the patients. Using clinical trials as closed-loop verification has several problems:
 \begin{itemize}
-	\item If system tuned using environment models doesn't work on real environment, nobody knows why. (Model/tool developer vs. application engineers, different domain expertise)
-    \item Assumptions/approximations made during the model development are not well-documented (fundamental problem of MBD)
-    \item So many models available at different abstraction level, which one to chose? What is the most appropriate level of abstraction? How to validate the model?
-    \item Model validation should not be only judged by how realistic the model is
-    \item Used CEGAR for model selection, analyzing the execution requires reasoning which relies on domain knowledge 
+	\item The cost of clinical trials are high
+    \item Due to the cost, the scale of the clinical trials cannot be large, thus affecting patient generality and the effectiveness of the trials.
+    \item It is the last step of the design process thus discovering a bug at this stage is very costly to fix.
 \end{itemize}
-We use pacemaker as case study to demonstrate
+In \cite{VHM_proc} we addressed the problems above by proposing a model-based design framework to enable closed-loop verification earlier in the design stage. The increased confidence in safety and efficacy of the device can potentially reduce the scale of the clinical trials, thus reduce cost.
+
+The biggest challenge for closed-loop evaluation is to bridge the domain knowledge gap between the domain experts and software developers. These domain knowledge are two folds:
 \begin{enumerate}
-	\item A behavior layer between the requirements and the model structure: better linking requirement with the model structure, reasoning refinement/requirements at behavior level instead of model structure level. 
-    \item A rule-based environment model abstraction flow: Easier to validate, also provide traceability on the effects of abstraction on model behaviors
-    \item We use the behavior layer to describe closed-loop requirements
-    \item We use the behavior layer to choose the appropriate heart abstraction according to the constraints in the requirements, thus automating the model refinement in \cite{STTT13}
+	\item How the physical plant works?
+    \item Evaluation of the well-being of the patient (Performance)
 \end{enumerate}
-\begin{figure}[!t]
-		\centering
-		\includegraphics[width=0.7\textwidth]{figs/requirement.png}
-		%\vspace{-5pt}
-		\caption{\small Stroke Volume as a function of heart rate and AV interval}
-		  %\vspace{-15pt}
-		\label{fig:req}
-\end{figure}
-\subsection{Requirement Engineering}
-The requirements for the software are initially \textbf{closed-loop requirements} which describe the high-level closed-loop behaviors of the system and the environment. For example an autonomous car will have a requirement of "no collision with pedestrians", which can be interpreted into a closed-loop behavioral requirement: "the car and the pedestrian should not be in the same location at the same time". The closed-loop requirements are then brokend down into executable lower-level open-loop requirements, or specifications that are explicit descriptions of how the system can achieve the closed-loop requirements. In requirement engineering, \emph{traceability} from system design to open-loop specifications, as well as from open-loop specifications to closed-loop requirements are maintained through documentation. 
+From tool developer's perspective, both of the aspects need to be addressed.
+\subsection{How the physical plant works?}
+The first aspect can be addressed by developing appropriate model(s) of the physical plant. The word "appropriate" means two things:
 \begin{itemize}
-	\item The link between requirement and environment missing
-    \item link mostly through behaviors
+	\item The model is validated, such that it captures the correct input-output of the system that it models.
+    \item The model has the correct level of abstraction, such that it has to be complex enough to model the required details of the patients' condition, and at the same time avoid over-complexity.
 \end{itemize}
-\subsection{Model Abstraction}
-\begin{itemize}
-	\item Observable state space don't change
-    \item Each abstraction is a mapping from internal state space to observable state space
-    \item More abstracted model has less \textbf{resolution} on the observable state space 
-    \item More refined model can describe
-\end{itemize}
-\begin{figure}[!t]
-		\centering
-		\includegraphics[width=0.6\textwidth]{figs/mapping.png}
-		%\vspace{-5pt}
-		\caption{\small Stroke Volume as a function of heart rate and AV interval}
-		  %\vspace{-15pt}
-		\label{fig:map}
-\end{figure}
-\subsection{Closed-loop Evaluation of Medical Device Software}
-\begin{itemize}
-	\item Why closed-loop?
-    \item Different level of abstraction for the environment model
-    \item CEGAR
-\end{itemize}
-\subsection{Difference With CEGAR in terms of finding the right level of abstraction}
-Assume an environment model (Model 1) has 3 state variables \textsf{x,y,z} but only \textsf{x,y} are observable. The state space of the model is shown in \figref{map}.(a). The error states are represented with the red cube. An abstraction has been made to reduce the state space to just \textsf{x} and \textsf{y} axis (Model 2). The error stats are also mapped onto the 2D plane.  
-\begin{itemize}
-	\item Due to observability, there can be multiple internal environmental behaviors that can result in the same observable trace. When an observable execution trace is returned as a counter-example, This ambiguity is mostly introduced during model abstraction and cannot be distinguished using CEGAR
-    \item CEGAR refine the model during closed-loop evaluation. Our approach can refine the model as early as the requirements are specified
-    
-\end{itemize}
-\section{Behavior Layer for Model-based Design}
-*Analogy of traffic control*
-\subsection{High-level EP Heart Behaviors}
-The observable EP heart behaviors are local depolarizations that can be recorded by placing electrodes against the inner heart wall. With these recordings, the physicians developed their own perspective of describing heart behaviors in terms of generation and conduction of depolarizations throughout the heart. The pacemaker has only two leads into the heart, thus offering only two observable points for local depolarizations.
 
+In \cite{VHM_proc} we developed the Virtual Heart Model (VHM), which is an electrophysiological heart model structure that captures the timing behaviors of the electrical conduction system of the human heart. The model structure can be used to represent different patient conditions and those conditions are validated by the physicians. 
+
+In \cite{sttt13}, we formally defined a series of heart models using the VHM structure. The heart models are at different abstraction levels and can be used for model checking of pacemaker software. We also adapted the Counter-Example Guided Abstraction and Refinement (CEGAR) framework \cite{cegar} to select the most appropriate model during model checking.
+
+\subsection{Evaluation of the well-being of the patient (Performance)}
+Having the models for the physical plant is important, thus this alone is not enough to bridge the gap between domain expert and software developers. These additional domain knowledge lies mostly in:
+\begin{itemize}
+	\item The requirements specified by the domain experts to evaluate the safety and efficacy of the device.
+    \item Assumptions made during heart model abstractions
+\end{itemize}
+The connection between these two aspects and the heart models are not well formalized, which significantly limiting the ability of the software developers to use the heart models. 
+
+In this project, we propose a Matlab toolbox for EP heart modeling to address the problem above during pacemaker software design. We formalized the abstraction rules and their effects on the model behaviors. Each heart model documents all the rules that were applied and all observable behaviors. These information can be used to 1) validate the model and 2) evaluate whether the model has enough information to express the heart conditions in the requirement. 
+
+This report is arranged as follow. Section 2 introduces the observable behaviors of the heart. Section 3 formalizes the abstraction rules and their effects on the heart behaviors. Section 4 introduces the heart structure and validation. Section 5 introduces the requirements and how to use heart behaviors to detemine whether a heart model can be used to verify certain requirement.
+
+% \begin{figure}[!t]
+% 		\centering
+% 		\includegraphics[width=0.8\textwidth]{figs/overall.png}
+% 		%\vspace{-5pt}
+% 		\caption{\small Overall Structure of the Toolbox}
+% 		  %\vspace{-15pt}
+% 		\label{fig:overall}
+% \end{figure}
+\section{Observable Behaviors of The Heart}
+The observable EP heart behaviors are local depolarizations that can be recorded by placing electrodes against the inner heart wall. With these recordings, the physicians developed their own perspective of describing heart behaviors in terms of generation and conduction of depolarizations throughout the heart. In terms of modeling, the behaviors are state transitions of the model.%The pacemaker has only two leads into the heart, thus offering only two observable points for local depolarizations.
 
 The following are the most fundamental behaviors to describe the behavior of the heart.
 \begin{itemize}
 	\item Self-activation (self):increase the number of activations
-    \item Conduction (cond): maintain the number of activations \Hao{Need to work on detail of this}
+    \item Conduction (cond): maintain the number of activations %\Hao{Need to work on detail of this}
     \item Refractory Blocking (block): reduce the number of activations
     \item External Pacing (pace): increase the number of activations
 
 \end{itemize}
-
 
 We name the behavior of depolarization of certain heart tissue \emph{activation (act)}. It can be triggered by both \emph{self-activation} and \emph{conduction}. Ideally one activation generated either by self-activation or pacing will activate all the activatable tissue in the heart \textbf{once}.
 \begin{figure}[!t]
 		\centering
 		\includegraphics[width=0.8\textwidth]{figs/basic.png}
 		%\vspace{-5pt}
-		\caption{\small Stroke Volume as a function of heart rate and AV interval}
+		\caption{\small Heart Model Abstractions}
 		  %\vspace{-15pt}
-		\label{fig:SV}
+		\label{fig:abs}
 \end{figure}
-
 First there are identified structures within the electrical conduction system of the heart. Without forming a circle in the heart, the self-depolarization always happens in the \emph{SA node ($SA$)}. After depolarizing the whole atria, the depolarization signal reaches the \emph{AV node ($AV$)}. Then the signal travels through the \emph{His Bundle (His)} and depolarize the whole ventricle, including the \emph{Right Ventricular Apex (RVA)} through the \emph{Pukinje Fibers (Puk)}. 
 
 Let $S$ be the set of structures and $B$ be the set of behaviors. We represent the behavior associated with a structure $s\in S$ using $s.b$. 
 
 So we have the following behaviors: \textsf{SA.self}, \textsf{SA.block},  \textsf{SA\_AV.cond}, \textsf{AV.block}, \textsf{His.cond}, \textsf{His.block}, \textsf{Puk.cond}, \textsf{Puk.block}, \textsf{RVA.block}. Some tissue in the left atrium and the ventricles can self-depolarize prematurely. They are called \emph{Premature Atrial Contraction (PAC)} and \emph{Premature Ventricular Contraction (PVC)} respectively. So we have two more behavior: \textsf{PAC.self} and \textsf{PVC.self}. A typical heart cycle can be represented by a sequence of behaviors: \textsf{SA.self$\rightarrow$SA\_AV.cond $\rightarrow$ His.cond$\rightarrow$Puk.cond$\rightarrow$Vent.act}
 
+\section{Abstraction Rules for the Heart}
+Abstraction rules are based on both domain knowledge and reasoning. The rules may have dependencies among each other, and for rules that are independent of each other, applying them in different order on a heart model will yield the same result. 
+
+In the next sub-section I will introduce the abstraction rules that we use for the toolbox and their brief justifications.
+
+\subsection{Abstraction Rules}
+The rules that we used to abstract the heart models are as follow:
+\begin{enumerate}
+	\item Remove all the nodes which do not generate electrical pulses
+    \item Merge sources of electrical pulses to the nearest pace node
+    \item Replace the blocking property of ERP period with non-deterministic conduction
+    \item Replace activation from conduction with self-activation
+\end{enumerate}
+
 \subsection{Behavior Abstraction}
-\Hao{Need formal description}Happens along with structural abstraction.
+During the abstractions the structure of the model changes, while at the same time the behaviors of the model changed as well. Although the total number of behaviors will not decrease during overapproximation abstractions, specific behaviors may merge with other behaviors thus will not be distinguishible anymore. These are the type of changes that apply to the behaviors during abstraction:
+%\Hao{Need formal description}Happens along with structural abstraction.
 \begin{itemize}
 	\item Renaming: sometimes behaviors are assigned to another structure and their old names no longer make sense. Or we can say that Renaming is a special case for Inclusion
     \item Inclusion: can also be used for constructing higher-level behaviors. e.g. \textsf{Atrial.self=\{SA.self,PAC.self\}}
     \item Remove: Behaviors like Block can be removed without \textbf{reducing} the observable behaviors
 \end{itemize}
-\subsection{Behavior Abstraction Criteria}
-There are criteria that have to be followed when abstracting behaviors. These criteria are based on domain knowledge.
-\begin{enumerate}
-	\item When a \textsf{block} behavior can be safely removed
-    \item How to combine \textsf{self-cond-self} with one \textsf{self}
-\end{enumerate}
+The result of the abstractions can be seen in \figref{abs}. 
+\subsubsection{Abstraction 1: HM1}
+\textsf{SA.self=\{SA.self\}\\
+PAC.self=\{PAC.self\}\\
+AV.block=\{AV.block\}\\
+P2.cond=\{SA\_AV.cond\}\\
+P3.cond=\{His.cond\}\\ 
+RVA.act=\{PVC.self,P3.cond\}}
+\subsubsection{Abstraction 2: HM2}
+\textsf{N1.self=\{SA.self,PAC.self\}\\
+N2.block=\{AV.block\}\\
+P4.cond=\{P2.cond\}\\
+P5.cond=\{P3.cond\}\\
+N3.act=\{RVA.act\}}
+\subsubsection{Abstraction 3: HM3}
+\textsf{N4.self=\{N1.self\}\\
+N5.self=\{N4.self\}\\
+P6.cond=\{P4.cond,P5.cond\}\\
+P6.block=\{N2.block\}}
+\subsubsection{Abstraction 4: HM4}
+\textsf{N6.self=\{N3.self,P6.cond\}\\
+N7.self=\{N5.self,P6.cond\}}
+% \subsection{Behavior Abstraction Criteria}
+% There are criteria that have to be followed when abstracting behaviors. These criteria are based on domain knowledge.
+% \begin{enumerate}
+% 	\item When a \textsf{block} behavior can be safely removed
+%     \item How to combine \textsf{self-cond-self} with one \textsf{self}
+% \end{enumerate}
 \subsection{High-level behaviors of the heart}
-We can use the behaviors to construct high-level behaviors of the heart to represent different heart conditions.\\
+We can use the behavior abstractions to construct high-level behaviors of the heart to represent different heart conditions.\\
 Intrinsic atrial activations:\\
 \textsf{Atrial.self=\{SA.self,PAC.self\}}\\
 Intrinsic Ventricular activations:\\
 \textsf{Vent.self=\{PVC.self\}}
-
-\section{Rule-based Heart Model Abstraction}
-In STTT, the heart model abstractions were directly given and their timed-simulation relationship are proved with text explanation. State graphs had to be given to show behavior abstraction, which is not effective and no-one will ever read and convinced the validity of the model. With the rule-based heart model, we can validate the initial model and all the rules applied to the model. The abstraction rules not only change the structure of the model, but also the behaviors. The structural changes for these abstractions can be found in \cite{STTT}. Here we show the behavior changes during these abstractions.
-\subsection{Abstraction Intuition}
-Abstract both the structure and internal behaviors without reducing the \textbf{observable behaviors}. So the definition of refinement is to add essential internal behaviors back to the model to represent more specific environmental conditions.
-\begin{figure}[!t]
+\begin{figure}[!b]
 		\centering
 		\includegraphics[width=0.9\textwidth]{figs/abs.png}
 		%\vspace{-5pt}
@@ -194,29 +203,35 @@ Abstract both the structure and internal behaviors without reducing the \textbf{
 		  %\vspace{-15pt}
 		\label{fig:SV}
 \end{figure}
-\subsection{Abstraction 1: HM1}
-\textsf{SA.self=\{SA.self\}\\
-PAC.self=\{PAC.self\}\\
-AV.block=\{AV.block\}\\
-P2.cond=\{SA\_AV.cond\}\\
-P3.cond=\{His.cond\}\\ 
-RVA.act=\{PVC.self,P3.cond\}}
-\subsection{Abstraction 2: HM2}
-\textsf{N1.self=\{SA.self,PAC.self\}\\
-N2.block=\{AV.block\}\\
-P4.cond=\{P2.cond\}\\
-P5.cond=\{P3.cond\}\\
-N3.act=\{RVA.act\}}
-\subsection{Abstraction 3: HM3}
-\textsf{N4.self=\{N1.self\}\\
-N5.self=\{N4.self\}\\
-P6.cond=\{P4.cond,P5.cond\}\\
-P6.block=\{N2.block\}}
-\subsection{Abstraction 4: HM4}
-\textsf{N6.self=\{N3.self,P6.cond\}\\
-N7.self=\{N5.self,P6.cond\}}
-\section{Case Study: Automated Requirement-based Heart Model Selection}
-\subsection{Annotating requirements with behavior objects}
+
+\subsection{Heart Model Validation}
+In \cite{VHM_proc} our heart models were validated by physicians. With the rule-based heart model abstraction, each abstract heart model can be validated using the following sequence:
+\begin{enumerate}
+	\item Validate the initial heart model (structure)
+    \item Validate all the abstraction rules applied.
+\end{enumerate}
+
+\section{The Heart Modeling Tool Box}
+In the toolbox we have 4 data structures: 
+\begin{itemize}
+	\item Heart models
+    \item Physiological behaviors of the heart
+    \item Abstraction rules for the heart
+    \item Physiological requirements
+\end{itemize}
+The heart model structure have following fields:
+\begin{itemize}
+	\item Heart parameter sets
+    \item Rules applied to the model
+    \item Behavior set
+\end{itemize}
+Functions associated with the heart model:
+\begin{itemize}
+    \item Display
+    \item Heart Model validation
+\end{itemize}
+
+\section{Requirement-Guided Heart Model Selection}
 Closed-loop requirements are mostly \textbf{conditional}, meaning that it should hold under certain environmental condition. For example, the following requirement:\\
 \textsf{R1: When the intrinsic activation in the atria and ventricles are both less than 100bpm, the ventricular rate is less than 100bpm}\\
 The requirement constrains on the \textsf{Atrial.self} and \textsf{Vent.self}, and reason about \textsf{Vent.act}
@@ -240,15 +255,6 @@ function [status,message]=eligible(HM,Req)
 
 \subsection{Example}
 We perform \textsf{eligible(HM4,R1)} and the check fails, since \textsf{Atrial.self=N1.self=N4.self$\in$N6.self}. The check also suggest that \textsf{N3.self} and \textsf{P6.cond} should be seperated. If we go to HM3 and \textsf{eligible(HM3,R1)} is successful. So HM3 is the suggested heart model for requirement \textsf{R1}.
-% \begin{figure}[!h]
-% 		\centering
-% 		\includegraphics[width=0.4\textwidth]{figs/SV.png}
-% 		%\vspace{-5pt}
-% 		\caption{\small Stroke Volume as a function of heart rate and AV interval}
-% 		  %\vspace{-15pt}
-% 		\label{fig:SV}
-% \end{figure}
-
 
 % ---- Bibliography ----
 %
