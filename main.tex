@@ -111,7 +111,7 @@ $$\exists\delta'\in\mathbb{B}(M')\text{ s.t. }h^{-1}(\delta')\not\subset\mathbb{
 		%\vspace{-5pt}
 		\caption{\small }
 		  %\vspace{-15pt}
-		\label{fig:distinction}
+		\label{fig:ambiguity}
 \end{figure}
 \begin{figure}[!t]
 		\centering
@@ -122,7 +122,7 @@ $$\exists\delta'\in\mathbb{B}(M')\text{ s.t. }h^{-1}(\delta')\not\subset\mathbb{
 		\label{fig:distinction}
 \end{figure}
 
-Since the requirements describe the intended behaviors of the closed-loop system consists of the environment and the system, verifying whether the specifications of the system satisfy the requirements requires closed-loop verification. In the medical device industry,    closed-loop verification is performed in the form of clinical trials in which the devices are tested on the real patients. Clinical trials can only cover very limited environmental conditions due to extremely high cost. Moreover, clinical trials are often conducted at the last design stage. Fixing bugs at this stage is also very costly.
+Since the requirements describe the intended behaviors of the closed-loop system consists of the environment and the system, verifying whether the specifications of the system satisfy the requirements requires closed-loop verification. In the medical device industry, closed-loop verification is performed in the form of clinical trials in which the devices are tested on the real patients. Clinical trials can only cover very limited environmental conditions due to extremely high cost. Moreover, clinical trials are often conducted at the last design stage. Fixing bugs at this stage is also very costly.
 
 Model-based design has been proposed to speed up system software design and provide sufficient safety maintaining the safety promises in software requirement. It can potentially enable closed-loop verification of the software requirements at an earlier stage thus reduce cost. In a model-based design framework, the system software is first designed as an abstract model. Together with an environment model the closed-loop system can be verified against software requirements using model-checking techniques. The verified system model can then be rigorously translated into the software implementation (semi-)automatically so that the software implementation also satisfies all the software requirements.
 
@@ -141,7 +141,7 @@ One of the biggest challenge for model-based design is to manage how much detail
 \end{itemize}
 
 %\input{formulation}
-\input{example}
+%\input{example}
 
 \section{State Space Formulation}
 Kripke structure $<S,\Sigma,L,I>$ in which $S$ is a set of states, $\sigma(s_1,s_2)\in\Sigma\subset S^2$ is a set of transitions, $I\subset S$ is a non-empty set of initial states.
@@ -269,24 +269,55 @@ $$\delta$$
 \section{Rule-based Heart Model Abstraction}
 \begin{figure}[!t]
 		\centering
-		\includegraphics[width=0.8\textwidth]{figs/HM_abs.png}
+		\includegraphics[width=0.8\textwidth]{figs/rule.png}
 		%\vspace{-5pt}
 		\caption{\small Heart Model Abstractions}
 		  %\vspace{-15pt}
 		\label{fig:abs}
 \end{figure}
+Unlike system modeling in which there is only one concrete system, during environment modeling there are infinite number of environmental conditions that can be generalize by abstractions. In this section, we model the heart as the physiological environment for implantable pacemakers and try to cover different heart conditions and the physiological interactions between the heart and the pacemaker. Then using abstraction rules defined over physiological knowledge and principles for over-approximation we construct a series of heart model abstractions with different complexity and coverage. During the rule applications the merging of transition groups are documented thus can be used during model refinements.
 \subsection{Electro-physiology (EP) Basics}
-\subsection{\textcolor{red}{A Reference Initial model}}
-\begin{itemize}
-	\item There are infinitely many possible initial models.
-    \item They differ each other in topology and/or parameters.
-    \item Here we just use one of them to illustrate the abstraction procedure. $H_0$
-    \item Transition groups associated with $H_0$
-\end{itemize}
+The heart generates periodic electrical impulses to control heart rates according to physiological needs. These impulses conduct through the heart, triggering coordinated muscle contractions and pump blood to the rest of the body. The underlying pattern and timing of these impulses determine the heart's rhythm and are the key to proper heart functions. Derangements in this rhythm are referred to as \emph{arrhythmia}, which impair the heart's ability to pump blood and compromise the patients' health. Arrhythmia are categorized into so-called \textsf{Tachycardia} and \textsf{Bradycardia}. Tachycardia features undesirable fast heart rate which results in inefficient blood pumping. Bradycardia features slow heart rate which results in insufficient blood supply. The electrical activities can be measured by inserting electrodes through the vein into the heart against the heart wall. Localized electrical activities can be measured, and the physicians can diagnose the heart conditions by delivering pacing sequence through the electrodes and observe the signal propagation. This procedure is referred to as Electrophysiological (EP) Testing  (\cite{josephson}) and the signals are referred to as electrograms (EGMs).
 
-  
+The implantable cardiac pacemakers are rhythm management devices designed to treat bradycardia. A typical dual chamber pacemaker has two leads inserted into the heart through the veins which can measure the local electrical activities of the right atrium and right ventricle, respectively. According to the timing between sensed impulses the pacemaker can deliver electrical pacing to the corresponding chamber to maintain proper heart rhythm.
+\begin{figure}[!t]
+\centering
+		\includegraphics[width=0.7\textwidth]{figs/egm.pdf}
+		
+%\vspace{-10pt}
+\caption{\small }
+\label{fig:probes}
+%\vspace{-15pt}
+\end{figure} 
+\subsection{The Initial Models}
+In \cite{VHM_proc} we developed a heart model structure based on ElectroPhysiology (EP). We use an extended timed-automata formulation (\cite{timed_automata}) to model the timing behaviors of a heart tissue during each cycle. We refer the tissue model as \emph{Node automaton} and \figref{node_automata} shows the structure of a node automaton $i$. 3 states correspond to 3 timing periods of the action potential. From \textsf{Rest} state, the node can either self activate or activated by external stimuli (Act\_node) and go to \textsf{ERP} state. During \textsf{ERP} state the node does not respond to external stimuli (blocked). During \textsf{RRP} state, the node can still be activated and go to \textsf{ERP} state, however the ERP period and the conduction delay of the tissue are affected by the "earliness" of the activation arrived during the RRP period, which is tracked by a shared variable $C(i)$. The new ERP period is determined by a function over clock value $g(f(t))$ which mimic the beat-to-beat dynamics described in \cite{josephson}. 
+
+The electrical conduction through the tissue between nodes are abstracted using \emph{path automata}. The path automata can be used to represent structural or topological (functional) electrical connections between nodes. \figref{path_automata} shows a path automaton connecting node a and b. The initial state of a path automaton is \emph{Idle}, which corresponds to no conduction. The states corresponding to the two conduction directions are named after the physiological terms: Antegrade (Ante) and Retrograde (Retro). These states can be intuitively described as forward and backward conductions. If \emph{Act\_path} event is received from one of the nodes connected to it, the a transition to \emph{Ante} or \emph{Retro} state correspondingly will occur in the path automaton. At the same time the clock invariant of the state is modified according to the shared variable \emph{C(a/b)}. This corresponds to the change of the conduction delay that is caused by the early activation. Similar to node automaton, the changing trend is extracted from clinical data. 
+  \begin{figure*}[!t]
+\centering
+		\subfigure [\small]{			
+		\includegraphics[width=0.35\textwidth]{figs/node_aut.png}
+		\label{fig:node_automata}
+		} 
+%	\hspace{.1in}%
+		\subfigure [\small] 
+		{
+		\includegraphics[width=0.35\textwidth]{figs/path_aut.png}
+		\label{fig:path_automata}
+		} 
+		\subfigure [\small] 
+		{
+		\includegraphics[width=0.2\textwidth]{figs/gen_setup.png}
+		\label{fig:general_setup}
+		} 
+\label{fig:h_automatas}
+%\vspace{-10pt}
+\caption{\small (a) Node automaton. Dotted transition is only valid for pacemaker tissue like SA node; (b) Path automaton; (c) Model of the electrical conduction system of the heart using a network of node \& path automata ~\cite{VHM_proc}.}
+%\vspace{-15pt}
+\end{figure*} 
+
 \subsection{Rule 1: Remove nodes without self-activation and short ERP}
-\begin{itemize}
+\begin{itemize}                                                                                                                                                                                                                             
 	\item \textcolor{red}{Formal description}
     \item \textcolor{red}{Physiological justification}
     \item $H_0\rightarrow H_1$
@@ -567,5 +598,6 @@ A third party, tool developer, can help in this regard.
 \end{itemize}
 
 
-
+\bibliographystyle{abbrv}
+\bibliography{bibliography}
 \end{document}
