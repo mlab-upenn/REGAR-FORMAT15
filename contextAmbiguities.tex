@@ -1,0 +1,27 @@
+\section{Case 1: Resolving Context Ambiguities Using Model Refinement}
+\label{contextAmbiguities}
+\subsection{Endless-loop Tachycardia}
+\subsection{\textcolor{red}{Requirement Encoding}}
+\begin{itemize}
+	\item Pre-condition: Regular atrial rate, possible ventricular tachycardia
+    \item Post-condition: Ventricular pace rate no faster than max(atrial rate, LRI)
+    \item $\sigma_{n1a}$ in pre-condition
+\end{itemize}
+\subsection{Why CEGAR does not work?}
+\begin{itemize}
+	\item Potential counter-example trace if $H_4$ is used
+    \item Different concrete traces that the counter-example can correspond to
+    
+    \begin{itemize}
+    	\item Valid and harmful
+        \item Valid and unharmful
+        \item Invalid
+    \end{itemize}
+\end{itemize}
+\subsection{Requirement-guided model refinement}
+\begin{itemize}
+	\item The most abstract model with no ambiguities
+    \item $\sigma_{n1a}$ is in $H_3$.
+    \item Environment model refined to $H_3$
+    \item Counter-example corresponds to real bug
+\end{itemize}
