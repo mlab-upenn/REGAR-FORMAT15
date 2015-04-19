@@ -60,8 +60,9 @@ The electrical conduction through the tissue between nodes are abstracted using 
 \end{figure}
 
 
-
-\subsection{Rule 1: Merge Parameter Ranges and Transitions}
+For a heart model $H$ with $n$ nodes and $m$ paths, the node automata are denoted as $N_i, i\in[1,n]$ and path automata are denoted as $P_j,j\in[1,m]$
+\subsection{Rule 1: Merge Parameter Ranges}
+The node and path automata model the timing periods with different properties. The parameters of the node and path automata are the ranges of time in which the automata can stay in corresponding locations. The lower range is specified as a clock invariant and the upper range is specified as a guard. Rule 1 is usually applied to heart models with the same node and path topology. 
  $$para\_min'=min(para\_min1,para\_min2\cdots para\_minN)$$ 
 $$para\_max'=max(para\_max1,para\_max2\cdots para\_maxN)$$
 
