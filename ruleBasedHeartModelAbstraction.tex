@@ -60,13 +60,22 @@ The electrical conduction through the tissue between nodes are abstracted using 
 \end{figure}
 
 
-For a heart model $H$ with $n$ nodes and $m$ paths, the node automata are denoted as $N_i, i\in[1,n]$ and path automata are denoted as $P_j,j\in[1,m]$
-\subsection{Rule 1: Merge Parameter Ranges}
-The node and path automata model the timing periods with different properties. The parameters of the node and path automata are the ranges of time in which the automata can stay in corresponding locations. The lower range is specified as a clock invariant and the upper range is specified as a guard. Rule 1 is usually applied to heart models with the same node and path topology. 
- $$para\_min'=min(para\_min1,para\_min2\cdots para\_minN)$$ 
-$$para\_max'=max(para\_max1,para\_max2\cdots para\_maxN)$$
+The node and path automata model the timing periods with different properties. The parameters of the node and path automata are the ranges of time in which the automata can stay in corresponding locations. The lower range is specified as a clock invariant and the upper range is specified as a guard. For a heart model $H$ with $n$ nodes and $m$ paths, the node automata are denoted as $N_i, i\in[1,n]$ and path automata are denoted as $P_j,j\in[1,m]$. The parameters for the nodes are $\{Trest,TERP,TRRP\}$ and the parameters for the paths are $\{Tante,Tretro\}$. 
 
+\subsection{Rule 1: Merge Parameter Ranges}
+For heart models with the same node and path topology ($H_i,i=[1,p]$), they can be abstracted by a single heart model $H_a$ such that:
+$$\forall i,j,H_a.\theta^j_{min}=min(H_i.\theta^j_{min})$$ 
+$$\forall i,j,H_a.\theta^j_{max}=max(H_i.\theta^j_{max})$$ 
+$H_a$ covers all possible behaviors, thus is an abstraction of $H_i, i\in [1,p]$.
+
+\subsection{Rule 2: Keeping the Essential Structures}
+\begin{itemize}
+	\item Nodes with self-activations
+	\item Nodes which interact with the pacemaker
+\end{itemize}
+view nodes as vertices, paths as edges with conduction delay as weight. shortest path between essential nodes
 \subsection{Rule 2: Convert Reentry Circuits to Activation Nodes}
+The time interval for an electrical signal to go around a reentry circuit
 \begin{figure}[!h]
 		\centering
 		\includegraphics[width=0.6\textwidth]{figs/reentry.pdf}
