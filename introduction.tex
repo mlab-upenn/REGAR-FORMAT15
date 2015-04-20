@@ -35,13 +35,13 @@ In this paper, we address the following four challenges that stand in the way of
 	\item There are no formal models of the human heart's behavior.
 	\item There is a wide variety of distinct heart conditions, many of which are ill- or incompletely understood.
 	This results in the a priori need to create many heart models.
-	\item The physiological requirements are worded in the language of physicians and medical practicionners, so there is a need to express these requirements formally.
+	\item The physiological requirements are worded in the language of physicians and medical practitioners, so there is a need to express these requirements formally.
 	\item A related challenge is that these requirements are often vague, in the sense that a violation of the requirement does not necessarily indicate a preventable issue or a bug in the pacemaker. 
 	Thus there is a need to transmit back our findings to the physicians and device manufacturers who can decide whether the found counter-example is a bug or not.
 \end{enumerate}
 
-\textcolor{red}{Question to be resolved: why is the application of abstraction rules preferred to `regular' predicate-based abstraction?
- }
+\todo[inline]{Question to be resolved: why is the application of abstraction rules preferred to `regular' predicate-based abstraction?}
+
 \subsection{The Model Checking Problem}
 %Model-based design enables closed-loop verification at an early design stage. 
 For a model $M$ with state space $S$, we define the behavior of the model as an execution trace in $\delta\in S^*$. The reachable behavior space of model $M$ is denoted as $\mathbb{B}(M)\subset S^*$. A property $\varphi$ defines a region in the behavior space within which the property is satisfied, which can be denoted as $\mathbb{B}(\varphi)$. A model checking problem is to use mathematical tool to explore the whole reachable behaviors of a model $M$ against a property $\varphi$ such that $\mathbb{B}(M)\subseteq \mathbb{B}(\varphi)$. We denote it as $M\models\varphi$. Property violations should be returned as execution traces $\delta_v$ so that the designer can analyze and address the problem. 
