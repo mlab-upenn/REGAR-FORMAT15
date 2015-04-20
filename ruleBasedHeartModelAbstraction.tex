@@ -62,30 +62,68 @@ The electrical conduction through the tissue between nodes are abstracted using 
 
 The node and path automata model the timing periods with different properties. The parameters of the node and path automata are the ranges of time in which the automata can stay in corresponding locations. The lower range is specified as a clock invariant and the upper range is specified as a guard. For a heart model $H$ with $n$ nodes and $m$ paths, the node automata are denoted as $N_i, i\in[1,n]$ and path automata are denoted as $P_j,j\in[1,m]$. The parameters for the nodes are $\{Trest,TERP,TRRP\}$ and the parameters for the paths are $\{Tante,Tretro\}$. 
 
-\subsection{Rule 1: Merge Parameter Ranges}
-For heart models with the same node and path topology ($H_i,i=[1,p]$), they can be abstracted by a single heart model $H_a$ such that:
-$$\forall i,j,H_a.\theta^j_{min}=min(H_i.\theta^j_{min})$$ 
-$$\forall i,j,H_a.\theta^j_{max}=max(H_i.\theta^j_{max})$$ 
-$H_a$ covers all possible behaviors, thus is an abstraction of $H_i, i\in [1,p]$.
+%\subsection{Pre-Processing: Identifying the Core Structures}
 
-\subsection{Rule 2: Keeping the Essential Structures}
-\begin{itemize}
-	\item Nodes with self-activations
-	\item Nodes which interact with the pacemaker
-\end{itemize}
-view nodes as vertices, paths as edges with conduction delay as weight. shortest path between essential nodes
-\subsection{Rule 2: Convert Reentry Circuits to Activation Nodes}
-The time interval for an electrical signal to go around a reentry circuit
+
+
+
+
+\subsection{Rule 1: Convert Reentry Circuits to Activation Nodes}
+Within the conduction network of the heart, there can be multiple pathways between two locations, forming conduction loops. If the timing parameters of the tissue along the loop satisfy certain property, there can be scenarios in which an depolarization wave circling the circuit. The circuits are referred to as \emph{Reentry Circuits}. Since the time interval for an activation wave to circle a reentry circuit is usually less than the intrinsic heart cycle length, the heart rate will be "`hijacked"' by the reentry circuit once the cycling is triggered, causing tachycardia. Reentry is the most common mechanism for tachycardia which can be modeled by our heart models \cite{vhm_embc10}. 
+
+The effect of reentry tachycardia is that activation signals coming out of the circuit with cycle length equals to the sum of conduction delays of the conduction paths forming the circuit. It is therefore reasonable to model a reentry circuit as a self-activation node with the self-activation range equal to the sum of conduction delays. For more complex structures with multiple circuits, the self-activation range will be the minimum of the shortest circuit to the maximum of the longest circuit. The detailed rule description and implementation can be found in \cite{regar_tech}.
 \begin{figure}[!h]
 		\centering
 		\includegraphics[width=0.6\textwidth]{figs/reentry.pdf}
 		%\vspace{-5pt}
-		\caption{\small Heart Model Abstractions}
+		\caption{\small Reentry Circuit}
 		  %\vspace{-15pt}
 		\label{fig:reentry}
 \end{figure}
-\subsection{Rule 3: Merge Activation Generation Nodes}
-\subsection{Rule 4: Remove Structures that Do Not Affect Outputs}
+
+\subsection{Rule 2: Remove Irrelevant Structures}
+The network of node and path automata can be viewed as a graph,with nodes as vertices, paths as edges with conduction delay as weight. After the loops within the topology are removed, the topology of the heart model is in form of tree. Within the network there are certain nodes that are more important in terms of model behaviors, we denote them as \emph{Nodes of Interests}, which include:
+\begin{itemize}
+	\item Nodes with self-activations
+	\item Nodes which interact with the pacemaker
+\end{itemize}
+Graph algorithm can be performed on the heart model to identify the core structure. Shortest paths can be calculated among nodes of interests. All the nodes and paths along the shortest paths are regarded as core structure. All the other nodes and paths can be then removed without affecting the behaviors of the model. 
+
+\subsection{Rule 3: Merge Parameter Ranges}
+For heart models with the same node and path topology ($H_i,i=[1,p]$), they can be abstracted by a single heart model $H_a$ such that:
+$$\forall i,j,H_a.\theta^j_{min}=min(H_i.\theta^j_{min})$$ 
+$$\forall i,j,H_a.\theta^j_{max}=max(H_i.\theta^j_{max})$$ 
+$H_a$ covers all possible behaviors, thus is an abstraction of $H_i, i\in [1,p]$. The added behaviors in the abstract model do not affect the number of transition groups
+%\begin{algorithm}[tb]
+%\caption{Rule 2: Removing Circuits}
+%{\bf Input}: A heart model $H$ with nodes \\
+%{\bf Output}: A heart model $H_a$ without circuits
+%
+%\begin{algorithmic}[1]
+%
+%\State Find all the loops in $H$ 
+%\For {All the loops}
+%\If {The loop contains core path(s)}
+	%\If {The loop contains core node(s)}
+		%\State 
+	%\Else
+	%\EndIf
+		%\State
+	%\Else
+%\EndIf
+ %
+ %\State Compute $z_i^*=(x_i^*, t_i^*, \nu_i^*)$ 
+ %\State $i=i+1$ 
+%\EndFor\\
+ %
+%\end{algorithmic}
+%\end{algorithm}
+%if the circuit contains a core path
+%
+     %if the circuit contains a core node
+
+\subsection{Rule 4: Merge Activation Generation Nodes}
+
 \subsection{Rule 5: Replace Blocking With Non-deterministic Conduction}
 
 \begin{figure}[!h]
