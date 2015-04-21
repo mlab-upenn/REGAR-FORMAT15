@@ -1,6 +1,10 @@
 \section{outline}
 \begin{enumerate}
 	\item Introduction
+	\subitem The problem of closed-loop formal verification
+	\item In this paper, we illustrate four challenges and solve them for medical devices, specifically cardiac devices.
+	\subitem Some elements of the proposed method can be generalized and have a wider applicability: namely the abstraction tree and MC on the tree (abstractness measure, search procedure)
+	\subitem Give overview of method in a block diagram and briefly explain it in text.
 	
 	\item Formal models of the environment
 	\begin{enumerate}
@@ -14,8 +18,26 @@
 	
 	\item Abstraction rules
 	\begin{enumerate}
-		\item 
+		\item Why predicate-based abstraction can be inadequate? Example
+		\label{ar:inadequate}
+		\item Physiologically meaningful abstraction rules
+		\subitem Give formal definition as a graph-to-graph function $R: G \rightarrow G'$ 
+		\subitem Why do you call it abstraction? 
+		\subitem Given 2 concrete examples, with 2 more in appendix (more in tech report?)
+		\item Example of rule application to example \ref{ar:inadequate}.
+		\item Abstraction tree		
 	\end{enumerate}
+	
+	\item Model-checking with the abstraction tree
+	\begin{enumerate}
+		\item Measure of abstractness; define 'appropriate for the requirement'
+		\item Search procedure
+		\item What happens if a counter-example is found
+		\item Elaborate example
+	\end{enumerate}
+	
+	\item Conclusions and future research
+	
 \end{enumerate}
 
 

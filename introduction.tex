@@ -1,5 +1,12 @@
 \section{Introduction}
 \label{introduction}
+\begin{enumerate}
+\item Introduction
+\subitem The problem of closed-loop formal verification
+\item In this paper, we illustrate four challenges and solve them for medical devices, specifically cardiac devices.
+\subitem Some elements of the proposed method can be generalized and have a wider applicability: namely the abstraction tree and MC on the tree (abstractness measure, search procedure)
+\subitem Give overview of method in a block diagram and briefly explain it in text.
+\end{enumerate}
 %\begin{itemize}
 	%\item What are Cyber-Physical Systems?
     %\item What are the unique challenges of developing CPS compared to other systems?
@@ -105,6 +112,7 @@ Model-based design has been proposed to speed up system software design and prov
 
 One of the biggest challenge for model-based design is to manage how much detail a model should have during model checking. In general the model should be abstract enough to ignore unnecessary details in order to reduce computational cost, but also detailed enough to distinguish execution paths that 1) satisfy/violate a property, and/or 2) are valid/invalid due to the extra behaviors introduced during model abstraction/approximation. These ambiguities must be removed from model to prevent false positives/negatives during model checking. 
 
+\input{contributions}
 \subsection{Outline of the paper}
 \begin{itemize}
 	\item Section 2: Basic state space formulation with transition groups
@@ -114,6 +122,7 @@ One of the biggest challenge for model-based design is to manage how much detail
     \item Section 6: Case 1: Requirement-guided model refinement during ELT case 
     \item\textcolor{red}{ Section 7: Case 2: Model refinement for eliminating potential ambiguity. With mode-switch case.} 
 \end{itemize}
+
 
 %\input{formulation}
 %\input{example}
