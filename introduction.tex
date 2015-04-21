@@ -113,15 +113,7 @@ Model-based design has been proposed to speed up system software design and prov
 One of the biggest challenge for model-based design is to manage how much detail a model should have during model checking. In general the model should be abstract enough to ignore unnecessary details in order to reduce computational cost, but also detailed enough to distinguish execution paths that 1) satisfy/violate a property, and/or 2) are valid/invalid due to the extra behaviors introduced during model abstraction/approximation. These ambiguities must be removed from model to prevent false positives/negatives during model checking. 
 
 \input{contributions}
-\subsection{Outline of the paper}
-\begin{itemize}
-	\item Section 2: Basic state space formulation with transition groups
-    \item Section 3: Formulation of over-approximation and its effect on transition groups
-    \item Section 4: Linking transition groups to environmental conditions and thus requirement
-    \item Section 5: Rule-based EP heart model abstraction with transition groups
-    \item Section 6: Case 1: Requirement-guided model refinement during ELT case 
-    \item\textcolor{red}{ Section 7: Case 2: Model refinement for eliminating potential ambiguity. With mode-switch case.} 
-\end{itemize}
+
 
 \paragraph{Notation}. For a positive integer $n$, $[n] = \{1,2,\ldots,n\}$.
 

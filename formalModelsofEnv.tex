@@ -10,6 +10,20 @@
 	\item Formalization of physiological requirements
 \end{enumerate}
 
+\subsection{Electrophysiology (EP) Basics}
+The heart generates periodic electrical impulses to control heart rates according to physiological needs. These impulses conduct through the heart, triggering coordinated muscle contractions and pump blood to the rest of the body. The underlying pattern and timing of these impulses determine the heart's rhythm and are the key to proper heart functions. Derangements in this rhythm are referred to as \emph{arrhythmia}, which impair the heart's ability to pump blood and compromise the patients' health. Arrhythmia are categorized into so-called \textsf{Tachycardia} and \textsf{Bradycardia}. Tachycardia features undesirable fast heart rate which results in inefficient blood pumping. Bradycardia features slow heart rate which results in insufficient blood supply. The electrical activities can be measured by inserting electrodes through the vein into the heart against the heart wall. Localized electrical activities can be measured, and the physicians can diagnose the heart conditions by delivering pacing sequence through the electrodes and observe the signal propagation. This procedure is referred to as Electrophysiological (EP) Testing  (\cite{josephson}) and the signals are referred to as electrograms (EGMs).
+
+The implantable cardiac pacemakers are rhythm management devices designed to treat bradycardia. A typical dual chamber pacemaker has two leads inserted into the heart through the veins which can measure the local electrical activities of the right atrium and right ventricle, respectively. According to the timing between sensed impulses the pacemaker can deliver electrical pacing to the corresponding chamber to maintain proper heart rhythm.
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=0.7\textwidth]{figs/egm.pdf}
+	
+	%\vspace{-10pt}
+	\caption{\small }
+	\label{fig:probes}
+	%\vspace{-15pt}
+\end{figure} 
+
 \subsection{Labeled graph model of heart conditions}
 \label{labeledGraph}
 
@@ -47,21 +61,24 @@ In the \textsf{RRP} state, the node can still be activated and transition to the
 But the fact that the activation arrived early (in the RR Period) affects the ERP and the conduction delay of the tissue.  
 This is tracked by a shared variable $C(i)$ for the $i^{th}$ node automaton. \todo[inline]{what is $C$?}
 The new ERP period is determined by a function over clock value $g(f(t))$ which mimics the beat-to-beat dynamics described in \cite{josephson}. \todo[inline]{what are $g,f$?}
-%
-%The electrical conduction through the tissue \emph{between} nodes is abstracted using \emph{path automata}. 
-%The path automata are used to represent structural or functional electrical connections between nodes. 
-%The initial state of a path automaton is \textsf{Idle}, which corresponds to no conduction. 
-%A path has two conduction directions, forward and backward.
-%These are represented by the states Ante and Retro, named after their standard physiological terms Antegrade and Retrograde.
-%If \textsf{Act\_path} event is received from one of the nodes connected to the path, the a transition to either \textsf{Ante} or \textsf{Retro} state will occur in the path automaton. 
-%At the same time the clock invariant of the state is modified according to the shared variable $C(a/b)$. 
-%This corresponds to the change of the conduction delay that is caused by early activation. 
-%Similarly to a node automaton, the changing trend is extracted from clinical data. 
-%
-%The parameters of the node and path automata determine the ranges of time in which the automata can stay in corresponding locations. 
-%The lower endpoint is specified as a clock invariant and the upper endpoint is specified as a guard. 
-%For a heart model $G$ with $n$ nodes and $m$ paths (thus, $n$ vertices and $m$ edges), the node automata are denoted as $N_i, i\in[n]$ and path automata are denoted as $P_j,j\in[m]$. 
-%\todo[inline]{change to $V_i$ and $E_i$ to stay consistent with definition of graph?}
-%The parameters for the nodes are $Trest$ (with range $[Trest_{min}$),TERP,TRRP and the parameters for the paths are $\{Tante,Tretro\}$. 
-%
+
+The electrical conduction through the tissue \emph{between} nodes is abstracted using \emph{path automata}. 
+The path automata are used to represent structural or functional electrical connections between nodes. 
+The initial state of a path automaton is \textsf{Idle}, which corresponds to no conduction. 
+A path has two conduction directions, forward and backward.
+These are represented by the states Ante and Retro, named after their standard physiological terms Antegrade and Retrograde.
+If \textsf{Act\_path} event is received from one of the nodes connected to the path, the a transition to either \textsf{Ante} or \textsf{Retro} state will occur in the path automaton. 
+At the same time the clock invariant of the state is modified according to the shared variable $C(a/b)$. 
+This corresponds to the change of the conduction delay that is caused by early activation. 
+Similarly to a node automaton, the changing trend is extracted from clinical data. 
+
+The parameters of the node and path automata determine the ranges of time in which the automata can stay in corresponding locations. 
+The lower endpoint is specified as a clock invariant and the upper endpoint is specified as a guard. 
+For a heart model $G$ with $n$ nodes and $m$ paths (thus, $n$ vertices and $m$ edges), the node automata are denoted as $N_i, i\in[n]$ and path automata are denoted as $P_j,j\in[m]$. 
+\todo[inline]{change to $V_i$ and $E_i$ to stay consistent with definition of graph?}
+The parameters for the nodes are $Trest$ (with range $[Trest_{min}$),TERP,TRRP and the parameters for the paths are $\{Tante,Tretro\}$. 
+
+\subsection{Formalizing physiological requirements}
+
+
 %\input{statespaceformulation}
