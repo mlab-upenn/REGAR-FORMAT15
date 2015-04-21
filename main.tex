@@ -1,11 +1,12 @@
 \documentclass{llncs}
 \usepackage{llncsdoc}
+\usepackage{fainekos-macros}
 
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \usepackage{graphicx}
-\usepackage[colorinlistoftodos,obeyDraft]{todonotes}
+\usepackage[colorinlistoftodos,obeyFinal]{todonotes}
 \usepackage{wrapfig}
 \usepackage{makeidx}  % allows for indexgeneration
 \usepackage{bibspacing}
@@ -24,7 +25,6 @@
 \newcommand{\tableref}[1]{Table~\ref{tab:#1}}
 \newcommand{\figref}[1]{Fig.~\ref{fig:#1}}
 \newcommand{\Hao}[1]{$\clubsuit$\footnote{HAO: #1}}
-\newtheorem{exmp}{Example}
 
 \title{Domain-Knowledge-Guided Environment Model Abstraction and Refinement for Medical Device Software Verification}
 
@@ -43,14 +43,13 @@
 \input{modelCheckingwAbstTree}
 \input{conclusions}
 
-%\input{statespaceformulation}
-%\input{predicateBasedAbstraction}
-%\input{ruleBasedHeartModelAbstraction}
-%\input{contextAmbiguities}
-%\newpage
-%\input{resolvingValidityAmbiguities}
-%\input{bulletPoints}
-% 
+
+
+\input{contextAmbiguities}
+\newpage
+\input{resolvingValidityAmbiguities}
+\input{bulletPoints}
+ 
 
 
 % \subsubsection{Domain Knowledge During Abstraction Level Management}
