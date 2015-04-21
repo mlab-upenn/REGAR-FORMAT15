@@ -89,7 +89,13 @@ The network of node and path automata can be viewed as a graph,with nodes as ver
 \end{itemize}
 Graph algorithm can be performed on the heart model to identify the core structure. Shortest paths can be calculated among nodes of interests. All the nodes and paths along the shortest paths are regarded as core structure. All the other nodes and paths can be then removed without affecting the behaviors of the model. 
 
-\subsection{Rule 3: Merge Parameter Ranges}
+\subsection{Rule 3: Removing Unnecessary Non-self-activation Nodes}
+The effect of non-self-activation nodes is blocking electrical events with interval shorter than its ERP period. If the self-activation nodes at both ends of a core path have self-activation interval longer than the maximum ERP period of nodes along the core path, the nodes can be removed.
+
+For a core path from a self-activation node $N_1$ to another core node $N_2$, for any structure $P_1-N_n-P_2$ which $N_n$ is a non-self-activation node, if $N_n.ERP_{max}<min(N_1.Rest_{min},N_2.Rest_{min})$, replace $P_1-N_n-P_2$ with $P_3$ so that:
+$$P_3.cond_{min}=P_1.cond_{min}+P_2.cond_{min}$$
+$$P_3.cond_{max}=P_1.cond_{max}+P_2.cond_{max}$$
+\subsection{Rule 4: Merge Parameter Ranges}
 For heart models with the same node and path topology ($H_i,i=[1,p]$), they can be abstracted by a single heart model $H_a$ such that:
 $$\forall i,j,H_a.\theta^j_{min}=min(H_i.\theta^j_{min})$$ 
 $$\forall i,j,H_a.\theta^j_{max}=max(H_i.\theta^j_{max})$$ 
@@ -122,10 +128,13 @@ $H_a$ covers all possible behaviors, thus is an abstraction of $H_i, i\in [1,p]$
 %
      %if the circuit contains a core node
 
-\subsection{Rule 4: Merge Activation Generation Nodes}
+\subsection{Rule 5: Merge Self-activation Nodes with Interaction Nodes}
+The effect of self-activation nodes on the interaction of the pacemaker is triggering sensing events within certain delay. In this rule we merge all the self-activation nodes to their neariest interaction nodes. If there exists multiple self-activation nodes merging to the same interaction node, the parameters of the new model are determined following Rule 3.
 
-\subsection{Rule 5: Replace Blocking With Non-deterministic Conduction}
-
+\subsection{Rule 6: Replace Blocking With Non-deterministic Conduction}
+The effect of a node automaton blocking an activation signal is equivalent to a path not conducting. So we designed new abstract node and path automata $N1$ and $P1$. For any $P_1-N_n-P_2$, it can be replaced by a $P$ with:
+$$P.cond_{min}=P_1.cond_{min}+P_2.cond_{min}$$
+$$P.cond_{max}=P_1.cond_{max}+P_2.cond_{max}$$
 \begin{figure}[!h]
 		\centering
 		\includegraphics[width=0.9\textwidth]{figs/rule5.pdf}
@@ -134,8 +143,11 @@ $H_a$ covers all possible behaviors, thus is an abstraction of $H_i, i\in [1,p]$
 		  %\vspace{-15pt}
 		\label{fig:rule5}
 \end{figure}
-\subsection{Rule 6: Replace}
 
+\subsection{Rule 7: Replace Conductions With Self-activation}
+The effect of conduction path is to connect activations from a self-activation node to another. By setting the interval between self-activations to $[0,\infty]$ the observable behaviors of the heart will not change.
+
+For all node $N$, $N.Rest_{min}=0,N.Rest_{max}=\infty$ and delete all paths.
 \begin{figure}[!h]
 		\centering
 		\includegraphics[width=0.3\textwidth]{figs/rule6.pdf}
