@@ -82,6 +82,10 @@ The effect of self-activation nodes on the interaction of the pacemaker is trigg
 The effect of a node automaton blocking an activation signal is equivalent to a path not conducting. So we designed new abstract node and path automata $N1$ and $P1$. For any $P_1-N_n-P_2$, it can be replaced by a $P$ with:
 $$P.cond_{min}=P_1.cond_{min}+P_2.cond_{min}$$
 $$P.cond_{max}=P_1.cond_{max}+P_2.cond_{max}$$
+For any self-activation node $N$:
+$$N'.rest_{min}=N.ERP_{min}+N.rest_{min}$$
+$$N'.rest_{max}=N.ERP_{max}+N.rest_{max}$$
+
 \begin{figure}[!h]
 		\centering
 		\includegraphics[width=0.9\textwidth]{figs/rule5.pdf}
@@ -103,3 +107,33 @@ For all node $N$, $N.Rest_{min}=0,N.Rest_{max}=\infty$ and delete all paths.
 		  %\vspace{-15pt}
 		\label{fig:rule6}
 \end{figure}
+
+\subsection{Rule Application Example}
+In this section we demonstrate 
+
+$$NA\_self=\{SA\_self,AVNRT\_self,AF\_self,PAC\_self\}$$
+$$NV\_self=\{PVC\_self,VF\_self,VT\_self\}$$
+$$NA-AV'\_cond=\{SA-AV\_cond\}$$
+$$AV'-NV\_cond=\{AV-RBB\_cond,RBB-RVA\_cond\}$$
+Apply Rule 6:
+$$NA'\_self=\{NA\_self\}$$
+$$NV'\_self=\{NV\_self\}$$
+$$NA'-NV'\_cond=\{AV'\_block,NA-AV'\_cond,AV'-NV\_cond\}$$
+Apply Rule 7:
+$$NA''\_self=\{NA'\_self,NA'-NV'\_cond\}$$
+$$NV''\_self=\{NV'\_self,NA'-NV'\_cond\}$$
+\begin{figure}[!t]
+		\centering
+		\includegraphics[width=0.9\textwidth]{figs/abs.png}
+		%\vspace{-5pt}
+		\caption{\small Heart Model Abstractions}
+		  %\vspace{-15pt}
+		\label{fig:abs_exam}
+\end{figure}
+
+
+
+
+
+
+
