@@ -78,7 +78,18 @@ For a heart model $G$ with $n$ nodes and $m$ paths (thus, $n$ vertices and $m$ e
 \todo[inline]{change to $V_i$ and $E_i$ to stay consistent with definition of graph?}
 The parameters for the nodes are $Trest$ (with range $[Trest_{min}$),TERP,TRRP and the parameters for the paths are $\{Tante,Tretro\}$. 
 
-\subsection{Formalizing physiological requirements}
+\subsection{Encoding Physiological Behaviors}
+Provide physiological context for model bahaviors. Useful for requirement encoding and justification of abstraction rules. The behaviors of heart tissue can be categorized into 3 basic transition groups:
 
+\begin{itemize}
+	\item \textbf{self:} The self-activation of the node automata. The min and max properties specify the minimum and maximum intervals between consecutive self-activation events.
+	\item \textbf{cond:} The conduction property of the path automata. The min and max properties specify the minimum and maximum delays between a node activation on one end and the activation on the other end.
+	\item \textbf{block:} The blocking property of the node automata. The min and max properties specify the minimum and maximum intervals between consecutive activations that can trigger path conduction.
+\end{itemize}
 
-\input{statespaceformulation}
+\subsection{Encoding Physiological Requirements}
+Physiological requirements are constraints on physiological behaviors. In \cite{iccps10} we 
+
+\subsection{Monitors}
+To simplify the requirement, \cite{iccps10}
+%\input{statespaceformulation}
