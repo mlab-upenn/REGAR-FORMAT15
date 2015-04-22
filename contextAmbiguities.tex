@@ -4,10 +4,10 @@
 function [HM]=eligible(HM_tree,Req)
    BM = all models in HM_tree with all Prop(Req)
 	 For all M in BM
-	   while (in M no behavior in Prop(Req) is merged with other parameters)
+	   while (in the parent of M no behavior in Prop(Req) is merged with other behaviors)
 	      M = parent of M
 	   endwhile
-	 save the parent of M in HM
+	 save M in HM
 	 endfor
 	 Return HM
 \end{Verbatim}

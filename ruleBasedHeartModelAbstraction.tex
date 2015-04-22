@@ -114,15 +114,15 @@ In this section we demonstrate
 \todo[inline]{I don't understand what this is...}
 $$NA\_self=\{SA\_self,AVNRT\_self,AF\_self,PAC\_self\}$$
 $$NV\_self=\{PVC\_self,VF\_self,VT\_self\}$$
-$$NA-AV'\_cond=\{SA-AV\_cond\}$$
-$$AV'-NV\_cond=\{AV-RBB\_cond,RBB-RVA\_cond\}$$
+$$(NA,AV')\_cond=\{(SA,AV)\_cond\}$$
+$$(AV',NV)\_cond=\{(AV,RBB)\_cond,RBB-RVA\_cond\}$$
 Apply Rule 6:
 $$NA'\_self=\{NA\_self\}$$
 $$NV'\_self=\{NV\_self\}$$
-$$NA'-NV'\_cond=\{AV'\_block,NA-AV'\_cond,AV'-NV\_cond\}$$
+$$(NA',NV')\_cond=\{AV'\_block,(NA,AV')\_cond,(AV',NV)\_cond\}$$
 Apply Rule 7:
-$$NA''\_self=\{NA'\_self,NA'-NV'\_cond\}$$
-$$NV''\_self=\{NV'\_self,NA'-NV'\_cond\}$$
+$$NA''\_self=\{NA'\_self,(NA',NV')\_cond\}$$
+$$NV''\_self=\{NV'\_self,(NA',NV')\_cond\}$$
 \begin{figure}[!t]
 		\centering
 		\includegraphics[width=0.9\textwidth]{figs/abs.png}
