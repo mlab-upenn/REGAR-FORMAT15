@@ -52,16 +52,38 @@ Return all saved CEs and their corresponding models
 \label{contextAmbiguities}
 \subsection{Requirement Encoding}
 \begin{itemize}
-	\item Pre-condition: Normal atrial self-activation rate (60bpm - 100bpm)
-    \item Post-condition: Ventricular pace rate no faster than LRI
+	\item Pre-condition: Atrial self-activation rate (60bpm - 150bpm)
+    \item Post-condition: Intervals between ventricular paces should be no shorter than 500ms
 \end{itemize}
 \Hao{Need a monitor here}
 The requirement can be translated to:
-$$R1: NA\_self.min=600,NA\_self.max=1000\Rightarrow VP-VP>=TLRI$$
-$Prop(R1)=NA\_self$
+$$Req1: NA\_self.min=600 \&\& NA\_self.max=1000 \&\& M.state=check\Rightarrow M.t_m>=500$$
+$Prop(Req1)=NA.self$
 \subsection{Solving Requirement Ambiguities}
-In the root level heart model $H_{all}$, \emph{Rule 7} has been applied which abstract the 
-Run the function $[HM]=eligible(HM\_tree,R1)$. Since 
+To verify the closed-loop system with pacemaker model $PM$ and heart model abstraction tree $HM\_tree$ (\figref{abs_exam}) against requirement $Req1$, we start by calling the function $[HM]=eligible(HM\_tree,Req1)$. In the root level heart model $H_{all}$, \emph{Rule 7} has been applied which abstract the $cond$ behavior of the path to the $self$ behavior of the nodes, including $NA.self$. As the result, the children of $H_{all}$ are examined and $NA.self$ is not abstracted with other behaviors in $H_n'',H_{at}'''',H_{vt}'''$. These 3 heart models are outputted as the appropriate models for $Req1$.
+\subsection{Solving Validity Ambiguities}
+After we choose the appropriate models for the requirement with 
+$$HM=\{H_n'',H_{at}'''',H_{vt}'''\}$$
+By model checking on all 3 initial models in UPPAAL we have: 
+$$[1,[]]=ModelChecking(H_n'',PM,Req1)$$
+ $$[0,CE_1]=ModelChecking(H_{at}'''',PM,Req1)$$
+$$[0,CE_2]=ModelChecking(H_{vt}''',PM,Req1)$$
+The algorithm keeps going down the abstraction tree, and at certain intermediate step we have:
+ $$[0,CE_a]=ModelChecking(H_{st}',PM,Req1)$$
+  $$[0,CE_b]=ModelChecking(H_{pvc}',PM,Req1)$$
+	$$[0,CE_c]=ModelChecking(H_{at},PM,Req1)$$
+ $$[1,[]]=ModelChecking(H_{vr}'',PM,Req1)$$
+ $$[1,[]]=ModelChecking(H_{vf}'',PM,Req1)$$
+The counter-examples are illustrated in \figref{CE}.
+\begin{figure}[!t]
+		\centering
+		\includegraphics[width=0.9\textwidth]{figs/case.pdf}
+		%\vspace{-5pt}
+		\caption{\small Counter-examples}
+		  %\vspace{-15pt}
+		\label{fig:CE}
+\end{figure}
+$CE_a$ is a save execution of the pacemaker. $CE_b$ is Endless Loop Tachycardia. $CE_c$ is referred to as Atrial Tachycardia Response of a pacemaker. Both $CE_b$ and $CE_c$ are inappropriate executions of the pacemaker .$CE_a$ and $CE_b$ can have the same input-output executions on the pacemaker side and can only be differentiated on the heart model side. After the physician examines the counter-example the programmer can work on debugging.
 %$NA\_self$ is in $H_3$, we go one level up, in $H_4$ the behavior is not merged with any other parameters. In $H_5$ $NA\_self$ is merged with  $NA'-NV'.cond$ so $H_4$ is returned as the appropriate heart model for R1. In \cite{STTT13} we used $H_4$ to verify the correctness of the ELT termination algorithm. With a basic DDD pacemaker we have $H_4 || P_{DDD}\models R1$. The counter-example returned is exactly the ELT behavior. Then we implement the ELT termination algorithm and we have  $H_4 || P_{ELT}\not\models R1$, meaning ELT has been successfully terminated, and only the ELT is terminated. 
 %
 %\subsection{Inappropriate Model Refinements}
