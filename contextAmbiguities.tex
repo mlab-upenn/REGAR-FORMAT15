@@ -60,6 +60,7 @@ The requirement can be translated to:
 $$R1: NA\_self.min=600,NA\_self.max=1000\Rightarrow VP-VP>=TLRI$$
 $Prop(R1)=NA\_self$
 \subsection{Solving Requirement Ambiguities}
+In the root level heart model $H_{all}$, \emph{Rule 7} has been applied which abstract the 
 Run the function $[HM]=eligible(HM\_tree,R1)$. Since 
 %$NA\_self$ is in $H_3$, we go one level up, in $H_4$ the behavior is not merged with any other parameters. In $H_5$ $NA\_self$ is merged with  $NA'-NV'.cond$ so $H_4$ is returned as the appropriate heart model for R1. In \cite{STTT13} we used $H_4$ to verify the correctness of the ELT termination algorithm. With a basic DDD pacemaker we have $H_4 || P_{DDD}\models R1$. The counter-example returned is exactly the ELT behavior. Then we implement the ELT termination algorithm and we have  $H_4 || P_{ELT}\not\models R1$, meaning ELT has been successfully terminated, and only the ELT is terminated. 
 %
