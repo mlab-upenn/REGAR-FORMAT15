@@ -1,12 +1,13 @@
 \section{Resolving Ambiguities Using the Abstraction Tree}
 \subsection{Resolving Context Ambiguities}
+The abstraction tree not only contains
 \begin{Verbatim}
 Algorithm 1
 function [HM]=eligible(HM_tree,Req)
 BM = root of HM_tree
 while (BM is not empty)
  For every model M in BM
-  If (all behaviors in Prop(Req) are not abstracted with other behaviors)
+  If (all behaviors in EnvB(Req) are not abstracted with other behaviors)
    Remove M from BM
    save M in HM
   else
@@ -49,18 +50,42 @@ Return all saved CEs and their corresponding models
 
 
 \section{Case Study: Closed-loop Model Checking of a Dual Chamber Pacemaker}
-\label{contextAmbiguities}
+\subsection{Pacemaker Model}
+\todo{We may not have space but if we do we should put the 5 timing cycle figure here}
+\subsection{Encoding Physiological Behaviors}
+Apply Rule 6:
+$$NA'.self=\{NA.self\},NV'.self=\{NV.self\}$$
+$$(NA',NV').cond=\{AV'.block,(NA,AV').cond,(AV',NV).cond\}$$
+Apply Rule 7:
+$$NA''.self=\{NA.self,(NA',NV').cond\}$$
+$$NV''.self=\{NV.self,(NA',NV').cond\}$$
+\begin{figure}[!t]
+		\centering
+		\includegraphics[width=0.5\textwidth]{figs/abs_sim.pdf}
+		%\vspace{-5pt}
+		\caption{\small Abstraction Example}
+		  %\vspace{-15pt}
+		\label{fig:abs_sim}
+\end{figure}
+
 \subsection{Requirement Encoding}
 \begin{itemize}
-	\item Pre-condition: Atrial self-activation rate (60bpm - 150bpm)
+	\item Pre-condition: Atrial self-activation rate (60bpm - 200bpm)
     \item Post-condition: Intervals between ventricular paces should be no shorter than 500ms
 \end{itemize}
-\Hao{Need a monitor here}
+\begin{figure}[!h]
+		\centering
+		\includegraphics[width=0.4\textwidth]{figs/monitor.pdf}
+		%\vspace{-5pt}
+		\caption{\small monitor}
+		  %\vspace{-15pt}
+		\label{fig:monitor}
+\end{figure}
 The requirement can be translated to:
-$$Req1: NA\_self.min=600 \&\& NA\_self.max=1000 \&\& M.state=check\Rightarrow M.t_m>=500$$
-$Prop(Req1)=NA.self$
+$$Req1: NA\_self.min=300 \&\& NA\_self.max=1000 \Rightarrow not M.Err$$
+The environment behavior specified in $Req1$ is $EnvB(Req1)=NA.self$.
 \subsection{Solving Requirement Ambiguities}
-To verify the closed-loop system with pacemaker model $PM$ and heart model abstraction tree $HM\_tree$ (\figref{abs_exam}) against requirement $Req1$, we start by calling the function $[HM]=eligible(HM\_tree,Req1)$. In the root level heart model $H_{all}$, \emph{Rule 7} has been applied which abstract the $cond$ behavior of the path to the $self$ behavior of the nodes, including $NA.self$. As the result, the children of $H_{all}$ are examined and $NA.self$ is not abstracted with other behaviors in $H_n'',H_{at}'''',H_{vt}'''$. These 3 heart models are outputted as the appropriate models for $Req1$.
+To verify the closed-loop system with pacemaker model $PM$ and heart model abstraction tree $HM\_tree$ (\figref{abs_exam}) against requirement $Req1$, we start by calling the function $[HM]=eligible(HM\_tree,Req1)$. In the root level heart model $H_{all}$, $NA.self$ is abstracted with $(NA',NV').cond$. As the result, $H_{all}$ is not appropriate for $Req1$ and the children of $H_{all}$ are examined. Since $NA.self$ is not abstracted with other behaviors in $H_n'',H_{at}'''',H_{vt}'''$, These 3 heart models are outputted as the most abstract appropriate models for $Req1$.
 \subsection{Solving Validity Ambiguities}
 After we choose the appropriate models for the requirement with 
 $$HM=\{H_n'',H_{at}'''',H_{vt}'''\}$$
