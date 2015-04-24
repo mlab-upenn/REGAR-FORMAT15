@@ -1,37 +1,5 @@
 \section{Introduction}
 \label{introduction}
-\begin{enumerate}
-\item Introduction
-\subitem The problem of closed-loop formal verification
-\item In this paper, we illustrate four challenges and solve them for medical devices, specifically cardiac devices.
-\subitem Some elements of the proposed method can be generalized and have a wider applicability: namely the abstraction tree and MC on the tree (abstractness measure, search procedure)
-\subitem Give overview of method in a block diagram and briefly explain it in text.
-\end{enumerate}
-%\begin{itemize}
-	%\item What are Cyber-Physical Systems?
-    %\item What are the unique challenges of developing CPS compared to other systems?
-    %\item How to guarantee the safety of CPS?
-    %\item What is the current practice?
-    %\item What is the difference between requirements and specifications?
-    %\item What is closed-loop verification? Is it necessary?
-    %\item What is model-based design? What are the benefits and limitations?
-    %\item What are the different techniques of model-based closed-loop verification? 
-    %\item In which steps during the software life cycle are those techniques used?
-    %\item What is model checking? What guarantee can it provide? What are the challenges?
-    %\item What are the focus difference between environment modeling and system modeling, in general and in each step?
-    %\item What is model abstraction/approximation? What information are lost during this process?
-    %\item How to keep track of these information? Where can they be used?
-    %\item What is over-approximation? What are the limits?
-    %\item What is the appropriate model complexity?
-    %\item What aspects affect the required model complexity?
-    %\item How to manage complexity for the system model?
-    %\item Why CEGAR cannot be applied to the environment model?
-    %\item How to manage the complexity of the environment model?
-    %\item What are domain knowledge? Where have we used them?
-    %\item How can we encode domain knowledge used during model development and abstraction?
-    %\item Can we use encoded domain knowledge to manage complexity of the environment model? How?
-    %\item The case study on heart model and pacemaker sounds good. Is the approach general enough?
-%\end{itemize}
 
 Implantable medical devices like pacemakers are designed to improve certain undesired physiological conditions with very little human interventions. Their capability of autonomously affecting the physiological conditions of the patients makes the medical devices safety-critical, and sufficient evidence on the safety and efficacy of the devices should be provided before the devices can be implanted in the patients. As more functions added to the devices, the complexity of the software component of the device is increasing dramatically, leading to more and more potential safety violations due to software bugs. To ensure the safety of medical device software, the device software not only have to conform with its design, which is specified in \emph{Software Specifications}
 
@@ -50,6 +18,8 @@ In this paper, we address the following four challenges that stand in the way of
 \todo[inline]{Question to be resolved: why is the application of abstraction rules preferred to `regular' predicate-based abstraction?}
 
 \subsection{The Model Checking Problem}
+\label{MCproblem}
+\todo[inline]{This section is too long. Reduce to half a page. Also, doesn't belong in the introduction.}
 %Model-based design enables closed-loop verification at an early design stage. 
 For a model $M$ with state space $S$, we define the behavior of the model as an execution trace in $\delta\in S^*$. The reachable behavior space of model $M$ is denoted as $\mathbb{B}(M)\subset S^*$. A property $\varphi$ defines a region in the behavior space within which the property is satisfied, which can be denoted as $\mathbb{B}(\varphi)$. A model checking problem is to use mathematical tool to explore the whole reachable behaviors of a model $M$ against a property $\varphi$ such that $\mathbb{B}(M)\subseteq \mathbb{B}(\varphi)$. We denote it as $M\models\varphi$. Property violations should be returned as execution traces $\delta_v$ so that the designer can analyze and address the problem. 
 
@@ -63,12 +33,15 @@ $$\mathbb{B}(M')\subseteq_a \mathbb{B}(M),\mathbb{B}(M)\subseteq_a \mathbb{B}(\v
 Since the properties are preserved In general the state space of $S'$ is smaller than $S$ while still preserve the property, during model checking the more abstract model can be used to check the property. 
 
 \subsubsection{Context Ambiguities}
+\todo[inline]{why give new names to familiar things? Especially since these names don't make sense at this point. E.g. you speak of validity ambiguity, but it is not at all clear what is being validated and why the equation expresses an `ambiguity'. This is basically a description of what happens when abstracting, which most formal people are familiar with, so merge with section \ref{MCproblem}}
+
 Since $h$ is non-surjective, certain states in $S$ will not be distinguishable in $S'$:
 $$\exists s_1,s_2\in S \text{ s.t. }h(s_1)=h(s_2)=s',s'\in S'$$
 For behaviors we have:
 $$\exists \delta_1,\delta_2\in \mathbb{B}(M) \text{ s.t. }h(\delta_1)=h(\delta_2)=\delta',\delta'\in \mathbb{B}(M')$$
 In the abstract model $\delta_1$ and $\delta_2$ are not distinguishable
-\subsubsection{Validity Ambiguities}
+
+\textbf{Validity Ambiguities}
 However since $h$ is non-surjective, there exists behaviors in $M'$ that do not exists in the original model $M$:
 $$\exists\delta'\in\mathbb{B}(M')\text{ s.t. }h^{-1}(\delta')\not\subset\mathbb{B}(M)$$
 
@@ -104,7 +77,9 @@ $$\exists\delta'\in\mathbb{B}(M')\text{ s.t. }h^{-1}(\delta')\not\subset\mathbb{
 		\label{fig:distinction}
 \end{figure}
 
-Since the requirements describe the intended behaviors of the closed-loop system consists of the environment and the system, verifying whether the specifications of the system satisfy the requirements requires closed-loop verification. In the medical device industry, closed-loop verification is performed in the form of clinical trials in which the devices are tested on the real patients. Clinical trials can only cover very limited environmental conditions due to extremely high cost. Moreover, clinical trials are often conducted at the last design stage. Fixing bugs at this stage is also very costly.
+Since the requirements describe the intended behaviors of the closed-loop system consists of the environment and the system, verifying whether the specifications of the system satisfy the requirements requires closed-loop verification. 
+\todo[inline]{reserve the word `verification' for formal verification, and use `validation' when talking more generally}
+In the medical device industry, closed-loop verification is performed in the form of clinical trials in which the devices are tested on the real patients. Clinical trials can only cover very limited environmental conditions due to extremely high cost. Moreover, clinical trials are often conducted at the last design stage. Fixing bugs at this stage is also very costly.
 
 Model-based design has been proposed to speed up system software design and provide sufficient safety maintaining the safety promises in software requirement. It can potentially enable closed-loop verification of the software requirements at an earlier stage thus reduce cost. In a model-based design framework, the system software is first designed as an abstract model. Together with an environment model the closed-loop system can be verified against software requirements using model-checking techniques. The verified system model can then be rigorously translated into the software implementation (semi-)automatically so that the software implementation also satisfies all the software requirements.
 
