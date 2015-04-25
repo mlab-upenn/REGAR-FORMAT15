@@ -1,16 +1,16 @@
-\subsection( section{Rule-based Heart Model Abstraction}
+\subsection{Rule-based Heart Model Abstraction}
 \label{ruleBasedHeartModelAbstraction}
-Unlike system modeling in which there is only one concrete system, during environment modeling there are infinite number of environmental conditions that can be generalize by abstractions. In this section, we model the heart as the physiological environment for implantable pacemakers and try to cover different heart conditions and the closed-loop interactions between the heart and the pacemaker. Then using abstraction rules defined over physiological knowledge and principles for over-approximation we construct a series of heart model abstractions with different complexity and coverage. During the rule applications the merging of transition groups are documented thus can be used during model refinements.
+During over-approximation additional behaviors are introduced to the abstract model. There are a lot of abstraction functions for a model, but not all the abstractions introduce physiological-relevant behaviors. In this section, we introduce 7 physiological abstraction rules which introduce physiological-relevant behaviors to the heart models. The rules are based on the combination of physiological domain knowledge and formal method. During the rule applications the transition groups incorporated with the models are also merged. These information maintains the physiological meanings of the transitions of the abstract models and are helpful to determine whether the models are appropriate for physiological requirements.%Unlike system modeling in which there is only one concrete system, during environment modeling there are infinite number of environmental conditions that can be generalize by abstractions. In this section, we model the heart as the physiological environment for implantable pacemakers and try to cover different heart conditions and the closed-loop interactions between the heart and the pacemaker. Then using abstraction rules defined over physiological knowledge and principles for over-approximation we construct a series of heart model abstractions with different complexity and coverage. During the rule applications the merging of transition groups are documented thus can be used during model refinements.
 
-\todo[inline]{For each rule, must 
-	
-	1) describe the graph to which it applies (could be the whole graph) 
-	
-	2) describe The conditions on that graph under which it applies (including any assumptions about previously applied rules. Could be empty) 
-	\\
-	3) The effect of applying it on both a) the graph (either as pseudo-code or by describing the output graph), and b) the automata 
-	\\
-	4) show that is an over-approximation of the relevant behavior (so must define irrelevant behavior)}
+%\todo[inline]{For each rule, must 
+	%
+	%1) describe the graph to which it applies (could be the whole graph) 
+	%
+	%2) describe The conditions on that graph under which it applies (including any assumptions about previously applied rules. Could be empty) 
+	%\\
+	%3) The effect of applying it on both a) the graph (either as pseudo-code or by describing the output graph), and b) the automata 
+	%\\
+	%4) show that is an over-approximation of the relevant behavior (so must define irrelevant behavior)}
 
 \subsection{Rule 1: Convert Reentry Circuits to Activation Nodes}
 Within the conduction network of the heart, there can be multiple pathways between two locations, forming conduction loops. If the timing parameters of the tissue along the loop satisfy certain property, there can be scenarios in which an depolarization wave circling the circuit. The circuits are referred to as \emph{Reentry Circuits}. Since the time interval for an activation wave to circle a reentry circuit is usually less than the intrinsic heart cycle length, the heart rate will be "`hijacked"' by the reentry circuit once the cycling is triggered, causing tachycardia. Reentry is the most common mechanism for tachycardia which can be modeled by our heart models \cite{vhm_embc10}. 
@@ -32,7 +32,7 @@ The network of node and path automata can be viewed as a graph,with nodes as ver
 	\item Nodes which interact with the pacemaker
 \end{itemize}
 Graph algorithm can be performed on the heart model to identify the core structure. Shortest paths can be calculated among nodes of interests. All the nodes and paths along the shortest paths are regarded as core structure. All the other nodes and paths can be then removed without affecting the behaviors of the model. 
-\todo[inline]{Not true. Teh behavior is affected. Because this is a formal methods conference, so behavior and so on mean very specific things.}
+%\todo[inline]{Not true. Teh behavior is affected. Because this is a formal methods conference, so behavior and so on mean very specific things.}
 \subsection{Rule 3: Removing Unnecessary Non-self-activation Nodes}
 The effect of non-self-activation nodes is blocking electrical events with interval shorter than its ERP period. If the self-activation nodes at both ends of a core path have self-activation interval longer than the maximum ERP period of nodes along the core path, the nodes can be removed.
 
@@ -73,12 +73,12 @@ $H_a$ covers all possible behaviors, thus is an abstraction of $H_i, i\in [1,p]$
      %if the circuit contains a core node
 
 \subsection{Rule 5: Merge Self-activation Nodes with Interaction Nodes}
-\todo[inline]{not clear}
+%\todo[inline]{not clear}
 The effect of self-activation nodes on the interaction of the pacemaker is triggering sensing events within certain delay. In this rule we merge all the self-activation nodes to their neariest interaction nodes. If there exists multiple self-activation nodes merging to the same interaction node, the parameters of the new model are determined following Rule 3.
 
 \subsection{Rule 6: Replace Blocking With Non-deterministic Conduction}
 The effect of a node automaton blocking an activation signal is equivalent to a path not conducting. So we designed new abstract node and path automata $N1$ and $P1$. For any $P_1-N_n-P_2$, it can be replaced by a $P$ with:
-\todo[inline]{tshouldn't we see the effect of node ERP somewhere here?}
+%\todo[inline]{tshouldn't we see the effect of node ERP somewhere here?}
 $$P.cond_{min}=P_1.cond_{min}+P_2.cond_{min}$$
 $$P.cond_{max}=P_1.cond_{max}+P_2.cond_{max}$$
 For any self-activation node $N$:
@@ -99,7 +99,7 @@ $$N'.rest_{max}=N.ERP_{max}+N.rest_{max}$$
 The effect of conduction path is to connect activations from a self-activation node to another. By setting the interval between self-activations to $[0,\infty]$ the observable behaviors of the heart will not change.
 
 For all node $N$, $N.Rest_{min}=0,N.Rest_{max}=\infty$ and delete all paths.
-\todo[inline]{but what about sensing nodes? how will they ever get activated if we delete all paths?}
+%\todo[inline]{but what about sensing nodes? how will they ever get activated if we delete all paths?}
 \begin{figure}[!h]
 		\centering
 		\includegraphics[width=0.3\textwidth]{figs/rule6.pdf}
@@ -108,9 +108,7 @@ For all node $N$, $N.Rest_{min}=0,N.Rest_{max}=\infty$ and delete all paths.
 		  %\vspace{-15pt}
 		\label{fig:rule6}
 \end{figure}
-
-
-\subsection{Rule Application Example}
+%\subsection{Rule Application Example}
 %In this section we demonstrate 
 %\todo[inline]{I don't understand what this is...}
 %$$NA\_self=\{SA\_self,AVNRT\_self,AF\_self,PAC\_self\}$$
