@@ -1,0 +1,128 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1265\cocoasubrtf210
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\margl1440\margr1440\vieww16120\viewh10360\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\f0\fs24 \cf0 \
+\
+# Parameter update equations\
+# These have to be input manually since the update functions change and we can\'92t model that in AMPL (or generated from MATLAB)\
+# Specifically, there will be one such equation for every x and i, as we need one for every f_\{i,k\}\
+# The following is an example expression where f_\{i,k\} is the max function\
+var Px \{x in 1..nelts,  i in 1..nRules, j in 1..N\} = sum \{s in 1..nStages\} a[i,j-1,s]*Indicator[s,x]*max(P[x,i, j-1], P[x+1, i,  j-1])\
+\
+var Ps \{s in 1..nStages, j in 1..N\} = \
+# Cumulative\
+\
+# optimization var: \
+var a \{i in 1..nRules, j in 1..N, s in 1..nStages\} := 0;\
+\
+# Abstracness per stage\
+var deltaV \{j in 1..N\} = sum \{i in 1..nRules\} (deltaRV[i]*(sum\{s in 1..nStages\} a[i,j,s]) );\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+\cf0 var deltaE \{j in 1..N\} = sum \{i in 1..nRules\} (deltaRE[i]*(sum\{s in 1..nStages\} a[i,j,s]) );\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+\cf0 minimize abstractness:\
+        min nvertices + nedges - (sum \{j in 1..N\} deltaV[j] + deltaE[j]) ;\
+\
+subject to One_rule_every_time \{j in 1..N\}:\
+	sum\{i in 1..nRules, s in 1..nStages\} a[i,j,s] = 1;\
+\
+subject to Disabling_by_structure \{i in 1..nRules, j in 1..N, s in 1..nStages\}:\
+	a[i,j,s]*(sum \{i in 1..nRules, jp in j+1..N, sp in D[i]\}) = 0;\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+\cf0 \
+# subject to Precedence:\
+\
+subject to Applicability_conditions \{j in 1..N,  s in 1..nStages, i in 1..nRules\}:\
+	a[i,j,s]*(B[i]*Ps[s, j] - C[i]) <= 0;\
+\
+\
+\
+# s is the _discrete_ time shift, i.e. an integer used as an index in yI,yM\
+param s;\
+param dt > 0;\
+\
+# Nb of discrete time steps\
+param N integer > 0;\
+set TS = 1..N;\
+\
+# Input signal u\
+param nIn > 0;\
+param u \{1..nIn, TS\};\
+param nOut > 0;\
+param nM >0; \
+param nI > 0;\
+\
+set MODES;\
+set MM;\
+param mode \{t in TS\} in MODES;\
+param nmodes = card(MODES);\
+\
+# Output constraints: y[t] = C_t*x[t] + D_t*u[t]\
+param CM \{1..nOut, 1..nM,  1..nmodes\};  \
+param CI \{1..nOut, 1..nI,  1..nmodes\};\
+param DM \{1..nOut, 1..nIn,  1..nmodes\}; \
+param DI \{1..nOut, 1..nIn,  1..nmodes\};\
+\
+# State constraints: lb <= x[1] <= ub\
+# Right now only state constraints on the initial state are supported\
+param lbM \{1..nM\}; \
+param ubM \{1..nM\}; \
+param lbI \{1..nI\};            \
+param ubI \{1..nI\};\
+\
+\
+# Dynamical constraints: x[t+1]= A_t*x[t]+B_t*u[t]\
+param AM \{1..nM, 1..nM,  1..nmodes\}; \
+param BM \{1..nM, 1..nIn, 1..nmodes\}; \
+param AI \{1..nI, 1..nI,  1..nmodes\}; \
+param BI \{1..nI, 1..nIn, 1..nmodes\}; \
+\
+# Reduction constraint: x_M[1] = M*x_I[1]\
+# since we assume the Model is obtained by reduction (or simplification) from the Implementation\
+param M \{1..nM,1..nI\};\
+\
+# Optimization vars: the two trajectories\
+var xM \{1..nM, TS\} := 1;\
+var xI \{1..nI, TS\} := 2;\
+\
+# Output vars\
+var yM \{i in 1..nOut, t in TS\} = \
+	sum \{j in 1..nM\} CM[i,j, mode[t]]*xM[j,t] + sum \{j in 1..nIn\} DM[i,j,mode[t]]*u[j,t];\
+var yI \{i in 1..nOut, t in TS\} = \
+	sum \{j in 1..nI\} CI[i,j, mode[t]]*xI[j,t] + sum \{j in 1..nIn\} DI[i,j,mode[t]]*u[j,t];\
+\
+# Time domain for maximization\
+set max_domain =\
+(if s >= 0 then\
+	1..N-s\
+else\
+	1-s..N\
+);\
+\
+\
+maximize eps_tilda_M:\
+        max \{t in max_domain\} (sum \{i in 1..nOut\} (yM[i,t] - yI[i,t+s])^2 );\
+\
+maximize eps_tilda_I:\
+        max \{t in max_domain\} (sum \{i in 1..nOut\} (yI[i,t] - yM[i,t+s])^2 );\
+\
+subject to Space_Cnstr_M \{i in 1..nM\}:\
+	lbM[i] <= xM[i,1] <= ubM[i];\
+\
+subject to Space_Cnstr_I \{i in 1..nI\}:\
+	lbI[i] <= xI[i,1] <= ubI[i];\
+\
+subject to Dyn_Cnstr_M \{t in 1..N-1, i in 1..nM\} : \
+	xM[i,t+1] = xM[i,t] + dt*(sum \{j in 1..nM\} AM[i,j,mode[t]]*xM[j,t] + sum \{j in 1..nIn\} BM[i,j,mode[t]]*u[j,t]);\
+\
+subject to Dyn_Cnstr_I \{t in 1..N-1, i in 1..nI\} : \
+	xI[i,t+1] = xI[i,t] + dt*(sum \{j in 1..nI\} AI[i,j,mode[t]]*xI[j,t] + sum \{j in 1..nIn\} BI[i,j,mode[t]]*u[j,t]);\
+\
+\
+subject to Reduction_Cnstr \{i in 1..nM\}:\
+	xM[i,1] = sum \{j in 1..nI\} M[i,j]*xI[j,1];}
