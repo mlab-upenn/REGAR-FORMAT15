@@ -1,0 +1,6 @@
+commands;
+reset;
+model idrules.mod;
+data idrules.dat;
+option solver gurobi;
+display RULES;
