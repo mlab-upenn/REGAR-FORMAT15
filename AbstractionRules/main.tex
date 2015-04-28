@@ -1,0 +1,391 @@
+\documentclass[11pt, oneside, reqno]{article}
+\usepackage{amssymb, amsthm, amsmath, amsfonts}
+%\parindent=0pt
+
+\newcommand\bs{\char '134 }
+\newcommand{\Gc}{\mathcal{G}}
+\newcommand{\Lc}{\mathcal{L}}
+\newcommand{\Ic}{\mathcal{I}}
+\newcommand{\Kc}{\mathcal{K}}
+\newcommand{\Ne}{\mathbb{N}}
+\newcommand{\Rc}{\mathcal{R}}
+
+
+\begin{document}
+
+\title{Automatic application of interdependent abstraction rules}
+\author{Houssam Abbas}
+\date{\today}
+\maketitle
+
+%\newpage
+%\tableofcontents        
+%\newpage
+
+\section{Introduction}
+Given a model of a system, a requirement $\varphi$, and a set of abstraction rules, we seek an automatic way to obtain the most abstract model of the system that is compatible with $\varphi$.
+A model is \emph{compatible} with a spec if the truth value of the spec can be evaluated on any run of the model.
+In particular, this requires that the atomic propositions of $\varphi$ refer to signals that are produced by the model.
+
+\section{Representing abstraction rules}
+We are given a finite directed graph $G=(V,E)$ representing the human heart. 
+Each edge is a conduction path, and each vertex is a node.
+Each vertex $v$ is decorated with an extended timed automaton $A_v$.
+The expressions of invariants and guards of the automaton use a set of parameters $P_v$. 
+These parameters can be reset at transitions of the automaton.
+%Collectively, we refer to $(A_v,P_v,\Ic_v)$ as the dynamics $D_v$ of the vertex $v$.
+Similarly, each edge $e$ is associated with an extended timed automaton $A_e$.
+All vertex automata have one of 2 structures, and all path automata have the same structure. 
+The differences between them are in the values of the parameters.
+
+Let $I(G)$ be the set of all induced subgraphs of $G$, and $\Gc$ be the set of all finite directed graphs.
+In what follows, all subgraphs are induced by $G$ unless stated otherwise.
+Given subgraph $K$, $P_K$ is the parameter vector of all vertices and edges of $K$: $P_K = (P_x)_{x \in E(K) \cup V(K)}$.
+For the rest of this document, fix the graph $G$.
+
+A \emph{rule} $R$ is a partial function on the set $\Gc$ of finite directed subgraphs:
+\[R: \Gc \rightarrow \Gc\]
+The argument of $R$ might be all of $G$.
+The rule has the following effect
+\begin{itemize}
+	\item $|V(R(K))| \leq |V(K)|$,
+	\item $|E(R(K))| \leq |E(K)|$,
+	\item $V(R(K)) \subset V(K)$,
+	\item For every $v \in V(K) \cap V(R(K))$, $R(A_v)$ is an abstraction of $A_v$, in the sense that $\Lc(R(A_v))$ is a superset of $\Lc(A_v)$.
+\end{itemize}
+\emph{Informally}, the rule $R$ operates by one of four ways: deleting a vertex and all edges incident on it, deleting an edge, merging two vertices together, fusing two edges if the vertex they share has degree 2.
+With each of these effects, the rule will also modify the \emph{parameter values} of the automata decorating some of the elements of the subgraph to which it applies.
+abstracting (in the sense of behavior inclusion) the automaton decorating a vertex or edge, over-approximating the intervals decorating a vertex or edge.
+A rule does NOT modify the structure of the automata.
+Let $\Rc$ be the set of all rules we are concerned with.
+
+\subsection{Rule applicability}
+\label{ruleApplicability}
+Each rule $R$ is associated with a subgraph $H_R = (V_R,E_R)$ and formula $\phi_R$ carrying on the parameters of $H_R$.
+A rule is defined on a subgraph $K$ only iff $K$ is isomorphic to $H_R$ and its parameters satisfy $\phi_R$
+\begin{equation}
+\label{eq:applicableR}
+R(K) \textrm{ is defined iff } K \equiv H_R \land P_K \models \phi_R
+\end{equation}
+E.g., Rule $R_1$ applies only on linear graphs with 3 vertices and whose parameters $ERP$ obey $ERP(v_1) < ERP(v_2)$ and $ERP(v_2) > ERP(v_3)$.\footnote{A cleaner, but perhaps less intuitive, way of doing this is by defining $R$'s domain to be the set of equivalence classes of $G$ induced by the isomorphism-to-$H_R$ relation. 
+	That is, $R: I(G)/H_R  \rightarrow \Gc$ where $I(G)/H_R = \{C_1,C_2\}$ is the set of equivalence classes $C_1 = \{K \in I(G) \;|\; K \equiv H_R \}$ and $C_2 = \{K \in I(G) \;|\; K \not \equiv H_R\}$.
+}
+
+We assume that $\phi_R$ is given by linear predicates over $P$
+\begin{equation}
+\label{eq:formOfPhi}
+\exists B_i, C_i\; s.t. P_K \models \phi_R \textrm{ iff } B_i P_K \leq C_i
+\end{equation}
+
+If a given subgraph is not of the form on which $R$ is applicable, then $R$ is not defined on it.
+In what follows, we let $\Kc$ be the set of all induced subgraphs of $G$ that are isomorphic to some $H_{R}, R \in \Rc$ : $\Kc = \{K \in I(G) \; s.t. \; \exists R \in \Rc . K \equiv H_R\}$.
+
+In a given $H_R$ (treated as the equivalence class of all subgraphs isomorphic to it), we may uniquely identify its vertices and the edges by numbering them in an increasing sequence.
+We call the integer associated with a vertex or edge the \emph{role} played by that element in $H_R$.
+E.g. given the linear graph $v e v' e' v''$, 
+role($v$) = 0, role($v'$) = 1, role($v''$) = 2, role($e$) = 3, role($e'$) = 4.
+When we determine that $K$ is isomorphic to $H_R$, the vertices and edges of $K$ are assigned the same roles as their isomorphic counterparts in $H_R$.
+We call the elements of a subgraph $H_R$ \emph{co-actors} in the rule $R$, since they share the same stage $H_R$.
+
+%As a matter of notational convenience, given rules $\Rc = \{R_1,\ldots,R_m\}$, we label the vertices of $H_{R_i}$ incrementally to avoid excessive book-keeping, i.e. no two vertices have the same role.
+%\[\textrm{role}(v) \neq \textrm{role}(v') \; \forall v,v', v \in V(H_{R}), v' \in V(H_{R'}), R \neq R' \in \Rc\]
+%Let $O \in \Ne$ be the highest role of any vertex in the graphs of $\Rc$:
+%\[O = \max_{x \in \cup_{R \in \Rc} V(H_R)\cup E(H_R)} \textrm{role}(x)\]
+
+\subsection{Rule effect}
+\label{ruleEffect}
+When a rule is applied on a subgraph $K$, its effect on a vertex $v \in V(K)$ depends on the role played by $v$ in $K$. 
+E.g. in $H_R = v e v' e' v''$ and $K = v_1 e v_2 e' v_3$, assume that $R$ deletes the middle vertex $v'$, so $R(H_R) =  v e^+ v''$ (where $e^+$ is obtained by fusing $e$ and $e'$ together).
+To know how $R$ affects $v_2$ we need to know what its role is.
+Because role($v_2$) = role($v'$), we know that $v_2$ will be deleted. 
+On the other hand, because role($v_1$) = role($v$) and $v$ is untouched, we know $v_1$ is untouched.
+
+Given a graph $G = (V,E)$, a finite set of rules $\Rc = \{R_1,\ldots,R_m\}$, we have a choice of the order in which to apply the rules on $G$, and at each step (= each rule application), a choice of the induced subgraph on which to apply it.
+Thus when we speak of applying a rule, we must give the rule $R_i$, the time step $j$ at which it is applied, and the particular subgraph $K$ to which it is being applied.
+The boolean variable $a_{ijs}$ tracks that: it is 1 iff rule $R_i$ is applied at step $j$ to subgraph $K_s \in \Kc$.
+Then the set $\{a_{ijs}(x), x \in V \cup E, i \in [|\Rc|], j \in [N], k \in [||V|+|E|]\}$ characterizes completely the sequence of rule applications and the graphs to which they were applied.
+In other words, by reading the sequence of $a_{ijs}$'s, we can tell what rule was applied when to what subgraph.
+
+When examining the effect of a rule application on a given element $x \in V \cup E$, we must give the rule $R_i$, the subgraph $K_s$ to which it applies, and the role played by $x$ in that subgraph.
+Given a vertex $v$, the triplet $(k,i,s)$ says that $v$ plays role $k$ for rule $R_i$ in subgraph (or `stage') $K_s$.
+A vertex may have many such triplets since it may be shared by many subgraphs and play different roles in them for different rules.
+Same goes for edges.
+Then we define the function $\rho: V \cup E \rightarrow 2^{\Ne \times \Ne \times \Gc}$ by 
+\begin{equation}
+\rho(x) = \{(k,i,s) \; s.t. \; x \textrm{ plays role $k$ for rule $R_i$ in subgraph }K_s\}
+\end{equation}
+In what follows we write
+\[\rho_1(x) = \{k \in \Ne \; s.t. \; \exists (k,i,s) \in \rho(x)\}\]
+\[\rho_2(x) = \{i \in \Ne \; s.t. \; \exists (k,i,s) \in \rho(x)\}\]
+\[\rho_3(x) = \{s \in \Ne \; s.t. \; \exists (k,i,s) \in \rho(x)\}\]
+
+\subsection{Data for a rule}
+For a rule $R_i$, we need to know
+\begin{itemize}
+	\item The roles it disables when applied to $H_R$: this is given by $<i>$
+	\item The induced subgraphs it applies to in $G$: let this be $\Kc(i)$
+\end{itemize}
+
+\section{Disabling of rules}
+\label{disablingOfRules}
+When a rule is applied, it changes the graph, and this affects the applicability of the rules to the resulting graph. 
+For example, if a rule deletes a vertex, then that vertex can not have any rule applied to it from that point onwards. 
+As an example, consider $H_{R_i} = v_1e_1v_2e_2v_3e_3v_4$, and the rule fuses $e_2$ to $e_3$ so $R(H_{R_i}) = v_1e_1v_2e^+v_4$.
+Then the effect of this rule is that $e_2$ and $e_3$ can no longer play any role from that point onwards (in any rule in any subgraph) since they've disappeared. 
+Same for $v_3$ which linked them.
+If roles($e_2,e_3,v_2$) = $4,5,6$ then we define $<i> = \{4,5,6\}$ to be the set of roles that are disabled forever by an application of this rule $R_i$.
+More generally, a rule applied to an element (strictly, to a subgraph containing that element in a particular role) implies that this element can no longer play any role in any subgraph for any rule.
+
+Note that we don't try to model now what role might be played by the new edge $e^+$, since this would complicate things tremendously.
+Note also that instead of introducing a new edge $e^+$ we could've just modeled this as the survival of $e_2$, i.e. $R(H_{R_i}) = v_1e_1v_2e_2v_4$. 
+
+\subsection{Disabling by structure change}
+When a rule is applied on a particular subgraph $K_s$, it disables forever its vertices and edges whose roles are listed in $<i>$.
+This list is given by:
+\[F_{i,s} = \{x \in K_s \;|\; \textrm{role}(x,i) \in <i>\}\]
+These elements $x$ also played other roles for other rules in other subgraphs.
+Those are the subgraphs listed in $\rho_3(x)$.
+The conservative thing to do then is to assume that those other subgraphs no longer exist as structures, and thus should be disabled or `destroyed'.
+\footnote{This is not the most accurate thing to do since the new edge $e^+$ (or the surviving edge $e_2$) might save the situation but that's too comlicated.}
+Therefore we define the set of subgraphs destroyed by the application of rule $R_i$ to be 
+\begin{equation}
+\label{eq:Di}
+\forall R_i \in \Rc, D(i) := \{s \in \rho_3(x) \;|\; \text{roles}(x) \in <i>\}
+\end{equation}
+
+The disabling action of the rules can now be stated as
+\begin{equation}
+\label{eq:disabling}
+\forall i,j,s \; a_{ijs} =1 \implies a_{i'j's'} = 0 \;\forall \; i', j'>j,s' \in D(i)
+\end{equation}
+
+\subsection{Disabling by parameter changes}
+Another way in which a rule might affect the application of future rules is by its effect on the automata parameters.
+Let $P_x[0]$ be the initial value of the parameter vector $P_x$ (i.e., before any rules application).
+Let $P_x[j]$ be its value at time $j$ after $j$ rule applications.
+So the rule to be applied at time $j$ uses the value $P_x[j]$ to determine its applicability.
+
+In general, a rule application might update the parameters of an element $x$.
+We postulate that 
+\begin{enumerate}
+	\item [[Locality of Parameter Update]] (LoPU) When a rule is applied on a subgraph $K$ containing $x$, the parameter $P_x$ is updated using the values of $x$'s co-actors only. 
+	That is, the parameters $P_y$ of $y \in V(K)\cup E(K)$ only.
+	\label{LoPU}
+\end{enumerate}
+
+The form of the update depends on the rule and the role of the element in that rule.
+So in the equation that follows, we index the update function $f_{ik}$ by the rule $R_i$ and the role $k=role(x,R_i)$.
+Since only the rule applied at the previous step should play a part in the update, we pre-multiply $f_{ik}$ by $a_{i,j-1,s}$ which tells us which rule was applied.
+Since this rule application matters only if $x$ is actually part of the stage $K_s$ on which the rule is applied, we also pre-multiply by the indicator function $\mathbf{1}_{\{K_s\}}(x)$ (which equals 1 only if $x\in K_s$ and is 0 otherwise.)
+Since the assumption \ref{LoPU} says that only parameters from co-actors affect $P_x$, only the co-actors appear as arguments to $f_{ik}$.
+Note that $x$ itself therefore appears in the argument.
+The general form of the udpate is
+\begin{eqnarray}
+\label{eq:paramUpdate}
+&& \forall x, j
+\\
+&& P_x[j] =  \sum_{i,s}a_{i,j-1,s} \mathbf{1}_{\{K_s\}}(x) f_{i,role(x,i)}(P_y[j-1],y \in V(K_s)\cup E(K_s))
+\nonumber
+\end{eqnarray}
+
+Function $f_{i,k}$ will take the form either min, max or sum.
+
+The following axioms we assume for rule applications:
+\begin{enumerate}
+	\item [[Sanity]] If $G$ is physiological (i.e. is a physiologically meaningful model of the heart), then $R(G)$ is physiological. This is a sanity requirement on our rules.
+	\label{axiomSanity}
+	\item [[Permanence]] Once a stage $K$ is destroyed by the application of a rule $R_i$, it is destroyed forever.
+	Thus, if a vertex is modified in such a way that a rule $R_i$ can't be applied to it \emph{in role $k$} at some step, no future rule applications will make $R_i$ applicable to it again.
+	\label{axiomPermanence}
+	\item [[Time-Invariance (TI)]] The effect of a rule on the structure of a graph does not depend on when the rule was applied.
+	E.g., if a rule merges two vertices, then this effect is the same regardless of whether the rule was applied at step $j$ or step $j'$.
+	\label{axiomTI}
+	\item [[Space-Invariance (SI)]] The effect of a rule on a vertex does not depend on the specific subgraph on which the rule is applied. 
+	Rather it only depends on the role.
+	E.g., if a rule merges a vertex with one of its neighbors, it does so regardless of the subgraph it is currently being applied to. 
+	(We could have achieved the same effect by defining the rule directly as a function of equivalence classes induced by isomorphism to $H_R$).
+	\label{axiomSI}
+\end{enumerate}
+
+\section{Expressing model appropriateness for the requirement}
+
+Recall that we seek a model that is compatible with the requirement $\phi$.
+This implies that the truth value of every atomic proposition appearing in the spec $\phi$ can be evaluated on any run of the model.
+Let $AP_\phi$ be the set of atomic propositions appearing in $\phi$.
+In general, the set $AP_\phi$ will contain propositions involving the edges and vertices of the model $G$ and their dynamics. 
+Therefore, for compatibility, the final model should preserve the edges and vertices appearing in $AP_\phi$. 
+Let $V_\phi$ and $E_\phi$ be those vertices and edges.
+They are preserved if no rule involves them in any role.
+This is expressed as
+\begin{equation}
+\label{eq:Vphi}
+\forall j, \forall i, \forall s \; s.t. \; K_s \cap (V_\phi \cup E_\phi)\neq \emptyset, a_{ijs}=0
+\end{equation}
+
+\section{Interdependence between rules}
+We can now express the interdependence between the rules. 
+(Never mind the numbering)
+
+1) First, we need to express that only one rule is applied at a step, and to one stage:
+\begin{equation}
+\label{eq:oneruleinstepArithm}
+\forall j, \; \sum_{i,s}a_{ijs}  \leq 1\; \forall j,k,v
+\end{equation}
+
+2) A rule is applied only on a subgraph subject to it:
+\begin{equation}
+\label{eq:ruleongraph}
+\forall j,i,s \notin \Kc(i): a_{ijs} = 0
+\end{equation}
+
+6) We need to express that a rule is applied at every step
+\begin{equation}
+\label{eq:oneruleeverystepArithm}
+\forall j\; \sum_{i,s}a_{ijs} \geq 1 
+\end{equation}
+Note that these can be combined into:
+\begin{equation}
+\label{eq:exactlyoneArithm}
+\forall j\; \sum_{i,s \in \Kc(i)}a_{ijs} = 1 
+\end{equation}
+
+
+4) We need to express rule disabling by structure change, so we arithmetize \eqref{eq:disabling}.
+\begin{equation}
+\label{eq:disablingStructArithm}
+\forall i,j,s \; a_{ijs}\left(\sum_{i,j'>j,s' \in D(i)}a_{i'j's'}\right) =0
+\end{equation}
+
+7) We need to express rule precedence, namely that some rules $R_i$ require that other rules from a set $\pi(i)$ be applied first:
+\begin{eqnarray}
+\label{eq:precedenceArithm}
+&& \forall i,j,s, a_{ijs}=1 \implies a_{i'j's'}=1 \textrm{ for some } j'<j,s',\forall i'\in \pi(i)
+\nonumber
+\\
+\Leftrightarrow && \forall i,j,s, a_{ijs}=1 \implies \sum_{j'<j,s'}\left(\Pi_{i'\in \pi(i)}a_{i'j's'}\right) \geq 1 
+\nonumber
+\\
+\Leftrightarrow && \forall i \sum_{j,s}a_{ijs} \geq 1 \implies \sum_{j'<j,s'}\left(\Pi_{i'\in \pi(i)}a_{i'j's'}\right) \geq 1 
+\nonumber
+\\
+\Leftrightarrow && \forall i, \sum_{j,s}\left(a_{ijs} + \sum_{j'<j,s'}\left(\Pi_{i'\in \pi(i)}a_{i'j's'}\right)\right) \neq 1 
+\end{eqnarray}
+
+8) Conditions for applying a rule to a graph: since the parameter values change (potentially) with every step $j$, we reformulate and then arithmetize \eqref{eq:applicableR} as follows
+\begin{eqnarray}
+\label{eq:applicableRArithm}
+&& \forall j,i,K \equiv H_{R_i}, R_i(K) \textrm{ is defined only if } P_K[j] \models \phi_{R_i}
+\nonumber
+\\
+\Leftrightarrow && \forall j,i,s, a_{ijs}=1 \implies B_iP_{K_s}[j]-C_i \leq 0 
+\nonumber 
+\\
+\Leftrightarrow && \forall j,i,s, a_{ijs} (B_iP_{K_s}[j]-C_i) \leq 0 
+\end{eqnarray}
+
+9) Parameter updates were already arithmetized above in \eqref{eq:paramUpdate}. 
+We give a slightly different but equivalent formulation here
+\begin{eqnarray}
+\label{eq:paramUpdate2}
+&& \forall x, j, i
+\\
+&& P_{x}[j;i] =  \sum_{s}a_{i,j-1,s} \mathbf{1}_{\{K_s\}}(x) f_{i,role(x,i)}(P_y[j-1;i],y \in V(K_s)\cup E(K_s))
+\nonumber
+\end{eqnarray}
+This is more compatible with AMPL.
+
+10) We need to express model appropriateness, so we repeat \eqref{eq:Vphi}
+\begin{equation}
+\label{eq:VphiArithm}
+\forall j, \forall i, \forall s \; s.t. \; K_s \cap (V_\phi \cup E_\phi)\neq \emptyset, a_{ijs}=0
+\end{equation}
+Note we don't need to arithmetize it since its elements are static and known beforehand.
+
+%It remains to deal with \emph{new} edges introduced by the rules, specifically by the merging of old edges (following the deletion of vertices).
+%These new edges $e^+$ are treated as just another edge in the constraint inequalities, and thus have their own $r_{ijk}(e^+)$ variables.
+%But because a new edge exists for part of the time and not at every step $j \in [N]$, its inequalities should apply only at the indices $j$ beyond the time they are created.
+%We know beforehand which rules introduce new edges, so let that set of rules be denoted by NPR.
+%At every step, a priori, any of the rules in NPR could be applied. 
+%There are $N$ steps.
+%So we define $|NPR| \cdot N$ binary variables $p_{ij}$. 
+%Variable $p_{ij} = 1$ iff rule $R_i$ was applied in the previous step $j-1$, thus a new edge $e_{ij}^+$ exists at step $j$.
+%In other words, $p_{ij} = 1$ iff $r_{i,j-1,k}(v)=1$ for some $v$ and $k$.
+%Moreover, once a new edge is `born', it is part of the problem for thereon after.
+%Thus, 
+%\begin{equation}
+%\label{eq:pij}
+%\forall i\in [m], \; p_{ij} = 1 \implies p_{i,j+1} = 1 \; \forall j' > j
+%\end{equation}
+%
+%Correspondingly, for these new edges, \eqref{eq:rijke} becomes
+%\begin{equation}
+%\label{eq:rijkenew}
+%\forall i\in [m], j \in [N],k \in [O], \; p_{ij}\left(r_{ijk}(e_{ij}^+) + \sum_{j < j' \leq N}r_{i'j'k'}(e_{ij}^+) \right) \leq 1 \; \forall (i',k') \in [i,k]
+%\end{equation}
+%In what follows, $E^+$ denotes the set of new edges.
+
+\section{A measure of abstractness}
+We must define a measure of `abstractness'.
+Based on the fact that a rule decreases the number of vertices and edges in the subgraph to which it is being applied, we define the abstractness of a graph $G$ as $|V(G)|+|E(G)|$.
+Note this \emph{ignores the transformations made by the rules on the dynamics of the vertices and edges. We need to include that.}
+
+We introduce a further axiom on the abstracting power of a rule:
+\begin{enumerate}
+	\item [[Constant Abstraction (CA)]] A rule has fixed abstraction power
+	\[|V(K)| - |V(R(K))| = constant\; \delta_{R,\nu}\; \forall K \equiv H_R\] 
+	\[|E(K)| - |E(R(K))| = constant\; \delta_{R,\epsilon}\; \forall K \equiv H_R\] 	
+\end{enumerate}
+
+After applying a sequence of rules $(R_l)_{l\in L}$ from the set $\Rc$ to the graph $G$, the abstractness of the final graph $G'$ is $|V'|+|E'|$, and can be calculated as 
+\[|V|-\sum_{l \in L}\delta_{R_l,\nu} + |E| - \sum_{l \in L} \delta_{R_l,\epsilon}\]
+
+At step $j$, we define the gain in abstraction to be $\delta_{j,\nu}+\delta_{j,\epsilon}$ where $\delta_{j,\nu}=\delta_{R_i,\nu}$ iff $R_i$ is applied at time $j$, i.e. iff $a_{ijs}=1$ for some $s$. 
+We can further word this as $\delta_{j,\nu}=\delta_{R_i,\nu}$ iff $\sum_{s}a_{ijs}\geq 1$.
+That last sum actually equals 1 (or 0) since a rule is applied to one graph at a time.
+
+Therefore we can compute: for all $j$,
+\begin{equation}
+\label{eq:deltav}
+\delta_{j,\nu} = \delta_{R_1,\nu} \left(\sum_{s}a_{1js}\right) + \delta_{R_2,\nu}\left(\sum_{s}a_{2js}\right) + \ldots + \delta_{R_m,\nu} \left(\sum_{s}a_{mjs} \right)
+\end{equation}
+\begin{equation}
+\label{eq:deltae}
+\delta_{j,\epsilon} = \delta_{R_1,\epsilon} \left(\sum_{s}a_{1js}\right) + \delta_{R_2,\epsilon}\left(\sum_{s}a_{2js}\right) + \ldots + \delta_{R_m,\epsilon} \left(\sum_{s}a_{mjs} \right)
+\end{equation}
+(Only one of the summands sums to 1, the others to 0, since only one rule is applied in a given step $j$).
+
+\section{The most abstract model that is compatible with the requirement}
+
+Finally, we define the optimization whose solution gives the most abstract model subject to preserving the sets $V_\phi$ and $E_\phi$.
+
+The data of the problem is:
+\begin{itemize}
+	\item the graph $G = (V,E)$.
+	\item The rules $\Rc = \{R_1,\ldots,R_m\}$ and associated subgraphs $H_{R_i}$
+	\item For each $H_{R}$, the list of integers uniquely identifying its vertices and edges, roles($H_R$)
+	\item the induced subgraphs $\Kc = \{K_1,\ldots,K_S\}$.
+	\item for each $K_s$, the subgraph $H_R$ it is isomorphic to.
+	\item for each $R_i$, the list $<i>$. This is a finite list of integers from the set roles($H_{R_i}$).
+	\item for each $R_i$, $\pi(i)$ = list of rules preceding $R_i$. $\pi(i)$ is a list of integers from $[m]$.
+	\item for each $R_i$, the list of subgraphs it applies to $\Kc(i)$
+	\item $\rho(x)$ for each $x\in V\cup E$. $\rho(x)$ is a finite set of integer triplets $(k,i,s)$ where $s \leq |\Kc|$, $k \leq |V(K_s)\cup E(K_s)|$, $i \leq |\Rc|$. This can be induced from the above data.
+	\item for each $R_i$,the rule application conditions $\phi_i$
+	\item $f_{ik}$ functions for parameter updates
+\end{itemize}
+
+The decision variables are
+\begin{itemize}
+	\item The binaries $a_{ijs}$, $|\Rc|N|\Kc|$ of them ($N$ is the number of time steps)
+\end{itemize}
+
+The optimization is given by the following integer linear program over the decision variables
+
+\begin{eqnarray}
+\min_{a_{ijs}} &&|V|-\sum_{j \in [N]}\delta_{j,\nu} + |E| - \sum_{j \in [N]} \delta_{j,\epsilon} 
+\\
+&& \textrm{s.t. } \eqref{eq:oneruleinstepArithm},\eqref{eq:oneruleeverystepArithm},\eqref{eq:exactlyoneArithm},\eqref{eq:disablingStructArithm},\eqref{eq:precedenceArithm},\eqref{eq:applicableRArithm},\eqref{eq:paramUpdate2},\eqref{eq:VphiArithm},\eqref{eq:deltav},\eqref{eq:deltae}
+\nonumber
+\end{eqnarray}
+
+
+\end{document}
