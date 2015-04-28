@@ -71,7 +71,7 @@ We first develop a list of concrete heart models corresponding to common heart c
 		\label{fig:HM_abs}
 \end{figure}
 
-Besides model structure changes, applying abstraction rules also merges the behaviors of the model, which is documented for each abstraction. Here we demonstrate the behavior merging process on a subset of the abstraction tree (\figref{abs_sim}). In $H_{vt}''$, we have self activation behavior $NA.self$ and $NV.self$ for node $NA$ and conduction behavior $NV$,$(NA,AV').cond$ and $(AV',NV).cond$ for path $(NA,AV')$ and $(AV',NV)$. After applying Rule 6 we obtain $H_{vt}''$ with
+Besides model structure changes, applying abstraction rules also merges the behaviors of the model, which is documented for each abstraction. Here we demonstrate the behavior merging process on a subset of the abstraction tree (\figref{HM_abs}). In $H_{vt}''$, we have self activation behavior $NA.self$ and $NV.self$ for node $NA$ and conduction behavior $NV$,$(NA,AV').cond$ and $(AV',NV).cond$ for path $(NA,AV')$ and $(AV',NV)$. After applying Rule 6 we obtain $H_{vt}''$ with
 $$NA'.self=\{NA.self\},NV'.self=\{NV.self\}$$
 $$(NA',NV').cond=\{AV'.block,(NA,AV').cond,(AV',NV).cond\}$$
 After applying Rule 7 we obtain $H_{all}$ with:
@@ -84,7 +84,7 @@ These information on behavior abstractions are useful to determine whether a mod
 		%\vspace{-5pt}
 		\caption{\small Abstraction Example}
 		  %\vspace{-15pt}
-		\label{fig:abs_sim}
+		\label{fig:abs_exam}
 \end{figure}
 
 \subsection{Requirement Encoding}
