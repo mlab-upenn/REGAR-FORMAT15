@@ -1,6 +1,6 @@
-\section{Formal models of the environment}
+\section{Formalizing Physiological Knowledge}
 \label{formalModelsofEnv}
-Before over-approximation can be applied, models of different physiological conditions have to be developed to be able to interact with the medical devices. This initial set of physiological models should be able to distinguish the physiological conditions that each model represents. Ideally the models are developed using formalisms that are suitable for provable abstraction and model checking. In this paper, we model different heart conditions with timed-automata models, which serve as the physiological environment of implantable pacemakers. 
+The physiological knowledge required during closed-loop model checking of medical devices are associated with the \emph{physiological models} and the \emph{physiological requirements}. It is thus important to maintain the physiological context of the models and link model behaviors to physiological requirements. In this section we use heart modeling as example to demonstrate physiological knowledge encoding. %First, we introduce the physiological basis for our heart modeling. Then we demonstrate our heart model structure which can be used to model different heart conditions. We link transitions in the models to physiological behaviors
 \begin{figure}[!t]
 	\centering
 	\includegraphics[width=0.7\textwidth]{figs/egm.pdf}
@@ -19,8 +19,7 @@ The implantable cardiac pacemakers are rhythm management devices designed to tre
 \subsection{Timed-automata Models of the Heart}
 \label{labeledGraph}
 %In a healthy heart, specialized tissue in the \emph{SA node} self-activate periodically. The signal conducts throughout both atria, causing them to contract and push the blood into the ventricles
-The timing behaviors of the heart can be modeled as timed automata \cite{timed_automata}. In \cite{VHM_proc} and \cite{sttt13}, we proposed an Electrophysiology heart model to represent the timing behaviors of the electrical conduction system. Heart tissue can be modeled as \emph{Node automata} and the conduction delays between nodes are modeled as \emph{Path automata} (\figref{nodepathTA}). 
-
+Models of different physiological conditions have to be developed to be able to interact with the medical devices. This initial set of physiological models should be able to distinguish the physiological conditions that each model represents. Ideally the models are developed using formalisms that are suitable for provable abstraction and model checking. The timing behaviors of the heart can be modeled as timed automata \cite{timed_automata}. In \cite{VHM_proc} and \cite{sttt13}, we proposed an Electrophysiology heart model to represent the timing behaviors of the electrical conduction system. Heart tissue can be modeled as \emph{Node automata} and the conduction delays between nodes are modeled as \emph{Path automata} (\figref{nodepathTA}). 
 
 The node automaton initializes with \textsf{Rest} state.
 From \textsf{Rest} state, the node can either self-activate or be activated by external activations (indicated by Act\_node). Upon activation the node transition to the \textsf{ERP} state and activate all the paths connecting to the node (indicated by Act\_path). 
@@ -72,16 +71,23 @@ The spatial and temporal properties of a given human heart condition can be mode
 \end{defn}
 The heart model structure has been used to model varies heart conditions and all of them have been validated by Electrophysiologists \cite{vhm_ecrts10,vhm_embc10}.
 
-\subsection{Encoding Physiological Transitions}
-Provide physiological context for model behaviors. Useful for requirement encoding and justification of abstraction rules. The behaviors of heart tissue can be categorized into 3 basic transition groups:
-
+\subsection{Describe Model Behaviors with Physiological Context}
+During model abstractions, the abstract model covers all transitions of the more refined model. Transitions corresponding to physiological behaviors may be merged or replaced by other transitions. Without documenting these information, the abstract models lose their physiological context. 
+In the heart models we modeled physiological timing periods using locations in timed automata. The minimum time an automaton can stay in those locations is limited by the guard on a transition out of the location, and the maximum time is limited by the clock invariant of the state. 
+The transitions of heart tissue can be categorized into 3 basic transition groups:
 \begin{itemize}
-	\item \textbf{self:} The self-activation of the node automata. The \emph{min} and \emph{max} properties specify the minimum and maximum intervals between consecutive self-activation events.
-	\item \textbf{cond:} The conduction property of the path automata. The \emph{min} and \emph{max} properties specify the minimum and maximum delays between a node activation on one end and the activation on the other end.
-	\item \textbf{block:} The blocking property of the node automata. The \emph{min} and \emph{max} properties specify the minimum and maximum intervals between consecutive activations that can trigger path conduction.
+	\item \textbf{self:} The self-activation of the node automata. The \emph{min} and \emph{max} parameters equal to $Trest\_min$ and $Trest\_max$ parameters in the node automata, which specify the minimum and maximum intervals between consecutive self-activation events.
+
+	\item \textbf{block:} The blocking property of the node automata. The \emph{min} and \emph{max} parameters equal to $Terp\_min$ and $Terp\_max$ parameters in the node automata, which specify the minimum and maximum intervals between consecutive activations that can trigger path conduction.	
+	\item \textbf{cond:} The conduction property of the path automata. The \emph{min} and \emph{max} parameters equal to $Tcond\_min$ and $Tcond\_max$ parameters in the node automata, which specify the minimum and maximum delays between a node activation on one end and the activation on the other end.
 \end{itemize}
+As an example, a node automata $NA$ has two transition groups, which can be represented by $NA.self$ and $NA.block$
 
 \subsection{Encoding Physiological Requirements}
+Devices are designed to improve certain physiological conditions, the performance of the devices is evaluated on the difference between the patient conditions without the device and with the device. The device should also avoid deteriorating certain patient conditions, physiological requirements are specified in the form of:
+$$C_{pre}\rightarrow C_{post}$$
+in which $C_{pre}$ is the physiological conditions without the device,  and $C_{post}$ is the physiological condition with the device. For model-based closed-loop verification, $C_{pre}$ is often in form of a set of constraints on patient parameters. As a special case, $C_{pre}$ can equal to $true$, means that $C_{post}$ should be satisfied under all possible conditions.
+
 Physiological requirements are constraints on physiological behaviors. In \cite{iccps10} we 
 
 \subsection{Monitors}
