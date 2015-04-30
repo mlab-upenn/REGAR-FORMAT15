@@ -1,5 +1,5 @@
 \section{Closed-loop Model Checking Using the Abstraction Tree}
-After the abstraction tree is built, it can be used for closed-loop model checking. The next question is how to navigate through the abstraction tree so that the most appropriate model(s) are selected for different requirements, and provide the most concrete counter-examples, possibly under multiple physiological conditions, for the physicians to determine the validity of the counter-examples.
+After the abstraction tree is built, it can be used for closed-loop model checking. The next question is how to navigate through the abstraction tree so that the most appropriate model(s) are selected for different requirements, and provide the most concrete counter-examples, possibly under multiple physiological conditions, for the physicians to determine the validity of the counter-examples. \cite{uppaal}
 \subsection{Select Initial Abstraction(s) Appropriate For the Requirement}
 Physiological requirements are in general conditional in the sense that they require conditions to hold under certain open-loop physiological constraints. These constraints map to parameters for certain transitions of the physiological models, which may be merged during the abstraction process.
 The most abstract model in the abstraction tree is built to cover the input space to the device as much as possible, thus it may not have enough details to constrain the behaviors of the model according to the constraints in the requirement. Thus the first step of closed-loop model checking is to select the most abstract models which are appropriate for the requirement. A model $M$ is appropriate for a requirement $Req$ if the environment transitions mentioned in the requirement, denoted as $EnvT(Req)$, is a subset of the environment transitions associated with the model $EnvT(M$). The following algorithm finds the most abstract heart models in the abstraction tree $HM\_tree$ that are appropriate for a requirement $Req$.
@@ -60,31 +60,6 @@ Return all saved CEs and their corresponding models
 		\caption{\small Heart Model Abstractions}
 		  %\vspace{-15pt}
 		\label{fig:PM_timers}
-\end{figure}\subsection{Heart Model Abstraction Tree}
-We first develop a list of concrete heart models corresponding to common heart conditions. By systematically applying rules from Section \ref{ruleBasedHeartModelAbstraction} we created an abstraction tree $HM\_tree$ for the heart (\figref{HM_abs}). Note that applying rules in different order results different abstraction tree. The order used to obtain $HM\_tree$ is based on the domain knowledge that certain heart conditions may have similar behaviors and similar inputs to the pacemaker. This systematic grouping maintains the physiological-relevance of the heart model even at higher abstraction levels, and reduce the necessity to resolve ambiguities at lower abstraction levels when model checking certain requirements.
-\begin{figure}[!t]
-		\centering
-		\includegraphics[width=0.9\textwidth]{figs/abs.pdf}
-		%\vspace{-5pt}
-		\caption{\small Heart Model Abstractions}
-		  %\vspace{-15pt}
-		\label{fig:HM_abs}
-\end{figure}
-
-Besides model structure changes, applying abstraction rules also merges the behaviors of the model, which is documented for each abstraction. Here we demonstrate the behavior merging process on a subset of the abstraction tree (\figref{HM_abs}). In $H_{vt}''$, we have self activation behavior $NA.self$ and $NV.self$ for node $NA$ and conduction behavior $NV$,$(NA,AV').cond$ and $(AV',NV).cond$ for path $(NA,AV')$ and $(AV',NV)$. After applying Rule 6 we obtain $H_{vt}''$ with
-$$NA'.self=\{NA.self\},NV'.self=\{NV.self\}$$
-$$(NA',NV').cond=\{AV'.block,(NA,AV').cond,(AV',NV).cond\}$$
-After applying Rule 7 we obtain $H_{all}$ with:
-$$NA''.self=\{NA.self,(NA',NV').cond\}$$
-$$NV''.self=\{NV.self,(NA',NV').cond\}$$
-These information on behavior abstractions are useful to determine whether a model is appropriate for a requirement.
-\begin{figure}[!t]
-		\centering
-		\includegraphics[width=0.5\textwidth]{figs/abs_sim.pdf}
-		%\vspace{-5pt}
-		\caption{\small Abstraction Example}
-		  %\vspace{-15pt}
-		\label{fig:abs_exam}
 \end{figure}
 
 \subsection{Requirement Encoding}

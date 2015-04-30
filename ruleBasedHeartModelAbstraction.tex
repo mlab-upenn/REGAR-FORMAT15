@@ -11,34 +11,34 @@ During over-approximation additional behaviors are introduced to the abstract mo
 	%3) The effect of applying it on both a) the graph (either as pseudo-code or by describing the output graph), and b) the automata 
 	%\\
 	%4) show that is an over-approximation of the relevant behavior (so must define irrelevant behavior)}
-
-\subsection{Rule 1: Convert Reentry Circuits to Activation Nodes}
-Within the conduction network of the heart, there can be multiple pathways between two locations, forming conduction loops. If the timing parameters of the tissue along the loop satisfy certain property, there can be scenarios in which an depolarization wave circling the circuit. The circuits are referred to as \emph{Reentry Circuits}. Since the time interval for an activation wave to circle a reentry circuit is usually less than the intrinsic heart cycle length, the heart rate will be "`hijacked"' by the reentry circuit once the cycling is triggered, causing tachycardia. Reentry is the most common mechanism for tachycardia which can be modeled by our heart models \cite{vhm_embc10}. 
-
-The effect of reentry tachycardia is that activation signals coming out of the circuit with cycle length equals to the sum of conduction delays of the conduction paths forming the circuit. It is therefore reasonable to model a reentry circuit as a self-activation node with the self-activation range equal to the sum of conduction delays. For more complex structures with multiple circuits, the self-activation range will be the minimum of the shortest circuit to the maximum of the longest circuit. The detailed rule description and implementation can be found in %\cite{regar_tech}.
-%\begin{figure}[!h]
-		%\centering
-		%\includegraphics[width=0.6\textwidth]{figs/reentry.pdf}
-		%%\vspace{-5pt}
-		%\caption{\small Reentry Circuit}
-		  %%\vspace{-15pt}
-		%\label{fig:reentry}
-%\end{figure}
-
-\subsection{Rule 2: Remove Irrelevant Structures}
-The network of node and path automata can be viewed as a graph,with nodes as vertices, paths as edges with conduction delay as weight. After the loops within the topology are removed, the topology of the heart model is in form of tree. Within the network there are certain nodes that are more important in terms of model behaviors, we denote them as \emph{Nodes of Interests}, which include:
-\begin{itemize}
-	\item Nodes with self-activations
-	\item Nodes which interact with the pacemaker
-\end{itemize}
-Graph algorithm can be performed on the heart model to identify the core structure. Shortest paths can be calculated among nodes of interests. All the nodes and paths along the shortest paths are regarded as core structure. All the other nodes and paths can be then removed without affecting the behaviors of the model. 
-%\todo[inline]{Not true. Teh behavior is affected. Because this is a formal methods conference, so behavior and so on mean very specific things.}
-\subsection{Rule 3: Removing Unnecessary Non-self-activation Nodes}
-The effect of non-self-activation nodes is blocking electrical events with interval shorter than its ERP period. If the self-activation nodes at both ends of a core path have self-activation interval longer than the maximum ERP period of nodes along the core path, the nodes can be removed.
-
-For a core path from a self-activation node $N_1$ to another core node $N_2$, for any structure $P_1-N_n-P_2$ which $N_n$ is a non-self-activation node, if $N_n.ERP_{max}<min(N_1.Rest_{min},N_2.Rest_{min})$, replace $P_1-N_n-P_2$ with $P_3$ so that:
-$$P_3.cond_{min}=P_1.cond_{min}+P_2.cond_{min}$$
-$$P_3.cond_{max}=P_1.cond_{max}+P_2.cond_{max}$$
+\subsection{Why Predicate Abstraction Does Not Work}
+%\subsection{Rule 1: Convert Reentry Circuits to Activation Nodes}
+%Within the conduction network of the heart, there can be multiple pathways between two locations, forming conduction loops. If the timing parameters of the tissue along the loop satisfy certain property, there can be scenarios in which an depolarization wave circling the circuit. The circuits are referred to as \emph{Reentry Circuits}. Since the time interval for an activation wave to circle a reentry circuit is usually less than the intrinsic heart cycle length, the heart rate will be "`hijacked"' by the reentry circuit once the cycling is triggered, causing tachycardia. Reentry is the most common mechanism for tachycardia which can be modeled by our heart models \cite{vhm_embc10}. 
+%
+%The effect of reentry tachycardia is that activation signals coming out of the circuit with cycle length equals to the sum of conduction delays of the conduction paths forming the circuit. It is therefore reasonable to model a reentry circuit as a self-activation node with the self-activation range equal to the sum of conduction delays. For more complex structures with multiple circuits, the self-activation range will be the minimum of the shortest circuit to the maximum of the longest circuit. The detailed rule description and implementation can be found in %\cite{regar_tech}.
+%%\begin{figure}[!h]
+		%%\centering
+		%%\includegraphics[width=0.6\textwidth]{figs/reentry.pdf}
+		%%%\vspace{-5pt}
+		%%\caption{\small Reentry Circuit}
+		  %%%\vspace{-15pt}
+		%%\label{fig:reentry}
+%%\end{figure}
+%
+%\subsection{Rule 2: Remove Irrelevant Structures}
+%The network of node and path automata can be viewed as a graph,with nodes as vertices, paths as edges with conduction delay as weight. After the loops within the topology are removed, the topology of the heart model is in form of tree. Within the network there are certain nodes that are more important in terms of model behaviors, we denote them as \emph{Nodes of Interests}, which include:
+%\begin{itemize}
+	%\item Nodes with self-activations
+	%\item Nodes which interact with the pacemaker
+%\end{itemize}
+%Graph algorithm can be performed on the heart model to identify the core structure. Shortest paths can be calculated among nodes of interests. All the nodes and paths along the shortest paths are regarded as core structure. All the other nodes and paths can be then removed without affecting the behaviors of the model. 
+%%\todo[inline]{Not true. Teh behavior is affected. Because this is a formal methods conference, so behavior and so on mean very specific things.}
+%\subsection{Rule 3: Removing Unnecessary Non-self-activation Nodes}
+%The effect of non-self-activation nodes is blocking electrical events with interval shorter than its ERP period. If the self-activation nodes at both ends of a core path have self-activation interval longer than the maximum ERP period of nodes along the core path, the nodes can be removed.
+%
+%For a core path from a self-activation node $N_1$ to another core node $N_2$, for any structure $P_1-N_n-P_2$ which $N_n$ is a non-self-activation node, if $N_n.ERP_{max}<min(N_1.Rest_{min},N_2.Rest_{min})$, replace $P_1-N_n-P_2$ with $P_3$ so that:
+%$$P_3.cond_{min}=P_1.cond_{min}+P_2.cond_{min}$$
+%$$P_3.cond_{max}=P_1.cond_{max}+P_2.cond_{max}$$
 \subsection{Rule 4: Merge Parameter Ranges}
 For heart models with the same node and path topology ($H_i,i=[1,p]$), they can be abstracted by a single heart model $H_a$ such that:
 $$\forall i,j,H_a.\theta^j_{min}=min(H_i.\theta^j_{min})$$ 
@@ -72,9 +72,9 @@ $H_a$ covers all possible behaviors, thus is an abstraction of $H_i, i\in [1,p]$
 %
      %if the circuit contains a core node
 
-\subsection{Rule 5: Merge Self-activation Nodes with Interaction Nodes}
-%\todo[inline]{not clear}
-The effect of self-activation nodes on the interaction of the pacemaker is triggering sensing events within certain delay. In this rule we merge all the self-activation nodes to their neariest interaction nodes. If there exists multiple self-activation nodes merging to the same interaction node, the parameters of the new model are determined following Rule 3.
+%\subsection{Rule 5: Merge Self-activation Nodes with Interaction Nodes}
+%%\todo[inline]{not clear}
+%The effect of self-activation nodes on the interaction of the pacemaker is triggering sensing events within certain delay. In this rule we merge all the self-activation nodes to their neariest interaction nodes. If there exists multiple self-activation nodes merging to the same interaction node, the parameters of the new model are determined following Rule 3.
 
 \subsection{Rule 6: Replace Blocking With Non-deterministic Conduction}
 The effect of a node automaton blocking an activation signal is equivalent to a path not conducting. So we designed new abstract node and path automata $N1$ and $P1$. For any $P_1-N_n-P_2$, it can be replaced by a $P$ with:
@@ -107,6 +107,33 @@ For all node $N$, $N.Rest_{min}=0,N.Rest_{max}=\infty$ and delete all paths.
 		\caption{\small Heart Model Abstractions}
 		  %\vspace{-15pt}
 		\label{fig:rule6}
+\end{figure}
+
+\subsection{Heart Model Abstraction Tree}
+We first develop a list of concrete heart models corresponding to common heart conditions. By systematically applying rules from Section \ref{ruleBasedHeartModelAbstraction} we created an abstraction tree $HM\_tree$ for the heart (\figref{HM_abs}). Note that applying rules in different order results different abstraction tree. The order used to obtain $HM\_tree$ is based on the domain knowledge that certain heart conditions may have similar behaviors and similar inputs to the pacemaker. This systematic grouping maintains the physiological-relevance of the heart model even at higher abstraction levels, and reduce the necessity to resolve ambiguities at lower abstraction levels when model checking certain requirements.
+\begin{figure}[!t]
+		\centering
+		\includegraphics[width=0.9\textwidth]{figs/abs.pdf}
+		%\vspace{-5pt}
+		\caption{\small Heart Model Abstractions}
+		  %\vspace{-15pt}
+		\label{fig:HM_abs}
+\end{figure}
+
+Besides model structure changes, applying abstraction rules also merges the behaviors of the model, which is documented for each abstraction. Here we demonstrate the behavior merging process on a subset of the abstraction tree (\figref{HM_abs}). In $H_{vt}''$, we have self activation behavior $NA.self$ and $NV.self$ for node $NA$ and conduction behavior $NV$,$(NA,AV').cond$ and $(AV',NV).cond$ for path $(NA,AV')$ and $(AV',NV)$. After applying Rule 6 we obtain $H_{vt}''$ with
+$$NA'.self=\{NA.self\},NV'.self=\{NV.self\}$$
+$$(NA',NV').cond=\{AV'.block,(NA,AV').cond,(AV',NV).cond\}$$
+After applying Rule 7 we obtain $H_{all}$ with:
+$$NA''.self=\{NA.self,(NA',NV').cond\}$$
+$$NV''.self=\{NV.self,(NA',NV').cond\}$$
+These information on behavior abstractions are useful to determine whether a model is appropriate for a requirement.
+\begin{figure}[!t]
+		\centering
+		\includegraphics[width=0.5\textwidth]{figs/abs_sim.pdf}
+		%\vspace{-5pt}
+		\caption{\small Abstraction Example}
+		  %\vspace{-15pt}
+		\label{fig:abs_exam}
 \end{figure}
 %\subsection{Rule Application Example}
 %In this section we demonstrate 
