@@ -47,7 +47,8 @@ At the end of \textsf{Ante} and \textsf{Retro} state the path will transition to
 %%The new ERP period is determined by a function over clock value $g(f(t))$ which mimics the beat-to-beat dynamics described in \cite{josephson}. \todo[inline]{what are $g,f$?}
 %
 %The electrical conduction through the tissue \emph{between} nodes is abstracted using \emph{path automata}. 
-%The path automata are used to represent structural or functional electrical connections between nodes.  
+%The path automata are used to represent structural or functional electrical connections between nodes. 
+ 
 %%At the same time the clock invariant of the state is modified according to the shared variable $C(a/b)$. 
 %%This corresponds to the change of the conduction delay that is caused by early activation. 
 %Similarly to a node automaton, the changing trend is extracted from clinical data. 
@@ -71,17 +72,17 @@ The spatial and temporal properties of a given human heart condition can be mode
 \end{defn}
 The heart model structure has been used to model varies heart conditions and all of them have been validated by Electrophysiologists \cite{vhm_ecrts10,vhm_embc10}.
 
-\subsection{Describe Model Behaviors with Physiological Context}
-During model abstractions, the abstract model covers all transitions of the more refined model. Transitions corresponding to physiological behaviors may be merged or replaced by other transitions. Without documenting these information, the abstract models lose their physiological context. 
-In the heart models we modeled physiological timing periods using locations in timed automata. The minimum time an automaton can stay in those locations is limited by the guard on a transition out of the location, and the maximum time is limited by the clock invariant of the state. 
-The transitions of heart tissue can be categorized into 3 basic transition groups:
-\begin{itemize}
-	\item \textbf{self:} The self-activation of the node automata. The \emph{min} and \emph{max} parameters equal to $Trest\_min$ and $Trest\_max$ parameters in the node automata, which specify the minimum and maximum intervals between consecutive self-activation events.
-
-	\item \textbf{block:} The blocking property of the node automata. The \emph{min} and \emph{max} parameters equal to $Terp\_min$ and $Terp\_max$ parameters in the node automata, which specify the minimum and maximum intervals between consecutive activations that can trigger path conduction.	
-	\item \textbf{cond:} The conduction property of the path automata. The \emph{min} and \emph{max} parameters equal to $Tcond\_min$ and $Tcond\_max$ parameters in the node automata, which specify the minimum and maximum delays between a node activation on one end and the activation on the other end.
-\end{itemize}
-As an example, a node automata $NA$ has two transition groups, which can be represented by $NA.self$ and $NA.block$
+%\subsection{Describe Model Behaviors with Physiological Context}
+%During model abstractions, the abstract model covers all transitions of the more refined model. Transitions corresponding to physiological behaviors may be merged or replaced by other transitions. Without documenting these information, the abstract models lose their physiological context. 
+%In the heart models we modeled physiological timing periods using locations in timed automata. The minimum time an automaton can stay in those locations is limited by the guard on a transition out of the location, and the maximum time is limited by the clock invariant of the state. 
+%The transitions of heart tissue can be categorized into 3 basic transition groups:
+%\begin{itemize}
+%	\item \textbf{self:} The self-activation of the node automata. The \emph{min} and \emph{max} parameters equal to $Trest\_min$ and $Trest\_max$ parameters in the node automata, which specify the minimum and maximum intervals between consecutive self-activation events.
+%
+%	\item \textbf{block:} The blocking property of the node automata. The \emph{min} and \emph{max} parameters equal to $Terp\_min$ and $Terp\_max$ parameters in the node automata, which specify the minimum and maximum intervals between consecutive activations that can trigger path conduction.	
+%	\item \textbf{cond:} The conduction property of the path automata. The \emph{min} and \emph{max} parameters equal to $Tcond\_min$ and $Tcond\_max$ parameters in the node automata, which specify the minimum and maximum delays between a node activation on one end and the activation on the other end.
+%\end{itemize}
+%As an example, a node automata $NA$ has two transition groups, which can be represented by $NA.self$ and $NA.block$
 
 \subsection{Encoding Physiological Requirements}
 Devices are designed to improve certain physiological conditions, the performance of the devices is evaluated on the difference between the patient conditions without the device and with the device. The device should also avoid deteriorating certain patient conditions, physiological requirements are specified in the form of:
