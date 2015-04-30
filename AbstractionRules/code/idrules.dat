@@ -2,7 +2,6 @@ data;
 # element = vertex or edge of the graph
 param nvertices 	 := 5;
 param nedges         := 5;
-param nRules    	 := 2;
 param N         	 := 3;
 set ELEMENTS     := 1 2 3 4 5 6 7 8 9 10;
 set RULES        := R1 R2;
@@ -11,8 +10,8 @@ set TIME0        := 0 1 2 3;
 set TIME 		 := 1 2 3;
 set ZERO         := 0;
 
-# R1 deletes an edge, and applies to simple vev'
-# R2 merges two vertices together, and applies to linear graphs with 3 vertices
+# R1 deletes an edge, and applies to simple 2-line graph vev'
+# R2 merges two vertices together, and applies to 3-linear graphs
 
 # The initial values of vertex parameters
 # Here I show only one parameter per element
@@ -68,7 +67,6 @@ set DESTROYED[R2,S7] := S7 S1 S4 S6 ;
 
 # Abstractness for every rule
 # 
-# deltaRV gives how many vertices are removed by application of a rule
-param deltaRV := R1 1 R2 1; 
-# deltaRE gives how many edges are removed by application of a rule
-param deltaRE := R1 0 R2 1; 
+# deltaRS gives how many elements are removed by application of a rule
+param deltaRS := R1 1 R2 2; 
+

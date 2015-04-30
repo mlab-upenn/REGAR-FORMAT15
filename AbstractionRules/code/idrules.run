@@ -1,6 +1,6 @@
 commands;
 reset;
 model idrules.mod;
-data idrules.dat;
-option solver gurobi;
-display RULES;
+data id1.dat;
+option solver cplex;
+option show_stats 1;

@@ -18,8 +18,8 @@ Bugs in the first category (non-conformance to specification) are detected via e
 Bugs in the second category (violation of physiological requirements), on the other hand, require the availability of the closed-loop system: e.g., the heart and the pacemaker. 
 In the medical device industry, clinical trials amount to a closed-loop test of the device and its software. 
 In a clinical trial, the actual device is implanted in a human subject and its operation tested over a certain duration.
-Unfortunately, clinical trials can only cover a very limited range of physiological conditions due to their extremely high cost and long duration. 
-\todo{give dollar amount and duration}
+Unfortunately, clinical trials can only cover a very limited range of physiological conditions due to their extremely high cost. 
+\todo{give dollar amount}
 Moreover, clinical trials are often conducted at the last design stage. Fixing bugs at this stage is also very costly.
 
 On the other hand, using a virtual model of the device's environment, we can conduct \emph{model-based clinical trials}: i.e., the device (or a model thereof) is connected to a virtual model of the environment and this virtual closed loop is verified.
@@ -29,16 +29,18 @@ The proposed method is also generalizable to other contexts where closed-loop fo
 In the rest of this paper, we speak therefore of pacemaker as the Device Under Verification (DUV) and of the heart as being the environment, but it is understood that the discussion carries more broadly, with possible domain-specific adjustments.
 
 The first challenge in closed-loop verification of pacemakers is that the human heart displays a large number of different conditions, henceforth referred to as `physiological conditions'.
-\footnote{The medical term is `arrhythmias'.} 
 E.g., one heart may display \emph{atrial fibrillation} where the upper chambers of the heart (the atria) produce an exceedingly fast beat that prevents proper blood pumping.
 Another heart may display Premature Ventricular Contraction (PVC) where a location in the ventricles produces electrical impulses at erratic time instants.
 Each such condition will require its own formal model, and some models may display more than one condition.
-This initial set of models will necessarily be incomplete: the number of conditions is too large, and some of the conditions are too ill-understood for modeling.
-Thus, unlike system modeling where one typically starts from one ground truth model to be verified, our starting point is an \emph{incomplete set of models}.
 In this paper, we build such a set of formal heart models using a network of timed automata in Section ???.
 Model checking for timed automata is decidable [???].
+Rather than perform verification on each model separately, we seek a method that can combine models, and perform model checking on the merged model. 
+The combination of models must be such that if the merged model is correct (according to the requirements) then so is every model that was combined into it.
+We present \emph{abstraction rules} in Section ?? which allow us to do precisely that.
 
-Next, in typical formal verification practice, when the state space of a model $M$ is too large, \emph{predicate abstraction} is used to reduce the size of the state space while still preserving all the behavior of the original model. 
+This initial set of models will necessarily be incomplete because the number of conditions is too large, and some of the conditions are too ill-understood for modeling.
+Thus, unlike system modeling where one typically starts from one ground truth model to be verified, our starting point is an \emph{incomplete set of models}.
+In typical formal verification practice, when the state space of a model $M$ is too large, \emph{predicate abstraction} is used to reduce the size of the state space while still preserving all the behavior of the original model. 
 This reduction in size may allow model checking where it wasn't possible before. 
 Because the abstract model $M'$ also introduces new behavior that didn't exist in the ground truth $M$, this new behavior is rejected as \emph{spurious} if it is encountered, and the abstraction is refined.
 This is the familiar CEGAR procedure[???].
@@ -50,53 +52,55 @@ However, the new behavior they introduce might not be spurious.
 We demonstrate such a case in Section ???.
 If model checking returns a counter-example on $R(M)$, the physician can decide whether this is actually physiologically plausible behavior and therefore the pacemaker needs to be debugged, or this is indeed spurious and should be thrown out (and the abstraction refined).
 
-Note also that predicate abstraction deals with only one model. 
-In the proposed framework, the abstraction rules can apply to several models $M_1,\ldots,M_n$ at a time, and can merge them together such that $\cup_{i=1}^n R(\beh(M_i)) \subset \beh(M)$.
+%Moreover, because our models are timed automata, the model checking procedure already applies predicate abstraction to the clocks to obtain a symbolic checkable model [???], so that further abstraction is not possible.\todo{delicate...make sure it doesnt' go against the argument so far}
 Moreover, because we start from a set of initial models, and use a set of abstraction rules, we actually produce an \emph{abstraction tree} rather than an abstraction chain.
 We demonstrate the construction and use of such a tree for the formal verification of pacemakers in Section ???
 
 \subsection{Technical preliminaries}
 In this section we briefly review the notions of abstraction and over-approximation of system.
 Let $M$ be a system model and $S$ be its state space (in Section ??? we give a specific formalism in which our systems are modeled).
-A \emph{trace} $\straj$ of $M$ is an infinite sequence of states produced by $M$: $\straj \in S^\omega$.The \emph{behavior}
-\subsection{The Model Checking Problem}
-Model-based design has been proposed to speed up system software design and provide safety promises in physiological requirements. ]
-For a model $M$ with state space $S$, we define a behavior of the model as an execution trace $\delta\in S^*$. The reachable behavior space of the model $M$ is denoted as $\mathbb{B}(M)\subset S^*$. A property $\varphi$ defines a region in the behavior space within which the property is satisfied, which can be denoted as $\mathbb{B}(\varphi)$. A model checking problem is to use mathematical tool to explore the whole reachable behaviors of a model $M$ against a property $\varphi$ such that $\mathbb{B}(M)\subseteq \mathbb{B}(\varphi)$. We denote it as $M\models\varphi$. Execution traces $\delta_v\in\mathbb{B}(M)/(\mathbb{B}(M)\cap\mathbb{B}(\varphi))$ will be returned by the model checker as property violations so that the designer can analyze and address the problem. 
+A \emph{trace} $\straj$ of $M$ is an infinite sequence of states produced by $M$: $\straj \in S^\omega$.
+The \emph{behavior} $\beh(M) \subset S^\omega$ of $M$ is then the set of all its possible traces.
 
-In closed-loop model checking, the closed-loop system $M_E||M_P$ consists of the system under check $M_P$, and environment conditions modeled as $M_E$. In the case of medical devices, the devices are designed to improve certain physiological conditions. In general, a closed-loop requirement $\varphi_C$ is in the form of $\varphi_E\Rightarrow \varphi_P$, in which $\varphi_E$ is the open-loop physiological condition that the device encounters, and $\varphi_P$ is the closed-loop physiological condition that the device should achieve. Then we have:
- \begin{equation}\label{req_def}
-M_E\models\varphi_E, M_E||M_P\models \varphi_P\Rightarrow M_E||M_P\models\varphi_C
-\end{equation}
+Let $AP$ be a set of atomic propositions and $\phi$ be an ACTL$^*$ formula over $AP$ [???].
+ACTL$^*$ is the fragment of CTL$^*$ with only the universal quantifier (``for every path'').
+The set of $M$ traces that satisfy $\phi$ is denoted by $\beh(\phi)$. 
+It holds by definition that if $M$ satisfies $\phi$, then $\beh(M) \subset \beh(\phi)$.
+We write this as $M \models \phi$.
+A model checker takes $M$ and $\phi$ as inputs and either returns SAT, meaning that $M \models \phi$, or returns a \emph{counter-example}, which is a trace $\straj \in \beh(M) \setminus \beh(\phi)$.
 
-\subsection{Model Abstraction with Over-approximation}
-The behavior space of the actual system is too large for model checker to exhaustively explore. A model of the system which covers all behaviors of the system can be developed which can not only reduce complexity, but also having the suitable formalism for the model checker. An abstraction function $h$ abstracting model $M$ to $M'$ is a non-surjective function from state space $S$ to the new abstract state space $S'$ such that: 
-$$\forall s\in S, \exists s'\in S' \text{ s.t. } h(s)=s'$$
-This definition can be extended to behaviors $\delta\in \mathbb{B}(M)$, such that:
-$$\forall \delta\in \mathbb{B}(M),\exists \delta'\in\mathbb{B}(M')\text{ s.t. } h(\delta)=h(\delta')$$
-From the definition, we know that the abstract model $M'$ covers all behaviors of $M$, which is referred to as \emph{over-approximation}. We represent the over-approximation relationship as $M\triangleleft_h M'$, and the relationship between reachable behavior spaces as $h(\mathbb{B}(M))\subseteq\mathbb{B}(M')$. Then we have:
-$$h(\mathbb{B}(M))\subseteq \mathbb{B}(M'),\mathbb{B}(M')\subseteq h(\mathbb{B}(\varphi))\Rightarrow h(\mathbb{B}(M))\subseteq h(\mathbb{B}(\varphi))\Rightarrow M\models\varphi$$
-\todo[inline]{The behavior space in which $\varphi$ is defined need to be clarified.}
-In general the state space of $S'$ is smaller than $S$ while preserving the property, thus preferable during model checking. 
+An \emph{abstraction function} $\absfun: S \rightarrow S'$ maps the states of $M$ to new \emph{abstract} states.
+We extend it to traces and sets of traces in a natural manner: $\absfun(\straj) =  \absfun(s_0)\absfun(s_1)\ldots$ for $\straj = s_0 s_1\ldots \in S^\omega$,
+and $\absfun(W) = \cup_{\straj \in W}\absfun(\straj)$ for any $W \subset S^\omega$.
+The abstraction function is total (i.e. defined for every $s \in S$) and is such that
+\[R(\beh(M)) \subset \beh(M') \]
+where $\absfun(W) = \cup_{\straj \in W} \absfun(\straj)$.
+Abstraction is used to reduce the size of the state space ($|S'| < |S|$), so that model checking becomes feasible on the new model $M'$ with state space $S'$, while preserving behavior.
+Indeed, if $R(\beh(M)) \subset  \beh(M') $ and $\beh(M') \subset \beh(\phi)$, then it holds that $\beh(M) \subset \beh(\phi)$ and so $M \models \phi$ (here we omit certain technicalities relating to the appropriateness of the abstraction function $\absfun$ to $\phi$. The reader is referred to [Section 3, Clarke JACM] for a good overview).
 
-Over-approximation can also be used to cover the behaviors of multiple models. A model $M'$ is an over-approximation of model $M_1$ and $M_2$ if 
-$$\forall \delta\in \mathbb{B}(M_1)\cup\mathbb{B}(M_2),\exists \delta'\in\mathbb{B}(M')\text{ s.t. } h(\delta)=h(\delta')$$
-We denote it as $\{M_1,M_2\}\triangleleft_h M'$, such that $h(\mathbb{B}(M_1)\cup\mathbb{B}(M_2))\subseteq\mathbb{B}(M')$.
+A \emph{closed loop requirement} is an ACTL$^*$ formula $\formula_C$ of the form $\formula_C :=\formula_E \implies \formula_D$ in which $\formula_E$ describes the open-loop environment behavior that the device encounters, and $\formula_D$ is the closed-loop behavior that the device should achieve. 
 
-\subsection{Ambiguities Caused by Over-approximation}
-\subsubsection{Validity Ambiguities: }
-Since $h$ is non-surjective, there exists behaviors in $M'$ that do not exists in the original model $M$:
-$$\exists\delta'\in\mathbb{B}(M')\text{ s.t. }h^{-1}(\delta')\not\subset\mathbb{B}(M)$$
-These invalid behaviors may contribute to false-negatives during model checking.
-\subsubsection{Context Ambiguities: }
-For models over-approximated to cover the behaviors of multiple models, distinct behaviors from different models can be indistinguishable in the abstract model. For $\{M_1,M_2\}\triangleleft_h M'$, we may have :
-$$ \delta_1\in\mathbb{B}(M_1),\delta_2\in \mathbb{B}(M_2)\text{ s.t. }h(\delta_1)=h(\delta_2)=\delta',\delta'\in \mathbb{B}(M')$$
-It is not a problem if $M'\models\varphi$, however if $\delta'\not\models\varphi$ is returned as a counter-example, it loses the context in which the property is violated and is hard to interpret the result. A small example is shown in \figref{ambiguity} to illustrate the potential ambiguities due to over-approximation. 
+A \emph{closed loop requirement} is an ACTL$^*$ formula of the form$\formula_E\Rightarrow \formula_C$ where $\formula_E$ is a specification on the environment model and $\formula_C$ is a specification on the closed-loop model.
+For example, 
+\[\textrm{AtrialSense} \implies \eventually ((\textrm{VentricularSense } ||  \textrm{ VentricularPace }) \land  t \leq 500)\]
+ expresses that if the heart displays electrical activity in the atrium (an `atrial sense'), then there should be electrical activity in the ventricles within 500ms (either naturally or as a result of a pacing event).
 
+\subsubsection{Spurious vs physiologically valid counter-examples}
+Suppose a model checker is run on an abstract model $M'$ obtained by abstracting $M$ using some abstraction function $R$.
+If the checking returns a counter example $\straj \in \beh(M')$, two cases are possible:
+either $R^{-1}(x) \in \beh(M)$, or not.
+In the first case, there is no ambiguity: this is a valid counter-example.
+In the second case $R^{-1}(x) \notin \beh(M)$, the trace $\straj$ is usually discarded as being spurious.
+This makes sense if the model $M$ is taken to be the ground truth: i.e. anything not generated by $M$ is not valid behavior. 
+However, when modeling the environment as we need to for closed-loop verification, $M$ is only one of many models, none of which is ground truth. 
+That is, it is recognized that there exists physiologically meaningful behavior not captured by any of the models. 
+In this case, we use abstraction functions not only to reduce the size of the state space, but mainly to \emph{introduce, in a systematic manner, physiologically meaningful behavior}. 
+Thus a counter-example $\straj$, while not producable by any of the initial models, may still be a valid example.
 \begin{figure}[!t]
 		\centering
 		\includegraphics[width=0.8\textwidth]{figs/distinction.png}
 		%\vspace{-5pt}
-		\caption{\small Two models such that $\{Sys1,Sys2\}\triangleleft_h M$. An over-approximation function $h_a$ is applied to $M$ to obtain $M'$. By model checking the abstract model $M'$ against property $\varphi$ we have $M'\not\models\varphi$ and $\delta'$ is returned as counter-example. However, $\delta'$ corresponds to 3 different behaviors in the original behavior space: $\delta_1$ satisfied and valid; $\delta_2$ unsatisfied and valid; $\delta_3$ unsatisfied and invalid}
+		\caption{\small Two models such that $\{Sys1,Sys2\}\triangleleft_h M$. An abstraction function $h_a$ is applied to $M$ to obtain $M'$. By model checking the abstract model $M'$ against property $\formula$ we have $M'\not\models\formula$ and $\delta'$ is returned as counter-example. However, $\delta'$ corresponds to 3 different behaviors in the original behavior space: $\delta_1$ satisfied and valid; $\delta_2$ unsatisfied and valid; $\delta_3$ unsatisfied and invalid}
 		  %\vspace{-15pt}
 		\label{fig:ambiguity}
 \end{figure}
@@ -133,12 +137,12 @@ A set of physiological abstraction rules are then developed based on physiologic
 
 Then the rules are applied in certain order onto the set of physiological models, resulting an abstraction tree $G=(V,E)$. Each leaf in the tree is a physiological model and the edges are applications of an abstraction rule. The abstraction tree can then be used as environment models for closed-loop model checking.
 
-The closed-loop requirement $\varphi_c:(\varphi_E\Rightarrow\varphi_P)$ has constraints on the environment in $\varphi_E$. During the abstraction steps, certain sub-states or transitions of the environment models may be removed or merged. If the variables mentioned in $\varphi_E$, which is denoted as $Var(\varphi_E)$, is not a subset of the variables of an environment model $M$, which is denoted as $Var(M)$, the model $M$ is not appropriate for the requirement $\varphi_c$. The first step for closed-loop model checking is to choose the most abstract environment model(s) from the tree which are appropriate for the requirement. These models will be used as the initial environment models $M_E$ during model checking. 
+The closed-loop requirement $\formula_c:(\formula_E\Rightarrow\formula_P)$ has constraints on the environment in $\formula_E$. During the abstraction steps, certain sub-states or transitions of the environment models may be removed or merged. If the variables mentioned in $\formula_E$, which is denoted as $Var(\formula_E)$, is not a subset of the variables of an environment model $M$, which is denoted as $Var(M)$, the model $M$ is not appropriate for the requirement $\formula_c$. The first step for closed-loop model checking is to choose the most abstract environment model(s) from the tree which are appropriate for the requirement. These models will be used as the initial environment models $M_E$ during model checking. 
 
-For a system model $M_S$ and a physiological requirement $\varphi_c$, closed-loop model checking is performed such that:
-$$\forall M\in M_E, \text{ check } M||M_S\models\varphi_c$$
-If the requirement is all satisfied, the system model $M_S$ satisfy $\varphi_c$ under environment condition covered by the models in $M_E$. Upon violation of the requirement, the model checker returns a counter-example $\delta_c\in M_c\in M_E$. However, counter-examples at the abstract level are difficult to interpret and there may exists ambiguities. To concretize the counter-example and enumerate possible physiological context, we explore the abstraction tree. Model checking is then performed such that:
-$$\forall M\in Child(M_c), \text{ check } M||M_S\models\varphi_c$$  
+For a system model $M_S$ and a physiological requirement $\formula_c$, closed-loop model checking is performed such that:
+$$\forall M\in M_E, \text{ check } M||M_S\models\formula_c$$
+If the requirement is all satisfied, the system model $M_S$ satisfy $\formula_c$ under environment condition covered by the models in $M_E$. Upon violation of the requirement, the model checker returns a counter-example $\delta_c\in M_c\in M_E$. However, counter-examples at the abstract level are difficult to interpret and there may exists ambiguities. To concretize the counter-example and enumerate possible physiological context, we explore the abstraction tree. Model checking is then performed such that:
+$$\forall M\in Child(M_c), \text{ check } M||M_S\models\formula_c$$  
 The procedure recurs until 1) the leaves of the tree is reached, or 2) there is no violations in the child nodes. The counter-examples returned from the most refined models are then submitted to the physicians for analysis. 
 
 %\todo[inline]{why give new names to familiar things? Especially since these names don't make sense at this point. E.g. you speak of validity ambiguity, but it is not at all clear what is being validated and why the equation expresses an `ambiguity'. This is basically a description of what happens when abstracting, which most formal people are familiar with, so merge with section \ref{MCproblem}}
