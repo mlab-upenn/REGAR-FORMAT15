@@ -68,14 +68,7 @@ Physiological requirements can be automatically mapped to model behaviors and pa
 	\item Pre-condition: Atrial self-activation rate (60bpm - 200bpm)
     \item Post-condition: Intervals between ventricular paces should be no shorter than 500ms
 \end{itemize}
-\begin{figure}[!h]
-		\centering
-		\includegraphics[width=0.4\textwidth]{figs/monitor.pdf}
-		%\vspace{-5pt}
-		\caption{\small monitor}
-		  %\vspace{-15pt}
-		\label{fig:monitor}
-\end{figure}
+
 With behavior mapping and a monitor (\figref{monitor}), the requirement can be translated to:
 $$Req1: NA.self.min=300 \&\& NA.self.max=1000 \Rightarrow not M.Err$$
 The environment behavior specified in $Req1$ is $EnvB(Req1)=NA.self$.

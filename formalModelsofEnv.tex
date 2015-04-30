@@ -1,6 +1,6 @@
 \section{Formal Models of the Environment}
 \label{formalModelsofEnv}
-To perform closed-loop model checking of medical devices, we need formal models of their physiological environment to represent different physiological conditions the devices may encounter. Physiological requirements which the closed-loop system should satisfy are also formalized. In this section, we use implantable pacemakers as example. Timed-automata \cite{timed-automata} models of the human heart are developed as the environment model. Physiological requirements are formalized with monitors and TCTL formula  \cite{TCTL}. %The physiological knowledge required during closed-loop model checking of medical devices are associated with the \emph{physiological models} and the \emph{physiological requirements}. It is thus important to maintain the physiological context of the models and link model behaviors to physiological requirements. In this section we use heart modeling as example to demonstrate physiological knowledge encoding. %First, we introduce the physiological basis for our heart modeling. Then we demonstrate our heart model structure which can be used to model different heart conditions. We link transitions in the models to physiological behaviors
+To perform closed-loop model checking of medical devices, we need formal models of their physiological environment to represent different physiological conditions the devices may encounter. Physiological requirements which the closed-loop system should satisfy are also formalized. In this section, we use implantable pacemakers as example. Timed-automata \cite{timed_automata} models of the human heart are developed as the environment model. Physiological requirements are formalized with monitors and TCTL formula  \cite{TCTL}. %The physiological knowledge required during closed-loop model checking of medical devices are associated with the \emph{physiological models} and the \emph{physiological requirements}. It is thus important to maintain the physiological context of the models and link model behaviors to physiological requirements. In this section we use heart modeling as example to demonstrate physiological knowledge encoding. %First, we introduce the physiological basis for our heart modeling. Then we demonstrate our heart model structure which can be used to model different heart conditions. We link transitions in the models to physiological behaviors
 \begin{figure}[!t]
 	\centering
 	\includegraphics[width=0.7\textwidth]{figs/egm.pdf}
@@ -85,13 +85,22 @@ The heart model structure has been used to model varies heart conditions and all
 %\end{itemize}
 %As an example, a node automata $NA$ has two transition groups, which can be represented by $NA.self$ and $NA.block$
 
-\subsection{Encoding Physiological Requirements}
-Devices are designed to improve certain physiological conditions, the performance of the devices is evaluated on the difference between the patient conditions without the device and with the device. The device should also avoid deteriorating certain patient conditions, physiological requirements are specified in the form of:
-$$C_{pre}\rightarrow C_{post}$$
-in which $C_{pre}$ is the physiological conditions without the device,  and $C_{post}$ is the physiological condition with the device. For model-based closed-loop verification, $C_{pre}$ is often in form of a set of constraints on patient parameters. As a special case, $C_{pre}$ can equal to $true$, means that $C_{post}$ should be satisfied under all possible conditions.
-
-Physiological requirements are constraints on physiological behaviors. In \cite{iccps10} we 
-
-\subsection{Monitors}
-To simplify the requirement, \cite{iccps10}
+\subsection{Formalizing Physiological Requirements}
+%Devices are designed to improve certain physiological conditions, the performance of the devices is evaluated on the difference between the patient conditions without the device and with the device. The device should also avoid deteriorating certain patient conditions, physiological requirements are specified in the form of:
+%$$C_{pre}\rightarrow C_{post}$$
+%in which $C_{pre}$ is the physiological conditions without the device,  and $C_{post}$ is the physiological condition with the device. For model-based closed-loop verification, $C_{pre}$ is often in form of a set of constraints on patient parameters. As a special case, $C_{pre}$ can equal to $true$, means that $C_{post}$ should be satisfied under all possible conditions.
+%
+%Physiological requirements are constraints on physiological behaviors. In \cite{iccps10} we 
+%
+%\subsection{Monitors}
+Physiological requirements need to be formalized for closed-loop model checking. A requirement $\varphi_C: \varphi_E\Rightarrow \varphi_P$ contains open-loop environmental constraints in $\varphi_E$ and desired closed-loop condition specified in $\varphi_P$. In \cite{iccps10} we mapped physiological heart conditions to parameter ranges in the heart model, which can be used to enforce $\varphi_E$ on the heart models. In general, $\varphi_P$ are timing constraints on closed-loop timing events. In \cite{iccps10} we developed general monitors in Stateflow for closed-loop testing of physiological requirements. They can be translated to timed-automata which are shown in \figref{monitor}. The $M_{sing}(event,thresh\_min,thresh\_max)$ enforces the time interval between two $event$ signals within $[thresh\_min,thresh\_max]$. $M_{doub}(event1,event2,thresh\_min,thresh\_max)$ enforces the time interval between $event1$ and $event2$ signals within $[thresh\_min,thresh\_max]$. Model checking is performed on the closed-loop system include the heart model $M_H$, the pacemaker model $M_P$ and the monitor $M$. $\varphi_P$ can be then represented with TCTL formula:\\
+ \textsf{A[] (not M.Err)}
+\begin{figure}[!b]
+		\centering
+		\includegraphics[width=0.8\textwidth]{figs/monitor.pdf}
+		%\vspace{-5pt}
+		\caption{\small (a) $M_{sing}$ for single event; (b) $M_{doub}$ for two events}
+		  %\vspace{-15pt}
+		\label{fig:monitor}
+\end{figure}
 %\input{statespaceformulation}
