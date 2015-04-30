@@ -57,23 +57,23 @@ These invalid behaviors may contribute to false-negatives during model checking.
 \subsubsection{Context Ambiguities: }
 For models over-approximated to cover the behaviors of multiple models, distinct behaviors from different models can be indistinguishable in the abstract model. For $\{M_1,M_2\}\triangleleft_h M'$, we may have :
 $$ \delta_1\in\mathbb{B}(M_1),\delta_2\in \mathbb{B}(M_2)\text{ s.t. }h(\delta_1)=h(\delta_2)=\delta',\delta'\in \mathbb{B}(M')$$
-It is not a problem if $M'\models\varphi$, however if $\delta'\not\models\varphi$ is returned as a counter-example, it loses the context in which the property is violated and is hard to interpret the result.
+It is not a problem if $M'\models\varphi$, however if $\delta'\not\models\varphi$ is returned as a counter-example, it loses the context in which the property is violated and is hard to interpret the result. A small example is shown in \figref{ambiguity} to illustrate the potential ambiguities due to over-approximation. 
 
-\todo[inline]{The following example seems important but has a lot of overlap with the text above}
-We use a small example to illustrate the ambiguities. In \figref{ambiguity}.(a) we have two models such that $\{Sys1,Sys2\}\triangleleft_h M$. An over-approximation function $h_a$ is applied to $M$ to obtain $M'$. By model checking the abstract model $M'$ against property $\varphi$ we have $M'\not\models\varphi$ and $\delta'$ is returned as counter-example. However, $\delta'$ corresponds to 3 different behaviors in the original behavior space:
+%\todo[inline]{The following example seems important but has a lot of overlap with the text above}
+%We use a small example to illustrate the ambiguities. In .(a) %we have two models such that $\{Sys1,Sys2\}\triangleleft_h M$. An over-approximation function $h_a$ is applied to $M$ to obtain $M'$. By model checking the abstract model $M'$ against property $\varphi$ we have $M'\not\models\varphi$ and $\delta'$ is returned as counter-example. However, $\delta'$ corresponds to 3 different behaviors in the original behavior space:
 %Since $h_a$ is non-surjective, for two models with $M\triangleleft_h M'$, we may have:
 %$$\exists s_1,s_2\in S \text{ s.t. }h(s_1)=h(s_2)=s',s'\in S'$$
 %For behaviors we have:
-$$ \delta_1\in\mathbb{B}(Sys1),\delta_2\in \mathbb{B}(Sys2), \delta_3\in\mathbb{B}(M)/(\mathbb{B}(Sys1)\cup\mathbb{B}(Sys2))$$
-s.t. 
-$$h_a(\delta_1)=h_a(\delta_2)=h_a(\delta_3)=\delta',\delta'\in \mathbb{B}(M')$$
-With $\delta'$ alone it is difficult to interpret the counter-example and use it to improve the software.
+%$$ \delta_1\in\mathbb{B}(Sys1),\delta_2\in \mathbb{B}(Sys2), \delta_3\in\mathbb{B}(M)/(\mathbb{B}(Sys1)\cup\mathbb{B}(Sys2))$$
+%s.t. 
+%$$h_a(\delta_1)=h_a(\delta_2)=h_a(\delta_3)=\delta',\delta'\in \mathbb{B}(M')$$
+%With $\delta'$ alone it is difficult to interpret the counter-example and use it to improve the software.
 
 \begin{figure}[!t]
 		\centering
 		\includegraphics[width=0.8\textwidth]{figs/distinction.png}
 		%\vspace{-5pt}
-		\caption{\small }
+		\caption{\small Two models such that $\{Sys1,Sys2\}\triangleleft_h M$. An over-approximation function $h_a$ is applied to $M$ to obtain $M'$. By model checking the abstract model $M'$ against property $\varphi$ we have $M'\not\models\varphi$ and $\delta'$ is returned as counter-example. However, $\delta'$ corresponds to 3 different behaviors in the original behavior space}
 		  %\vspace{-15pt}
 		\label{fig:ambiguity}
 \end{figure}
