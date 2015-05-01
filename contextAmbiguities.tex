@@ -1,7 +1,8 @@
 \section{Closed-loop Model Checking Using the Abstraction Tree}
-After the abstraction tree is built, it can be used for closed-loop model checking. The next question is how to navigate through the abstraction tree so that the most appropriate model(s) are selected for different requirements, and provide the most concrete counter-examples, possibly under multiple physiological conditions, for the physicians to determine the validity of the counter-examples. \cite{uppaal}
+After the abstraction tree is built, it can be used for closed-loop model checking. The next question is how to navigate through the abstraction tree so that the most appropriate model(s) are selected for different requirements, and provide the most concrete counter-examples, possibly under multiple physiological conditions, for the physicians to determine the validity of the counter-examples. %\cite{uppaal}
 \subsection{Select Initial Abstraction(s) Appropriate For the Requirement}
-Physiological requirements are in general conditional in the sense that they require conditions to hold under certain open-loop physiological constraints. These constraints map to parameters for certain transitions of the physiological models, which may be merged during the abstraction process.
+%Physiological requirements are in general conditional in the sense that they require conditions to hold under certain open-loop physiological constraints. These constraints map to parameters for certain transitions of the physiological models, which may be merged during the abstraction process.
+For a requirement $Req$ and its auxiliary 
 The most abstract model in the abstraction tree is built to cover the input space to the device as much as possible, thus it may not have enough details to constrain the behaviors of the model according to the constraints in the requirement. Thus the first step of closed-loop model checking is to select the most abstract models which are appropriate for the requirement. A model $M$ is appropriate for a requirement $Req$ if the environment transitions mentioned in the requirement, denoted as $EnvT(Req)$, is a subset of the environment transitions associated with the model $EnvT(M$). The following algorithm finds the most abstract heart models in the abstraction tree $HM\_tree$ that are appropriate for a requirement $Req$.
 \begin{Verbatim}
 Algorithm 1
@@ -9,7 +10,7 @@ function [HM]=eligible(HM_tree,Req)
 BM = root of HM_tree
 while (BM is not empty)
  For every model M in BM
-  If (EnvT(M) \cap EnvT(Req) == EnvT(Req))
+  If (Var(Req)\cap Var(Mon) is a subset of Var(M))
    Remove M from BM
    save M in HM
   else
