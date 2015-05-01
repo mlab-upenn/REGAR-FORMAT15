@@ -2,8 +2,10 @@
 After the abstraction tree is built, it can be used for closed-loop model checking. The next question is how to navigate through the abstraction tree so that the most appropriate model(s) are selected for different requirements, and provide the most concrete counter-examples, possibly under multiple physiological conditions, for the physicians to determine the validity of the counter-examples. %\cite{uppaal}
 \subsection{Select Initial Abstraction(s) Appropriate For the Requirement}
 %Physiological requirements are in general conditional in the sense that they require conditions to hold under certain open-loop physiological constraints. These constraints map to parameters for certain transitions of the physiological models, which may be merged during the abstraction process.
-For a requirement $Req$ and its auxiliary 
-The most abstract model in the abstraction tree is built to cover the input space to the device as much as possible, thus it may not have enough details to constrain the behaviors of the model according to the constraints in the requirement. Thus the first step of closed-loop model checking is to select the most abstract models which are appropriate for the requirement. A model $M$ is appropriate for a requirement $Req$ if the environment transitions mentioned in the requirement, denoted as $EnvT(Req)$, is a subset of the environment transitions associated with the model $EnvT(M$). The following algorithm finds the most abstract heart models in the abstraction tree $HM\_tree$ that are appropriate for a requirement $Req$.
+For a requirement $Req$ and its auxiliary monitor $Mon$, an environment model $M_E$ is appropriate for $Req$ if the variables contained in $M_E$ is a superset of the variables in the requirement and its auxiliary monitor: 
+$$Var(Req)\cap Var(Mon)\subseteq Var(M_E)$$
+The following algorithm selects the most abstract models from the abstraction tree $HM\_tree$ that are appropriate for a requirement $Req$.
+%The most abstract model in the abstraction tree is built to cover the input space to the device as much as possible, thus it may not have enough details to constrain the behaviors of the model according to the constraints in the requirement. Thus the first step of closed-loop model checking is to select the most abstract models which are appropriate for the requirement. A model $M$ is appropriate for a requirement $Req$ if the environment transitions mentioned in the requirement, denoted as $EnvT(Req)$, is a subset of the environment transitions associated with the model $EnvT(M$). The following algorithm finds the most abstract heart models in the abstraction tree $HM\_tree$ that are appropriate for a requirement $Req$.
 \begin{Verbatim}
 Algorithm 1
 function [HM]=eligible(HM_tree,Req)
@@ -27,14 +29,15 @@ Return HM
  %endwhile
  %save M in HM
  %endfor
-\subsection{Obtaining Concrete Counter-examples Under Corresponding Physiological Conditions}
-One challenge for modeling physiological environment of medical devices is the large variety of physiological conditions that the devices may encounter. %It is impossible to exhaustively model the conditions with concrete physiological models. 
-The set of concrete models (the leave nodes in the abstraction tree) only represent a subset of all possible physiological conditions, thus model checking the device on all of the concrete models is not enough to guarantee the satisfaction of the requirement. By applying physiological abstraction rules, additional physiological-relevant behaviors are incorporated into the abstract models by over-approximation, providing more coverage. 
-However, if model checking on an abstract model returns a counter-example, if is difficult to determine whether the counter-example is a valid execution. Due to the incomplete nature of the set of concrete models, if the counter-example cannot be concretized on all the concrete models, it does not mean it is invalid. Therefore it is up to the physician to decide whether a counter-example is valid or not. The algorithm below explore the abstraction tree during model checking and provide the physician the most concrete counter-example(s), if there exists any. 
+\subsection{Obtaining Concrete Counter-examples with Unambiguous Physiological Context}
+%One challenge for modeling physiological environment of medical devices is the large variety of physiological conditions that the devices may encounter. %It is impossible to exhaustively model the conditions with concrete physiological models. 
+%The set of concrete models (the leave nodes in the abstraction tree) only represent a subset of all possible physiological conditions, thus model checking the device on all of the concrete models is not enough to guarantee the satisfaction of the requirement. By applying physiological abstraction rules, additional physiological-relevant behaviors are incorporated into the abstract models by over-approximation, providing more coverage. 
+%However, if model checking on an abstract model returns a counter-example, if is difficult to determine whether the counter-example is a valid execution. Due to the incomplete nature of the set of concrete models, if the counter-example cannot be concretized on all the concrete models, it does not mean it is invalid. Therefore it is up to the physician to decide whether a counter-example is valid or not. The algorithm below explore the abstraction tree during model checking and provide the physician the most concrete counter-example(s), if there exists any. 
+Upon requirement violation, an abstract counter-example is returned during closed-loop model checking. The counter-example may contain context ambiguities that should be resolved before sending to the physician. An abstraction tree contains the information of how different environment conditions are over-approximated by more abstract models. By exploring the abstraction tree, the most concrete yet unambiguous counter-examples can be sent to the physicians for analysis. The following algorithm describes the process for closed-loop model checking with an abstraction tree.
 \begin{Verbatim}
 Algorithm 2
 Input: system model PM, abstraction tree for environment HM_tree, requirement Req
-Output: Counter examples CE and corresponding model refinements
+Output: Counter examples CE and corresponding model refinements, if any
 [HM]=eligible(HM_tree,Req);
 Mc= HM;
  while (Mc is not empty)
@@ -64,11 +67,9 @@ Return all saved CEs and their corresponding models
 \end{figure}
 
 \subsection{Requirement Encoding}
-Physiological requirements can be automatically mapped to model behaviors and parameters. In general, a requirement has \emph{pre-conditions} under which the requirement should hold. The pre-conditions are open-loop physiological conditions which are in terms of constraints on model behaviors. The \emph{post-conditions} are closed-loop behaviors that the device should achieve. The requirement below is designed to prevent the pacemaker from pacing too fast.
-\begin{itemize}
-	\item Pre-condition: Atrial self-activation rate (60bpm - 200bpm)
-    \item Post-condition: Intervals between ventricular paces should be no shorter than 500ms
-\end{itemize}
+The requirement below is designed to prevent the pacemaker from pacing too fast.\\
+\textsf{If intervals between self-activations of the atria is between 300ms to 1000ms, the intervals between ventricular paces should be no shorter than 500ms.}
+
 
 With behavior mapping and a monitor (\figref{monitor}), the requirement can be translated to:
 $$Req1: NA.self.min=300 \&\& NA.self.max=1000 \Rightarrow not M.Err$$
