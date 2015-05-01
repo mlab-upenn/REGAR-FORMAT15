@@ -1,0 +1,7 @@
+commands;
+
+option show_stats 1;
+solve;
+display a;
+display Px;
+expand Disabling_by_structure;

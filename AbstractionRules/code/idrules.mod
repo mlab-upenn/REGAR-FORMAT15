@@ -9,6 +9,8 @@ set SUBGRAPHS  ;
 set TIME       ;
 set TIME0      ;
 
+param arithmetic binary;
+
 check card(ELEMENTS) = nvertices + nedges;
 check card(TIME) = N;
 
@@ -54,9 +56,6 @@ var abst {j in TIME} = sum {(i,s) in KRULES}
 maximize abstractness: 
 	sum {j in TIME} abst[j] ;
 
-#minimize abstractness: 
-#	nvertices + nedges - sum {j in TIME} (deltaV[j] + deltaE[j]) ;
-
 subject to InitialP0 {x in ELEMENTS}:
 	Px[x,0] = Px0[x];
 
@@ -69,20 +68,25 @@ subject to Parameter_update {(x,j) in ELEMENTS cross TIME}:
 	Px[x,j] = Px[x,j-1] + sum {(i,s) in KRULES: s in mySUBGRAPHS[x]}  a[i,s,j]*(-Px[x,j-1] + max( 430, Px[x, j-1]));
 	
 # If at some j no rule is applied, then this means applications are over, and no rules can be further applied
+#       Arithmetic version
 subject to Regular_application {j in 1..N-1}:
-	sum {(i,s) in KRULES} a[i,s,j] = 0 ==> sum{(i,s) in KRULES, jp in j+1..N} a[i,s,jp] <= 0;
+	(sum {(i,s) in KRULES} a[i,s,j]) - (sum{(i,s) in KRULES, jp in j+1..N} a[i,s,jp]) >= 0;
+#  		Logic version
+#subject to Regular_application {j in 1..N-1}:
+#	sum {(i,s) in KRULES} a[i,s,j] = 0 ==> sum{(i,s) in KRULES, jp in j+1..N} a[i,s,jp] = 0;
 
 # One rule at the most is applied per step
 subject to One_rule_at_a_time {j in TIME}:
 	sum {(i,s) in KRULES} a[i,s,j] <= 1;
 
-#subject to Disabling_by_structure {(i,s) in KRULES, j in TIME}:
-#	a[i,s,j]*(sum {jp in {j+1..N}, ip in RULES, sp in DESTROYED[i,s] : (ip,sp) in KRULES  }
-#	               a[ip,sp,jp]) = 0;
-
+#       Arithmetic version
 subject to Disabling_by_structure {(i,s) in KRULES, j in 1..N-1}:
-	a[i,s,j] = 1 ==> sum {jp in {j+1..N}, ip in RULES, sp in DESTROYED[i,s] : (ip,sp) in KRULES  }
-	               a[ip,sp,jp] <= 0;
+	a[i,s,j]*(sum {jp in {j+1..N}, ip in RULES, sp in DESTROYED[i,s] : (ip,sp) in KRULES  }
+	               a[ip,sp,jp]) = 0;
+#       Logic version
+#subject to Disabling_by_structure {(i,s) in KRULES, j in 1..N-1}:
+#	a[i,s,j] = 1 ==> sum {jp in {j+1..N}, ip in RULES, sp in DESTROYED[i,s] : (ip,sp) in KRULES  }
+#	               a[ip,sp,jp] <= 0;
 
 # subject to Precedence:
 
