@@ -1,39 +1,39 @@
 \section{Introduction}
 \label{introduction}
 
-Implantable medical devices like pacemakers are designed to improve undesired physiological conditions with very little human intervention. 
-Their ability of autonomously affect the physiological state of the patient makes the medical devices safety-critical, and sufficient evidence for their safety and efficacy should be provided before the devices can be implanted in the patients. 
-As more functionality is added to the devices, the complexity of the software component of the device is increasing dramatically, leading to an increasing number of potential safety violations due to software bugs. 
-\todo{give recall statistics}
-In what follows, we use the word `device' to refer both to the hardware and the software of the device.
+Implantable medical devices like pacemakers are designed to improve physiological conditions with very little human intervention. 
+Their ability of autonomously affecting the physiological state of the patient makes the medical devices safety-critical, and sufficient evidence for their safety and efficacy should be provided before the devices can be implanted in the patients. 
+As more functionality is added to the devices, the complexity of the software component of the device is increasing dramatically, leading to a large number of potential safety violations due to software bugs \cite{recall_stats}.
+
+In what follows, we use the word `device' to refer both to the hardware and the software of the device.\Hao{Why do we need to mention this?}
 
 There are two categories of device bugs: 
-first, the device may fail to conform to its \emph{specification}, i.e. the prescription of how it should react to certain inputs.  
-Secondly, even if it conforms to its specification, the device may fail to improve the health of the patient as promised. 
-The improved state of health is captured in the \emph{physiological requirements}; e.g., for a pacemaker, the heart rate should always be below a certain threshold. 
+Firstly, the device may fail to conform to its \emph{specifications}, i.e. the prescription of how it should react to certain inputs.  
+Secondly, even if the device conforms to its specification, it may fail to improve the conditions of the patient as promised. 
+The desired physiological conditions that the closed-loop system should achieve are captured in the \emph{physiological requirements}; e.g., for a pacemaker, the heart rate should always be maintained above a certain threshold. 
 %In what follows, the word `requirement' always refers to such physiological requirements.
-Note that requirements are about \emph{the closed-loop system}: they prescribe the behavior of both device and environment (e.g. both pacemaker and heart).
+%Note that requirements are about \emph{the closed-loop system}: they prescribe the behavior of both device and environment (e.g. both pacemaker and heart).
 
-Bugs in the first category (non-conformance to specification) are detected via extensive open-loop testing where a set of input sequences is fed to the device, and its output is observed to see if it matches the expected output.
-Bugs in the second category (violation of physiological requirements), on the other hand, require the availability of the closed-loop system: e.g., the heart and the pacemaker. 
-In the medical device industry, clinical trials amount to a closed-loop test of the device. 
-In a clinical trial, the actual device is implanted in a human subject and its operation tested over a certain duration.
-Unfortunately, clinical trials can only cover a very limited range of physiological conditions due to their extremely high cost. 
-\todo{give dollar amount}
+Bugs in the first category (non-conformance to specification) can be detected via systematic and extensive open-loop testing in which a set of input sequences is fed to the device, and its output is compared with the expected output.
+Bugs in the second category (violation of physiological requirements), on the other hand, require the availability of the closed-loop system: e.g., the pacemaker and the heart as its environment. 
+In the medical device industry, closed-loop verification of the physiological requirements are mostly performed in terms of clinical trials, in which the actual devices are implanted in human subjects over an extended duration.
+Unfortunately, due to the extremely high cost, the amount and variety of human subjects during the clinical trials are limited, which affects their capability to find bugs. 
+%\todo{give dollar amount}
 Moreover, clinical trials are often conducted at the last design stage. Fixing bugs at this stage is very costly.
 
-On the other hand, using a virtual model of the device's environment, we can conduct \emph{model-based clinical trials}: i.e., the device (or a model thereof) is connected to a virtual model of the environment and this virtual closed loop is verified.
-Depending on the formalism used to model the environment (and device) and the language used to express the requirements, this allows the usage of formal methods to perform the verification.
-Environment modeling introduces new challenges and issues that do not arise when modeling the device alone, and this paper aims at addressing these issues in the context of pacemaker verification.
-The proposed method is also generalizable to other contexts where closed-loop formal verification is desired.
+%On the other hand, using a virtual model of the device's environment, we can conduct \emph{model-based clinical trials}: i.e., the device (or a model thereof) is connected to a virtual model of the environment and this virtual closed loop is verified.
+Closed-loop model checking enables closed-loop evaluation of physiological requirements at earlier design stage, which requires formal model(s) of the physiological environment. 
+%Depending on the formalism used to model the environment (and device) and the language used to express the requirements, this allows the usage of formal methods to perform the verification.
+Formal environment modeling introduces new challenges that do not arise when modeling the device alone, and this paper aims at addressing these issues in the context of pacemaker verification.
+The proposed method can potentially generalized to other domains in which the system operates in a large variety of environmental conditions.
 In the rest of this paper, we speak therefore of pacemaker as the Device Under Verification (DUV) and of the heart as being the environment, but it is understood that the discussion carries more broadly, with possible domain-specific adjustments.
 
-The first challenge in closed-loop verification of pacemakers is that the human heart displays a large number of different conditions, henceforth referred to as `physiological conditions'.
+The first challenge in closed-loop model checking of pacemakers is that the human heart displays a large number of different conditions, henceforth referred to as `physiological conditions'.
 E.g., one heart may display \emph{atrial fibrillation} where the upper chambers of the heart (the atria) produce an exceedingly fast beat that prevents proper blood pumping.
-Another heart may display Premature Ventricular Contraction (PVC) where a location in the ventricles produces electrical impulses at erratic time instants.
+Another heart may display Premature Ventricular Contraction (PVC) where a location in the ventricles produces electrical impulses at erratic time instants.\Hao{I don't think these two conditions make sense to the reader}
 Each such condition will require its own formal model, and some models may display more than one condition.
 In this paper, we build such a set of formal heart models using the timed automata formalism in Section ???.
-Rather than perform verification on each model separately, we seek a method that can combine models, and perform model checking on the merged model. 
+Rather than perform model checking with each model separately, we seek a method that can combine models, and perform model checking on the merged model. 
 The combination of models must be such that if the merged model is correct (according to the requirements) then so is every model that was combined into it.
 We present \emph{abstraction rules} in Section ?? which allow us to do precisely that.
 

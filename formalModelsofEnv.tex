@@ -1,6 +1,6 @@
 \section{Formal Models of the Environment}
 \label{formalModelsofEnv}
-To perform closed-loop model checking of medical devices, we need formal models of their physiological environment to represent different physiological conditions the devices may encounter. Physiological requirements which the closed-loop system should satisfy are also formalized. In this section, we use implantable pacemakers as example. Timed-automata \cite{timed_automata} models of the human heart are developed as the environment model. Physiological requirements are formalized with monitors and TCTL formula  \cite{TCTL}. %The physiological knowledge required during closed-loop model checking of medical devices are associated with the \emph{physiological models} and the \emph{physiological requirements}. It is thus important to maintain the physiological context of the models and link model behaviors to physiological requirements. In this section we use heart modeling as example to demonstrate physiological knowledge encoding. %First, we introduce the physiological basis for our heart modeling. Then we demonstrate our heart model structure which can be used to model different heart conditions. We link transitions in the models to physiological behaviors
+To perform closed-loop model checking of medical devices, we need formal models of their physiological environment to represent different physiological conditions the devices may encounter. Physiological requirements which the closed-loop system should satisfy are also formalized. In this section, we use implantable pacemakers as example. Timed-automata \cite{timed_automata} models of the human heart are developed as the environment model. Physiological requirements are formalized with monitors and TCTL formula  \cite{TCTL}. Model checking can then be performed on the closed-loop system in model checker UPPAAL \cite{uppaal}. %The physiological knowledge required during closed-loop model checking of medical devices are associated with the \emph{physiological models} and the \emph{physiological requirements}. It is thus important to maintain the physiological context of the models and link model behaviors to physiological requirements. In this section we use heart modeling as example to demonstrate physiological knowledge encoding. %First, we introduce the physiological basis for our heart modeling. Then we demonstrate our heart model structure which can be used to model different heart conditions. We link transitions in the models to physiological behaviors
 \begin{figure}[!t]
 	\centering
 	\includegraphics[width=0.7\textwidth]{figs/egm.pdf}
@@ -15,6 +15,13 @@ At cellular level, a heart tissue can be activated by external voltage. Certain 
 Different heart conditions can be distinguished by the timing of generation and conduction of electrical signals, which are researched in clinical setting referred to as \emph{Electrophysiology (EP)}\cite{josephson}.
 
 The implantable cardiac pacemakers are rhythm management devices designed to treat bradycardia. A typical dual chamber pacemaker has two leads inserted into the heart through the veins which can measure the local electrical activities of the right atrium and right ventricle, respectively. According to the timing between sensed impulses the pacemaker can deliver electrical pacing to the corresponding chamber to maintain proper heart rhythm (\figref{probes}).  
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=0.9\textwidth]{figs/init_abs.pdf}
+	%\vspace{-5pt}
+	\caption{\small (a) Action potential for a heart tissue and its tissue nearby (dashed). (b) Node automaton. (c) Path automaton. (d) An example model of the heart consist of a network of node and path automata}
+	\label{fig:nodepathTA}
+\end{figure}
 
 \subsection{Timed-automata Models of the Heart}
 \label{labeledGraph}
@@ -25,13 +32,6 @@ Different heart conditions can be distinguished by the \emph{timing} of the elec
 The node automaton initializes with \textsf{Rest} state.
 From \textsf{Rest} state, the node can either self-activate or be activated by external activations (indicated by Act\_node). Upon activation the node transition to the \textsf{ERP} state and activate all the paths connecting to the node (indicated by Act\_path). 
 In the \textsf{ERP} state the node does not respond to external activations. At the end of \textsf{ERP} state the node transition to the \textsf{Rest} state. 
-\begin{figure}[!t]
-	\centering
-	\includegraphics[width=0.9\textwidth]{figs/init_abs.pdf}
-	%\vspace{-5pt}
-	\caption{\small (a) Action potential for a heart tissue and its tissue nearby (dashed). (b) Node automaton. (c) Path automaton. (d) An example model of the heart consist of a network of node and path automata}
-	\label{fig:nodepathTA}
-\end{figure}
 
 The initial state of a path automaton is \textsf{Idle}, which corresponds to no conduction. 
 A path has two conduction directions, forward and backward.

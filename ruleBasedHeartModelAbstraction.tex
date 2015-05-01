@@ -1,6 +1,6 @@
 %\subsection{Rule-based Heart Model Abstraction}
 \label{ruleBasedHeartModelAbstraction}
-During over-approximation additional behaviors are introduced to the abstract model. There are a lot of abstraction functions for a model, but not all the abstractions introduce physiological-relevant behaviors. In this section, we introduce 7 physiological abstraction rules which introduce physiological-relevant behaviors to the heart models. The rules are based on the combination of physiological domain knowledge and formal method. During the rule applications the transition groups incorporated with the models are also merged. These information maintains the physiological meanings of the transitions of the abstract models and are helpful to determine whether the models are appropriate for physiological requirements.%Unlike system modeling in which there is only one concrete system, during environment modeling there are infinite number of environmental conditions that can be generalize by abstractions. In this section, we model the heart as the physiological environment for implantable pacemakers and try to cover different heart conditions and the closed-loop interactions between the heart and the pacemaker. Then using abstraction rules defined over physiological knowledge and principles for over-approximation we construct a series of heart model abstractions with different complexity and coverage. During the rule applications the merging of transition groups are documented thus can be used during model refinements.
+In the last section we introduced a heart model structure which can be used to develop a set of heart models representing different heart conditions. However, the set can never be complete, thus over-approximation is proposed to cover more physiological possible behaviors into the model. We developed 7 physiological abstraction rules which introduce physiological-relevant behaviors into over-approximations of the heart models. These rules are specific to heart modeling but some intuitions can extend to other domains with timed automata models. Due to space limit we only introduce a subset of abstraction rules. %The rules are based on the combination of physiological domain knowledge and formal method. %During the rule applications the transition groups incorporated with the models are also merged. These information maintains the physiological meanings of the transitions of the abstract models and are helpful to determine whether the models are appropriate for physiological requirements.%Unlike system modeling in which there is only one concrete system, during environment modeling there are infinite number of environmental conditions that can be generalize by abstractions. In this section, we model the heart as the physiological environment for implantable pacemakers and try to cover different heart conditions and the closed-loop interactions between the heart and the pacemaker. Then using abstraction rules defined over physiological knowledge and principles for over-approximation we construct a series of heart model abstractions with different complexity and coverage. During the rule applications the merging of transition groups are documented thus can be used during model refinements.
 
 %\todo[inline]{For each rule, must 
 	%
@@ -11,7 +11,8 @@ During over-approximation additional behaviors are introduced to the abstract mo
 	%3) The effect of applying it on both a) the graph (either as pseudo-code or by describing the output graph), and b) the automata 
 	%\\
 	%4) show that is an over-approximation of the relevant behavior (so must define irrelevant behavior)}
-\subsection{Why Predicate Abstraction Does Not Work}
+\subsection{Why Predicate Abstraction Does Not Work?}
+Predicate abstraction \cite{predicate} has been proposed to reduce the state space of Kripke structures. For a program $P$, $Atom(P)$ is the set of atomic formula in the program (i.e. $v+3<5$ where $v$ is a variable in $P$). The abstraction function $h_{Atom(P)}$ reduce the overall state space by merging states in $P$ based on the satisfaction of $Atom(P)$. Predicate abstraction is not applicable in environment modeling as it cannot combine two models and abstract the behaviors of both. For a timed automata heart model $H$, $Atom(H)$ are transition guards and clock invariants. The variables included in $Atom(H)$ are clocks of the timed automata which are treated symbolically during model checking. Therefore over-approximating a timed automata model $H$ with $h_{Atom(H)}$ is not helpful in terms of reducing computational cost during model checking.
 %\subsection{Rule 1: Convert Reentry Circuits to Activation Nodes}
 %Within the conduction network of the heart, there can be multiple pathways between two locations, forming conduction loops. If the timing parameters of the tissue along the loop satisfy certain property, there can be scenarios in which an depolarization wave circling the circuit. The circuits are referred to as \emph{Reentry Circuits}. Since the time interval for an activation wave to circle a reentry circuit is usually less than the intrinsic heart cycle length, the heart rate will be "`hijacked"' by the reentry circuit once the cycling is triggered, causing tachycardia. Reentry is the most common mechanism for tachycardia which can be modeled by our heart models \cite{vhm_embc10}. 
 %
@@ -40,7 +41,9 @@ During over-approximation additional behaviors are introduced to the abstract mo
 %$$P_3.cond_{min}=P_1.cond_{min}+P_2.cond_{min}$$
 %$$P_3.cond_{max}=P_1.cond_{max}+P_2.cond_{max}$$
 \subsection{Rule 4: Merge Parameter Ranges}
-For heart models with the same node and path topology ($H_i,i=[1,p]$), they can be abstracted by a single heart model $H_a$ such that:
+In the heart models we modeled physiological timing periods using locations in timed automata. The minimum time an automaton can stay in those locations is limited by the guard on a transition out of the location, and the maximum time is limited by the clock invariant of the state. As the result, two node automata with different parameters $N_1,N_2$ can be over-approximated with one node automaton $N'$ if the parameter ranges of $N'$ is a superset of the parameter ranges of $N_1,N_2$. The same principle can be extended to path automata, and any heart models with the same node and path topology.
+
+For heart models $H_i,i=[1\dots p]$ with parameter set $\Theta$
 $$\forall i,j,H_a.\theta^j_{min}=min(H_i.\theta^j_{min})$$ 
 $$\forall i,j,H_a.\theta^j_{max}=max(H_i.\theta^j_{max})$$ 
 $H_a$ covers all possible behaviors, thus is an abstraction of $H_i, i\in [1,p]$. The added behaviors in the abstract model do not affect the number of transition groups
@@ -82,7 +85,7 @@ The effect of a node automaton blocking an activation signal is equivalent to a 
 $$P.cond_{min}=P_1.cond_{min}+P_2.cond_{min}$$
 $$P.cond_{max}=P_1.cond_{max}+P_2.cond_{max}$$
 For any self-activation node $N$:
-\todo[inline]{what is $N_1$ and what is replacing? what is $N$}
+%\todo[inline]{what is $N_1$ and what is replacing? what is $N$}
 $$N'.rest_{min}=N.ERP_{min}+N.rest_{min}$$
 $$N'.rest_{max}=N.ERP_{max}+N.rest_{max}$$
 
