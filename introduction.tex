@@ -3,13 +3,15 @@
 
 Implantable medical devices like pacemakers are designed to improve physiological conditions with very little human intervention. 
 Their ability of autonomously affecting the physiological state of the patient makes the medical devices safety-critical, and sufficient evidence for their safety and efficacy should be provided before the devices can be implanted in the patients. 
-As more functionality is added to the devices, the complexity of the software component of the device is increasing dramatically, leading to a large number of potential safety violations due to software bugs \cite{recall_stats}.
+As more functionality is added to the devices
+\footnote{In what follows, we use the word `device' to refer both to the hardware and the software of the device.}
+, the complexity of the software component of the device is increasing dramatically, leading to a large number of potential safety violations due to software bugs \cite{recall_stats}.
 
-In what follows, we use the word `device' to refer both to the hardware and the software of the device.\Hao{Why do we need to mention this?}
+
 
 There are two categories of device bugs: 
-Firstly, the device may fail to conform to its \emph{specifications}, i.e. the prescription of how it should react to certain inputs.  
-Secondly, even if the device conforms to its specification, it may fail to improve the conditions of the patient as promised. 
+1) the device may fail to conform to its \emph{specifications}, i.e. the prescription of how it should react to certain inputs.  
+2) the device may fail to improve the conditions of the patient as promised, even if it conforms to its specifications. 
 The desired physiological conditions that the closed-loop system should achieve are captured in the \emph{physiological requirements}; e.g., for a pacemaker, the heart rate should always be maintained above a certain threshold. 
 %In what follows, the word `requirement' always refers to such physiological requirements.
 %Note that requirements are about \emph{the closed-loop system}: they prescribe the behavior of both device and environment (e.g. both pacemaker and heart).
@@ -19,28 +21,28 @@ Bugs in the second category (violation of physiological requirements), on the ot
 In the medical device industry, closed-loop verification of the physiological requirements are mostly performed in terms of clinical trials, in which the actual devices are implanted in human subjects over an extended duration.
 Unfortunately, due to the extremely high cost, the amount and variety of human subjects during the clinical trials are limited, which affects their capability to find bugs. 
 %\todo{give dollar amount}
-Moreover, clinical trials are often conducted at the last design stage. Fixing bugs at this stage is very costly.
+%Moreover, clinical trials are often conducted at the last design stage. Fixing bugs at this stage is very costly.
 
 %On the other hand, using a virtual model of the device's environment, we can conduct \emph{model-based clinical trials}: i.e., the device (or a model thereof) is connected to a virtual model of the environment and this virtual closed loop is verified.
 Closed-loop model checking enables closed-loop evaluation of physiological requirements at earlier design stage, which requires formal model(s) of the physiological environment. 
 %Depending on the formalism used to model the environment (and device) and the language used to express the requirements, this allows the usage of formal methods to perform the verification.
-Formal environment modeling introduces new challenges that do not arise when modeling the device alone, and this paper aims at addressing these issues in the context of pacemaker verification.
-The proposed method can potentially generalized to other domains in which the system operates in a large variety of environmental conditions.
-In the rest of this paper, we speak therefore of pacemaker as the Device Under Verification (DUV) and of the heart as being the environment, but it is understood that the discussion carries more broadly, with possible domain-specific adjustments.
+%Formal environment modeling introduces new challenges that do not arise when modeling the device alone, and this paper aims at addressing these issues in the context of pacemaker verification.
+%In the rest of this paper, we speak therefore of pacemaker as the Device Under Verification (DUV) and of the heart as being the environment, but it is understood that the discussion carries more broadly, with possible domain-specific adjustments.
 
-The first challenge in closed-loop model checking of pacemakers is that the human heart displays a large number of different conditions, henceforth referred to as `physiological conditions'.
-E.g., one heart may display \emph{atrial fibrillation} where the upper chambers of the heart (the atria) produce an exceedingly fast beat that prevents proper blood pumping.
-Another heart may display Premature Ventricular Contraction (PVC) where a location in the ventricles produces electrical impulses at erratic time instants.\Hao{I don't think these two conditions make sense to the reader}
-Each such condition will require its own formal model, and some models may display more than one condition.
-In this paper, we build such a set of formal heart models using the timed automata formalism in Section ???.
-Rather than perform model checking with each model separately, we seek a method that can combine models, and perform model checking on the merged model. 
-The combination of models must be such that if the merged model is correct (according to the requirements) then so is every model that was combined into it.
-We present \emph{abstraction rules} in Section ?? which allow us to do precisely that.
+In closed-loop model checking, there is only one concrete system. However there can be countless number of environmental conditions which require different models to represent. A set of initial models of the environment can be constructed but the set has to be incomplete due to the large number of environment conditions and their combinations. As the result, performing model checking using every models in the set
+%The first challenge in closed-loop model checking of pacemakers is that the human heart displays a large number of different conditions, henceforth referred to as `physiological conditions'.
+%E.g., one heart may display \emph{atrial fibrillation} where the upper chambers of the heart (the atria) produce an exceedingly fast beat that prevents proper blood pumping.
+%Another heart may display Premature Ventricular Contraction (PVC) where a location in the ventricles produces electrical impulses at erratic time instants.\Hao{I don't think these two conditions make sense to the reader}
+%Each such condition will require its own formal model, and some models may display more than one condition.
+%In this paper, we build such a set of formal heart models using the timed automata formalism in Section ???.
+%Performing model checking with each model separately, we seek a method that can combine models, and perform model checking on the merged model. 
+%The combination of models must be such that if the merged model is correct (according to the requirements) then so is every model that was combined into it.
+%We present \emph{abstraction rules} in Section ?? which allow us to do precisely that.
 
-This initial set of models will necessarily be \emph{incomplete} because the number of physiological conditions is too large, and some of the conditions are too ill-understood for modeling.
-Thus, unlike system modeling where one typically starts from one ground truth model to be verified, our starting point is an \emph{incomplete set of models}.
-Because of this incompleteness, we seek abstraction rules that introduce new \emph{physiologically meaningful} behavior which might actually be produced by heart models not in the initial set.
-These then correspond to heart conditions not taken explicitly into account. 
+%This initial set of models will necessarily be \emph{incomplete} because the number of physiological conditions is too large, and some of the conditions are too ill-understood for modeling.
+%Thus, unlike system modeling in which one typically starts from one ground truth model to be verified, our starting point is an \emph{incomplete set of environment models}.
+%Because of this incompleteness, we seek abstraction rules that introduce new \emph{physiologically meaningful} behavior which might actually be produced by heart models not in the initial set.
+%These then correspond to heart conditions not taken explicitly into account. 
 This provides a second motivation for the domain-specific abstraction rules $R$ in Section ???, which can be thought of as relaxations of the conditions governing the model's behavior. 
 Like predicate abstraction, they produce models that over-approximate the behavior of the model they are applied to (i.e., $\beh(R(M)) \supset \beh(M)$).
 However, the new behavior they introduce might not be spurious. 
@@ -64,4 +66,6 @@ Specifically, we present several extended timed automata models of various heart
 We define domain-specific abstraction rules for these models, and demonstrate how these can be applied to gradually add physiologically meaningful behavior in Section ???. 
 Using the models and the rules, we build an abstraction tree which serves to perform model checking of physiological requirements for the heart+pacemaker closed loop in Section ???.
 We illustrate the approach via case studies in Section ???, and conclude in Section ???
+
+The proposed method can potentially generalized to other domains in which the system operates in a large variety of environmental conditions.
 
