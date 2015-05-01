@@ -71,6 +71,10 @@ subject to Parameter_update {(x,j) in ELEMENTS cross TIME}:
 #       Arithmetic version
 subject to Regular_application {j in 1..N-1}:
 	(sum {(i,s) in KRULES} a[i,s,j]) - (sum{(i,s) in KRULES, jp in j+1..N} a[i,s,jp]) >= 0;
+#subject to Regular_application {j in 1..N-1}:
+#	sum {(i,s) in KRULES} a[i,s,j] = 0 ==> sum{(i,s) in KRULES, jp in j+1..N} a[i,s,jp] = 0;
+
+	
 #  		Logic version
 #subject to Regular_application {j in 1..N-1}:
 #	sum {(i,s) in KRULES} a[i,s,j] = 0 ==> sum{(i,s) in KRULES, jp in j+1..N} a[i,s,jp] = 0;

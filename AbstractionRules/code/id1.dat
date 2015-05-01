@@ -10,10 +10,10 @@ set RULES        := R1 R2 R4 R5;
 set SUBGRAPHS    := SIness;
 set TIME0        := 0 1 2 ;
 set TIME 		 := 1 2 ;
-
 #set TIME0        := 0 1 2 3 4 5;
 #set TIME 		 := 1 2 3 4 5;
 set ZERO         := 0;
+param arithmetic := 1;
 
 # The initial values of vertex parameters
 # Here I show only one parameter per element
