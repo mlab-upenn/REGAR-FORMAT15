@@ -32,11 +32,15 @@
 \newcommand{\straj}{\mathbf{x}}
 \newcommand{\absfun}{R}
 
-\title{Abstraction-tree-guided Closed-loop Model Checking of Medical Devices}
+\DeclareSymbolFont{extraup}{U}{zavm}{m}{n}
+\DeclareMathSymbol{\varheart}{\mathalpha}{extraup}{86}
+\DeclareMathSymbol{\vardiamond}{\mathalpha}{extraup}{87}
+
+\title{I $\varheart$ Trees: Abstraction trees for model checking of medical devices}
 
 \author{Zhihao Jiang\inst{1} \and Houssam Abbas\inst{1},
 Pieter Mosterman\inst{2} \and Rahul Mangharam\inst{1}}
-\institute{Department of Electrical Engineering, University of Pennsylvania
+\institute{Department of Electrical and Systems Engineering, University of Pennsylvania
 \and
 Mathworks. Inc}
 
@@ -55,56 +59,6 @@ Mathworks. Inc}
 \input{conclusions}
 \bibliographystyle{abbrv}
 \bibliography{bibliography}
-%\newpage
-%\input{outline}
-
-
-%\input{resolvingValidityAmbiguities}
-%\input{bulletPoints}
- 
-
-
-% \subsubsection{Domain Knowledge During Abstraction Level Management}
-% Although CEGAR is not directly applicable to the environment model, the knowledge of how the environment works can be used during the abstraction level management. 
-
-% The domain knowledge contains:
-
-
-% \begin{itemize}
-%     \item Distinguish environment conditions specified in the requirement
-% 	\item Using domain knowledge a counter-example can be regarded as spurious, although sometimes not 100\%. (Physicians can say that some conditions are very unlikely to happen, but not impossible)
-% \end{itemize}
-
-% \begin{itemize}
-    
-   
-%     \item The system and the environment have very different characteristics, thus requires different approaches during modeling.
-%     \begin{itemize}
-%         \item We have full or near-full knowledge of the system:
-%         \begin{itemize}
-%             \item The system has one single deterministic implementation or the non-determinism is minimal
-%             \item The internal mechanism of the system is 
-%             \item Observability of the system is maximal
-%         \end{itemize}
-%      	\item
-%     \end{itemize}
-%     \item \textbf{Model validation}: Given the same input sequence, the model should be able to produce equivalent or close enough output as the corresponding entity being modeled.
-            
-%     \item System modeling
-% \end{itemize}
-
-%Medical device is a typical Cyber-Physical System and ensuring the safety and efficacy of the device requires closed-loop verification. Currently closed-loop verifications of medical devices are performed in the form of clinical trials in which the devices are tested on the patients. Using clinical trials as closed-loop verification has several problems:
-
-% In \cite{VHM_proc} we addressed the problems above by proposing a model-based design framework to enable closed-loop verification earlier in the design stage. The increased confidence in safety and efficacy of the device can potentially reduce the scale of the clinical trials, thus reduce cost.
-
-% In model-based design for Cyber-Physical Systems, both the system and its environment are abstracted as models. One of the widely used abstraction technique is \emph{over-approximation}. The benefits of over-approximation are:
-% \begin{itemize}
-% 	\item Reducing verification complexity by removing details of the system or the environment.
-% 	\item Generalizing different system/environment conditions
-% \end{itemize}
-% However, there are inevitable infomation losses during over-approximation. The biggest challenge for model-based design is obtaining correct abstraction levels of the models and managing the information loss during the abstraction steps. 
-
-% Although over-approximation 
 
 
 
