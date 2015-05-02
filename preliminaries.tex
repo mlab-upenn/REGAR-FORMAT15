@@ -1,8 +1,9 @@
 \section{Technical preliminaries}
 \label{preliminaries}
 For a model $M$ with state space $S$, we define a behavior of the model as an execution trace $\delta\in S^*$. The reachable behavior space of the model $M$ is denoted as $\mathbb{B}(M)\subset S^*$. A property $\varphi$ defines a region in the behavior space within which the property is satisfied, which can be denoted as $\mathbb{B}(\varphi)$. A model checking problem is to use mathematical tool to explore the whole reachable behaviors of a model $M$ against a property $\varphi$ such that $\mathbb{B}(M)\subseteq \mathbb{B}(\varphi)$. We denote it as $M\models\varphi$. Execution traces $\delta_v\in\mathbb{B}(M)/(\mathbb{B}(M)\cap\mathbb{B}(\varphi))$ will be returned by the model checker as property violations so that the designer can analyze and address the problem. 
-
-In closed-loop model checking, the closed-loop system $M_E||M_P$ consists of the system under check $M_P$, and environment conditions modeled as $M_E$. In the case of medical devices, the devices are designed to improve certain physiological conditions. In general, a closed-loop requirement $\varphi_C$ is in the form of $\varphi_E\Rightarrow \varphi_P$, in which $\varphi_E$ is the open-loop physiological condition that the device encounters, and $\varphi_P$ is the closed-loop physiological condition that the device should achieve. Then we have:
+\subsection{Closed-loop Physiological Requirements}
+In closed-loop model checking, the closed-loop system $M_E||M_P$ consists of the system under check $M_P$, and environment conditions modeled as $M_E$. In the case of medical devices, the devices are designed to \emph{improve} certain physiological conditions. For 
+In general, a closed-loop requirement $\varphi$ is in the form of $\varphi_E\Rightarrow \varphi_C$, in which $\varphi_E$ is the open-loop physiological condition that the device encounters, often in form of parameter ranges in the environment models, and $\varphi_C$ is the closed-loop physiological condition that the device should achieve. Then we have:
  \begin{equation}\label{req_def}
 M_E\models\varphi_E, M_E||M_P\models \varphi_P\Rightarrow M_E||M_P\models\varphi_C
 \end{equation}
