@@ -20,94 +20,78 @@ Recall that a parameter $\theta$ has both a minimum $\theta_{min}$ (which is use
 
 \subsection{Rule 4: Merge Parameter Ranges}
 \textbf{Physiological intuition}. 
-Timing periods of heart tissue is modeled as locations in the node and path automata. The minimum and maximum time an automaton can stay in the location is governed by the parameters in the guards and invariants. By combining parameter ranges for two automata with same structure the new automaton covers the behaviors of both automata.
+Timing periods of heart tissue is modeled as locations in the node and path automata. The minimum and maximum time an automaton can stay in the location is governed by the parameters in the guards and invariants. By combining parameter ranges for two automata with same structure the new automaton covers the behaviors of both automata.\\
 %By expanding these periods, we introduce new behavior where a heart may stay in rest for longer, or (self-)activate a node faster, or tissue can conduct current sooner, etc.
-
 \textbf{(Sub)graph(s) to which it applies}.
 This rule applies to a set of graphs $G_i$ with the same structure (i.e. isomorphic) but possibly with different parameters: $R(G_1,\ldots,G_n) = G'$.
-See Fig.~\ref{fig:HM_abs}.
-
+See Fig.~\ref{fig:HM_abs}.\\
 \textbf{Applicability conditions}.
-None.
-
+None.\\
 \textbf{Output (sub)graph $G'$}.
 $G'$ has same structure as the $G_i$.
 Thus $R$ plays the role of an isomorphism between every $G_i$ and $G'$.
-Given an element $x$ of $G'$, we abuse notation by writing $R^{-1}(x') = \{x_1,\dots,x_n\}$ is the set of elements that map to it via $R$.
-
+Given an element $x$ of $G'$, we abuse notation by writing $R^{-1}(x') = \{x_1,\dots,x_n\}$ is the set of elements that map to it via $R$.\\
 \textbf{Effect on parameters}
 %Recall Def.~\ref{def:labeledGraph}
 For every automaton $A_{x'} \in \Ac(G')$, and every parameter $\theta^{x'}$ of $A_{x'}$, 
 \[\theta_{min}^{x'} = \min(\theta^x_{min})_{x \in R^{-1}(x') }\]
 \[\theta_{max}^{x'} = \max(\theta^x_{max})_{x \in R^{-1}(x') }\]
-
 \textbf{Proof of abstraction} Detailed proof can be found in \cite{regar_tech}.
 
 %\input{rule5}
 
 \subsection{Rule 6: Replace Blocking With Non-deterministic Conduction}
 \textbf{Physiological intuition}. 
-Consider the structure $N_1 P_1 N_2 P_2 N_3$ with three nodes and two paths, where $N_2$ is a passive node (i.e. not self-activating).
-If $N_2$ blocks an activation signal from $N_1$ to $N_3$, this is equivalent to the paths $P_1$ or $P_2$ not conducting.
-In this rule, we replace the structure $P_1 N_2 P_2$ by a path $P$ whose automaton can take a self loop when it receives an activation signal, thus effectively stopping the conduction. 
-This is shown in Fig.~\ref{fig:rule5}: the extra transitions are marked {\quattrofont Act\_path\_1?} and {\quattrofont Act\_path\_2?}.
-Because the blocking effect of nodes is now incorporated into the paths, we can also modify the node automata of self-activating nodes to the one shown in Fig.~\ref{fig:rule5}, which doesn't have the (now useless) ERP period.
-
+If a node automaton is in its \textsf{ERP} state, a \textsf{Act\_node} event is "blocked" and will not trigger corresponding path conduction. If we add non-deterministic transitions to the path automata such that a \textsf{Act\_path} event do not trigger state transitions to \textsf{ante} or \textsf{retro} (\figref{rule5}), the blocking behavior of the node is covered. We can then merge the \textsf{ERP} state with the \text{Rest} state in the node automata, and all passive nodes can be removed. An application of Rule 6 is shown in \figref{abs_exam}.\\
+%Consider the structure $N_1 P_1 N_2 P_2 N_3$ with three nodes and two paths, where $N_2$ is a passive node (i.e. not self-activating).
+%If $N_2$ blocks an activation signal from $N_1$ to $N_3$, this is equivalent to the paths $P_1$ or $P_2$ not conducting.
+%In this rule, we replace the structure $P_1 N_2 P_2$ by a path $P$ whose automaton can take a self loop when it receives an activation signal, thus effectively stopping the conduction. 
+%This is shown in Fig.~\ref{fig:rule5}: the extra transitions are marked {\quattrofont Act\_path\_1?} and {\quattrofont Act\_path\_2?}.
+%Because the blocking effect of nodes is now incorporated into the paths, we can also modify the node automata of self-activating nodes to the one shown in Fig.~\ref{fig:rule5}, which doesn't have the (now useless) ERP period.
 \textbf{Subgraph to which it applies}.
-Line graphs with 3 vertices $N_1 P_1 N_2 P_2 N_3$, and self-activating nodes.
-
+Line graphs with 3 vertices $N_1 P_1 N_2 P_2 N_3$, and self-activating nodes.\\
 \textbf{Applicability conditions}.
-$N_2$ is a passive node.
-
+$N_2$ is a passive node.\\
 \textbf{Output subgraph}.
 $N'_1 P' N'_3$
-A path $P$ whose path automaton is as shown in Fig.~\ref{fig:rule5}.
-The self-activating nodes $N$ are replaced by nodes $N'$ with automata shown in Fig.~\ref{fig:rule5}.
-
+A path $P'$ whose path automaton is as shown in Fig.~\ref{fig:rule5}.
+The self-activating nodes $N$ are replaced by nodes $N'$ with automata shown in Fig.~\ref{fig:rule5}.\\
 \textbf{Effect on parameters}
 For the new path, $P.cond_{min}=P_1.cond_{min}+P_2.cond_{min}$ and 
 $P.cond_{max}=P_1.cond_{max}+P_2.cond_{max}$
 For the new nodes, $N'.Trest_{min}=N.TERP_{min}+N.Trest_{min}$ and 
-$N'.Trest_{max}=N.TERP_{max}+N.Trest_{max}$.
-
-
+$N'.Trest_{max}=N.TERP_{max}+N.Trest_{max}$.\\
 \textbf{Proof of abstraction} Timed simulation relationship between $N_1 P_1 N_2 P_2 N_3$ and $N'_1 P' N'_3$ are proved in \cite{sttt13}.
 
 \begin{figure}[!h]
 	\centering
 	\includegraphics[width=0.9\textwidth]{figs/rule5.pdf}
 	%\vspace{-5pt}
-	\caption{\small Automata of Rule 5}
+	\caption{\small Node and Path Automata after application of Rule 6}
 	%\vspace{-15pt}
 	\label{fig:rule5}
 \end{figure}
 
 \subsection{Rule 7: Replace Conductions With Self-activation}
 \textbf{Physiological intuition}. 
-This rule applies only after Rule 5 has been applied, and sensing nodes have been merged with self-activation nodes.
-
-The effect of a conduction path is to conduct electrical activity generated by a self-activation node to other nodes. 
-If we simply allow all self-activation nodes to activate at any time by setting their Rest period to $+\infty$, we can remove all the conduction paths, while preserving the original behavior (where the Rest period was constrained to a finite interval).
-
+This rule applies only after Rule 5 has been applied, and sensing nodes have been merged with self-activation nodes. The effect of a conduction path is to conduct electrical activity generated by a self-activation node to other nodes. 
+If we simply allow all self-activation nodes to activate at any time by setting their Rest period to $[0,+\infty]$, we can remove all the conduction paths, while preserving the original behavior (where the Rest period was constrained to a finite interval).
+An application of Rule 7 is shown in \figref{abs_exam}.
 \textbf{Subgraph to which it applies}.
-The entire graph $G$.
-
+The entire graph $G$.\\
 \textbf{Applicability conditions}.
-This rule can only be applied after Rule 5 has been applied.
-
+This rule can only be applied after Rule 5 has been applied.\\
 \textbf{Output subraph}.
-All edges are deleted: $G' = (V(G), \emptyset)$.
-
+All edges are deleted: $G' = (V(G), \emptyset)$. The node automata are replaced with the one shown in \figref{rule6}.\\
 \textbf{Effect on parameters}
-For every node automaton $N$ in $G'$, $N.Trest = +\infty$.
-
-\textbf{Proof of abstraction}.
+For every node automaton $N$ in $G'$, the node automata are $N.Trest_min=0,N.Trest_max = +\infty$.\\
+\textbf{Proof of abstraction} Detailed proof can be found in \cite{regar_tech}.
 
 \begin{figure}[!h]
 	\centering
 	\includegraphics[width=0.3\textwidth]{figs/rule6.pdf}
 	%\vspace{-5pt}
-	\caption{\small Heart Model Abstractions}
+	\caption{\small Node automata after application of Rule 7}
 	%\vspace{-15pt}
 	\label{fig:rule6}
 \end{figure}
@@ -122,19 +106,12 @@ By systematically applying rules in this section we created an abstraction tree 
 	\centering
 	\includegraphics[width=0.9\textwidth]{figs/abs.pdf}
 	%\vspace{-5pt}
-	\caption{\small Heart Model Abstractions}
+	\caption{\small Heart Model Abstraction Tree}
 	%\vspace{-15pt}
 	\label{fig:HM_abs}
 \end{figure}
 
-\begin{figure}[!t]
-	\centering
-	\includegraphics[width=0.5\textwidth]{figs/abs_sim.pdf}
-	%\vspace{-5pt}
-	\caption{\small Abstraction Example}
-	%\vspace{-15pt}
-	\label{fig:abs_exam}
-\end{figure}
+
 %\subsection{Rule Application Example}
 %In this section we demonstrate 
 %\todo[inline]{I don't understand what this is...}

@@ -55,28 +55,40 @@ endwhile
 Return all saved CEs and their corresponding models
 \end{Verbatim}
 
-\section{Case Study: Closed-loop Model Checking of a Dual Chamber Pacemaker}
-\subsection{Pacemaker Model}
 \begin{figure}[!t]
 		\centering
-		\includegraphics[width=0.5\textwidth]{figs/PM_timers.pdf}
+		\includegraphics[width=0.8\textwidth]{figs/PM_timers.pdf}
 		%\vspace{-5pt}
-		\caption{\small Heart Model Abstractions}
+		\caption{\small Basic timers for a dual chamber pacemaker. AS: Atrial Sense, VS: Ventricular Sense, AP: Atrial Pacing, VP: Ventricular Pacing.}
 		  %\vspace{-15pt}
 		\label{fig:PM_timers}
 \end{figure}
+\section{Case Study: Closed-loop Model Checking of a Dual Chamber Pacemaker}
+\subsection{Pacemaker Model}
+A pacemaker diagnoses heart conditions and deliver electrical pacing to the heart according to the timing intervals among timing events from the heart and the pacemaker itself. In this section we use a simple dual chamber pacemaker as example for closed-loop model checking. The detailed UPPAAL timed automata implementation of the model can be found in \cite{sttt13}. A dual chamber pacemaker has several basic timers, which are shown in \figref{PM_timers}:\\
+\textbf{Atrial Escape Interval (AEI)} defines the maximum interval between the last ventricular event (VS,VP) to an atrial event (AS,AP). If no AS happened before AEI timer runs out, atrial pacing (AP) is delivered to the heart (Marker 1 in \figref{PM_timers}). \\
+\textbf{Atrio-Ventricular Interval (AVI)} defines the maximum interval between the last atrial event (AS,AP) to an ventricular event (VS,VP). If no VS happened before AVI timer runs out, and the time since the last ventricular event (VS,VP) is no less than URI, ventricular pacing (VP) is delivered to the heart (Marker 3 in \figref{PM_timers}).
+\textbf{Post-Ventricular Atrial Refractory Period (PVARP) and Ventricular Refractory Period (VRP)} define the minimum period that a AS or VS can happen since the last ventricular event (VS,VP). 
 
 \subsection{Requirement Encoding}
 The requirement below is designed to prevent the pacemaker from pacing too fast.\\
 \textsf{If intervals between self-activations of the atria is between 300ms to 1000ms, the intervals between ventricular paces should be no shorter than 500ms.}
 
-With parameter mapping and a monitor $M_{sing}(Vpace,500,\infty)$, the requirement can be translated to:
+With parameter mapping and a monitor $M_{sing}(VP,500,\infty)$, the requirement can be translated to:
 $$Req1: N_A.Trest\_min=300 \&\& N_A.Trest\_max=1000 \Rightarrow \neg M_{sing}.Err$$
  \subsection{Choosing Appropriate Heart Model For the Requirement}
 To verify the closed-loop system with pacemaker model $PM$ and heart model abstraction tree $HM\_tree$ (\figref{HM_abs}) against requirement $Req1$, we start by searching for the most abstract appropriate models from the abstraction tree. We call the function specified in Algorithm 1: $[HM]=eligible(HM\_tree,Req1)$. The variables in the requirement and the corresponding monitor are:
 $$Var(Req1)\cup Var(M_{sing})=\{N_A.Trest\_min,N_A.Trest\_max, Vpace\}$$
 
 At the root level heart model $H_{all}$, we have $\{N_A.Trest\_min,N_A.Trest\_max\}\not\in Var(H_{all})$. As the result, $H_{all}$ is not appropriate for $Req1$. For all the children of $H_{all}$: $H_n'',H_{at}'''',H_{vt}'''$, we have $Var(Req1)\cup Var(M_{sing})\subseteq Var(H_n'')=Var(H_{at}'''')=Var(H_{vt}''')$, thus these 3 heart models are outputted as the most abstract models that are appropriate for $Req1$.
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=0.5\textwidth]{figs/abs_sim.pdf}
+	%\vspace{-5pt}
+	\caption{\small Abstraction Rule Application Example}
+	%\vspace{-15pt}
+	\label{fig:abs_exam}
+\end{figure}
 \subsection{Providing Unambiguous Counter-examples to the Physicians}
 After we choose the appropriate models for $Req1$, we have: 
 $$HM=\{H_n'',H_{at}'''',H_{vt}'''\}$$

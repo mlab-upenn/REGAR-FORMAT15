@@ -1,6 +1,7 @@
 \subsection{Related works}
 \todo[inline]{complete}
-In \cite{sttt13} we developed a set of formal heart models with different abstraction levels and performed closed-loop model checking on an implantable pacemaker. 
-In each step of closed-loop model checking, both physiological knowledge and knowledge on formal methods are needed.
-
 Counter-Example Guided Abstraction Refinement (CEGAR) \cite{CEGAR} has been proposed to over-approximate the system using predicate abstraction. Upon property violation the abstract counter-example is checked for its validity on the actual system. If the counter-example is \emph{spurious} the model is then refined to eliminate the spurious counter-example. This process is then continued on the refined model until either a valid counter-example returns or no counter-examples are returned. CEGAR works well during system modeling, however, it cannot be applied to environment modeling for two reasons: 1) predicate abstraction does not guarantee the validity of behaviors introduced into the model. In fact, for system modeling, all additional behaviors introduced into the abstract model are spurious. 2) the validity of a counter-example cannot be checked automatically as in system modeling. 
+
+In \cite{sttt13} we developed a set of formal heart models with different abstraction levels and performed closed-loop model checking on an implantable pacemaker. 
+However in each step of closed-loop model checking, both physiological knowledge and knowledge on formal methods are needed.
+
