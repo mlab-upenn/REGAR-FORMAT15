@@ -37,8 +37,8 @@ The guards and invariants of node automata define timing periods of the heart, l
 By expanding these periods, we introduce new behavior where a heart may stay in rest for longer, or (self-)activate a node faster, or tissue can conduct current sooner, etc.
 
 \textbf{(Sub)graph(s) to which it applies}.
-This rules applies to a set of graphs $G_i$ with the same structure (i.e. isomorphic) but possibly with different parameters: $R(G_1,\ldots,G_n) = G'$.
-See Fig.[???].
+This rule applies to a set of graphs $G_i$ with the same structure (i.e. isomorphic) but possibly with different parameters: $R(G_1,\ldots,G_n) = G'$.
+See Fig.~\ref{fig:HM_abs}.
 
 \textbf{Applicability conditions}.
 None.
@@ -68,34 +68,36 @@ For every automaton $A_{x'} \in \Ac(G')$, and every parameter $\theta^{x'}$ of $
 
 \subsection{Rule 6: Replace Blocking With Non-deterministic Conduction}
 \textbf{Physiological intuition}. 
-\todo[inline]{i don't understand this}
+Consider the structure $N_1 P_1 N_2 P_2 N-3$ with three nodes and two paths, where $N_2$ is a passive node (i.e. not self-activating).
+If $N_2$ blocks an activation signal from $N_1$ to $N_3$, this is equivalent to the paths $P_1$ or $P_2$ not conducting.
+In this rule, we replace the structure $P_1 N_2 P_2$ by a path $P$ whose automaton can take a self loop when it receives an activation signal, thus effectively stopping the conduction. 
+This is shown in Fig.~\ref{fig:rule5}: the extra transitions are marked {\quattrofont Act\_path\_1?} and {\quattrofont Act\_path\_2?}.
+Because the blocking effect of nodes is now incorporated into the paths, we can also modify the node automata of self-activating nodes to the one shown in Fig.~\ref{fig:rule5}, which doesn't have the (now useless) ERP period.
 
 \textbf{Subgraph to which it applies}.
-Line graphs with 3 vertices $N_1 P_1 N_2 P_2 N_3$.
+Line graphs with 3 vertices $N_1 P_1 N_2 P_2 N_3$, and self-activating nodes.
 
 \textbf{Applicability conditions}.
+$N_2$ is a passive node.
 
-\textbf{Output subraph}.
-A path $P$ whose path automaton is as shown in Fig?? 
+\textbf{Output subgraph}.
+A path $P$ whose path automaton is as shown in Fig.~\ref{fig:rule5}.
+The self-activating nodes $N$ are replaced by nodes $N'$ with automata shown in Fig.~\ref{fig:rule5}.
 
 \textbf{Effect on parameters}
-$$P.cond_{min}=P_1.cond_{min}+P_2.cond_{min}$$
-$$P.cond_{max}=P_1.cond_{max}+P_2.cond_{max}$$
-For any self-activation node $N$:
-\todo[inline]{what is $N_1$ and what is replacing? what is $N$}
-$$N'.rest_{min}=N.ERP_{min}+N.rest_{min}$$
-$$N'.rest_{max}=N.ERP_{max}+N.rest_{max}$$
+For the new path, $P.cond_{min}=P_1.cond_{min}+P_2.cond_{min}$ and 
+$P.cond_{max}=P_1.cond_{max}+P_2.cond_{max}$
+For the new nodes, $N'.rest_{min}=N.ERP_{min}+N.rest_{min}$ and 
+$N'.rest_{max}=N.ERP_{max}+N.rest_{max}$.
 
 
 \textbf{Proof of abstraction}.
-The effect of a node automaton blocking an activation signal is equivalent to a path not conducting. So we designed new abstract node and path automata $N1$ and $P1$. For any $P_1-N_n-P_2$, it can be replaced by a $P$ with:
-\todo[inline]{tshouldn't we see the effect of node ERP somewhere here?}
 
 \begin{figure}[!h]
 	\centering
 	\includegraphics[width=0.9\textwidth]{figs/rule5.pdf}
 	%\vspace{-5pt}
-	\caption{\small Heart Model Abstractions}
+	\caption{\small Automata of Rule 5}
 	%\vspace{-15pt}
 	\label{fig:rule5}
 \end{figure}
@@ -117,7 +119,7 @@ This rule can only be applied after Rule 5 has been applied.
 All edges are deleted: $G' = (V(G), \emptyset)$.
 
 \textbf{Effect on parameters}
-For every node automaton $N$ in $G'$, $N.Trest = +infty$.
+For every node automaton $N$ in $G'$, $N.Trest = +\infty$.
 
 \textbf{Proof of abstraction}.
 

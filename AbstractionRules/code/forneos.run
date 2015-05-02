@@ -3,5 +3,5 @@ commands;
 option show_stats 1;
 solve;
 display a;
-display Px;
+expand Regular_application;
 expand Disabling_by_structure;

@@ -1,6 +1,7 @@
 param nvertices integer >= 1;
 param nedges    integer >= 1;
 param N         integer >= 1;
+param nelements integer >= 1;
 set ZERO; 
 
 set ELEMENTS   ;
@@ -9,13 +10,12 @@ set SUBGRAPHS  ;
 set TIME       ;
 set TIME0      ;
 
-param arithmetic binary;
 
-check card(ELEMENTS) = nvertices + nedges;
+check card(ELEMENTS) = nelements;#nvertices + nedges;
 check card(TIME) = N;
 
 # The initial values of vertex parameters
-param Px0 {ELEMENTS} >= 0;
+param Px0 {ELEMENTS} integer >= 0;
 # Terms for the linear predicate Phi
 param C {RULES};
 param B {RULES, ELEMENTS};
@@ -45,7 +45,7 @@ var a {KRULES, TIME0} binary := 0;
 # Px(1) is the value after 1 rule is applied. That application is captured in a[i,s,1].
 # Similarly, Px(j) is the value after j rule applications, captured in a[i,s,1..j]
 set mySUBGRAPHS {x in ELEMENTS} = {s in SUBGRAPHS : (s,x) in KX};
-var Px {(x,j) in ELEMENTS cross TIME0} ;
+var Px {(x,j) in ELEMENTS cross TIME0} integer;
 
 # Abstracness per stage
 set SUBGRAPHtoX {s in SUBGRAPHS} = setof {(s,x) in KX} x;
@@ -64,9 +64,16 @@ subject to InitialP0 {x in ELEMENTS}:
 # Here I'm giving everything the same form, max.
 # But say if Ri is applied to Ks at j-1, then x gets updated via max, and if Rj is applied
 # to Ks at j-1 then x is updated by sum, then those are two different constraints.	
-subject to Parameter_update {(x,j) in ELEMENTS cross TIME}:
+#
+#subject to Parameter_update {(x,j) in ELEMENTS cross TIME}:
+#	Px[x,j] = Px[x,j-1] + sum {(i,s) in KRULES: s in mySUBGRAPHS[x]}  a[i,s,j]*(-Px[x,j-1] + max( 430, Px[x, j-1]));
+
+subject to Parameter_update1 {(x,j) in {ELEMENTS cross TIME} diff {{65} cross TIME}}:
 	Px[x,j] = Px[x,j-1] + sum {(i,s) in KRULES: s in mySUBGRAPHS[x]}  a[i,s,j]*(-Px[x,j-1] + max( 430, Px[x, j-1]));
-	
+		
+subject to Parameter_update2 {j in TIME}:
+	Px[65,j] = Px[65,j-1] + sum {(i,s) in KRULES: s in mySUBGRAPHS[65]}  a[5,'S4',j]*(-Px[65,j-1] + Px[65,j-1] + 200);
+
 # If at some j no rule is applied, then this means applications are over, and no rules can be further applied
 #       Arithmetic version
 subject to Regular_application {j in 1..N-1}:
