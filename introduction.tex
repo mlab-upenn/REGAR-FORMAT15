@@ -1,12 +1,12 @@
 \section{Introduction}
 \label{introduction}
 
+\todo[inline]{stress the timing aspect more}
 Implantable medical devices like pacemakers are designed to improve physiological conditions with very little human intervention. 
 Their ability of autonomously affecting the physiological state of the patient makes the medical devices safety-critical, and sufficient evidence for their safety and efficacy should be provided before the devices can be implanted in the patients. 
 As more functionality is added to the devices
-\footnote{In what follows, we use the word `device' to refer both to the hardware and the software of the device.}
+\footnote{In what follows, we use the word `device' to refer to the software of the device.}
 , the complexity of the software component of the device is increasing dramatically, leading to a large number of potential safety violations due to software bugs \cite{recall_stats}.
-
 
 There are two categories of device bugs: 
 1) the device may fail to conform to its \emph{specifications}, i.e. the prescription of how it should react to certain inputs.  
@@ -18,8 +18,8 @@ The desired physiological conditions that the closed-loop system should achieve 
 Bugs in the first category (non-conformance to specification) can be detected via systematic and extensive open-loop testing in which a set of input sequences is fed to the device, and its output is compared with the expected output.
 Bugs in the second category (violation of physiological requirements), on the other hand, require the availability of the \emph{closed-loop system}, which consists of the device and its environment.
 E.g., the pacemaker and the heart as its environment. 
-In the medical device industry, closed-loop verification of the physiological requirements are mostly performed in terms of clinical trials, in which the actual devices are implanted in human subjects over an extended duration.
-Unfortunately, due to the extremely high cost, the amount and variety of human subjects during the clinical trials are limited, which reduces the number of bugs found during trials. 
+In the medical device industry, closed-loop verification of the physiological requirements is mostly performed in terms of clinical trials, in which the actual devices are implanted in human subjects over an extended duration.
+Unfortunately, due to the extremely high cost, the amount and variety of human subjects during the clinical trials are limited, which reduces the chances of finding bugs. 
 \todo{give dollar amount}
 Moreover, clinical trials are often conducted at the last design stage. Fixing bugs at this stage is very costly.
 
@@ -27,19 +27,40 @@ Closed-loop model checking enables closed-loop evaluation of the physiological r
 %Depending on the formalism used to model the environment (and device) and the language used to express the requirements, this allows the usage of formal methods to perform the verification.
 %Formal environment modeling introduces new challenges that do not arise when modeling the device alone, and this paper aims at addressing these issues in the context of pacemaker verification.
 %In the rest of this paper, we speak therefore of pacemaker as the Device Under Verification (DUV) and of the heart as being the environment, but it is understood that the discussion carries more broadly, with possible domain-specific adjustments.
-In closed-loop model checking, there is only one concrete system. However there can be countless number of environmental conditions which require different models to represent. A set of initial models of the environment can be constructed but the set is inherently incomplete due to the large number of environment conditions and their combinations. As the result, performing model checking using every models in the set cannot ensure full coverage on environment conditions. 
+In closed-loop model checking, there is only one device model. 
+However there can be a large number of environmental conditions which require different models to represent them.
+\todo[inline]{should we give an example of a heart condition?}
+A set of initial models of the environment can be constructed but the set is inherently incomplete due to the large number of environment conditions and their combinations. 
+As a result, performing model checking using every model in the set cannot ensure full coverage of the environmental conditions. 
 
-Over-approximation has been proposed in system modeling to reduce the state space while covering all the behaviors of the system. Over-approximation can be extended to environment modeling. By carefully designing over-approximation rules, the abstract model not only covers explicitly modeled environment conditions, but also covers behaviors and conditions not modeled in the set of initial models. The abstract model can be then used for closed-loop model checking. If a requirement is satisfied, the system under verification satisfy the requirement under environment conditions covered by the abstract model. 
+In this paper, we design domain-specific over-approximation rules that produce abstract models that not only cover explicitly modeled environment conditions, but also cover physiological behaviors and conditions not modeled in the set of initial models. 
+The abstract models and the device model can be then used for closed-loop model checking. 
+If the closed-loop system satisfies a requirement, the device under verification satisfies the requirement under environment conditions covered by the abstract models. 
+However, if the requirement is unsatisfied, the model checker returns a counter-example. 
+In system modeling, the counter-example is considered \emph{spurious} if it can not be produced by the device.
+However in environment modeling, even if the counter-example can not be produced by any of the initial environment models, it might still be a physiologically valid behavior.
+Thus the validity of a counter-example can only be determined by domain experts. 
 
-However, if the requirement is unsatisfied, the model checker returns a counter-example. The counter-example is not necessarily a bug since it may be a behavior that does not belong to any environment conditions, but was introduced into the abstract model during over-approximation. In system modeling the validity of the counter-example can be easily checked on the one and only concrete system. However in environment modeling, due to the possibly valid behaviors introduced in the abstract model, the validity of the counter-example cannot be determined even if it is not valid in all the models in the initial model set. Thus the validity of a counter-example can only be determined by domain experts, which is made challenging due to the possible lose of environment context during the over-approximation. One abstract counter-example may also correspond to multiple valid conditions, which causes ambiguity. A rigorous framework is thus needed to balance the coverage and environment context of the environment models.
+Counter-examples returned from abstract models can be hard to interpret by domain experts.
+\todo[inline]{why hard?}
+One abstract counter-example could be produced by multiple physiologically valid conditions, which causes ambiguity.
+Thus, a rigorous framework is needed to balance the need to cover a wide range of environmental conditions and the need to provide counter-examples to the physicians within their physiological context.
 
-Counter-Example Guided Abstraction and Refinement (CEGAR) \cite{CEGAR} has been proposed to over-approximate the system using predicate abstraction. Upon property violation the abstract counter-example is checked for its validity on the actual system. If the counter-example is \emph{spurious} the model is then refined to eliminate the spurious counter-example. This process is then continued on the refined model until either a valid counter-example returns or no counter-examples are returned. CEGAR works well during system modeling, however, it cannot be applied to environment modeling for two reasons: 1) predicate abstraction does not guarantee the validity of behaviors introduced into the model. In fact, for system modeling, all additional behaviors introduced into the abstract model are spurious. 2) the validity of a counter-example cannot be checked automatically as in system modeling.
+Another challenge for closed-loop model checking of medical devices is the amount of domain expertise needed during: 1) physiological modeling, 2) physiological model abstraction and refinement, and 3) checking the validity of counter-examples, which is not ideal in real world applications. 
 
-Another challenge for closed-loop model checking of medical devices is the amount of domain expertise needed during: 1) Physiological modeling; 2) Physiological model abstraction and refinement; 3) Checking the validity of counter-examples. In \cite{sttt13} we developed a set of heart models with different abstraction levels for closed-loop model checking of implantable pacemaker. In each steps of closed-loop model checking, both physiological knowledge and knowledge on formal methods are needed, which is not idea in real world applications. %The models were constructed and abstracted manually using domain knowledge. Models at different abstraction levels have a timed simulation relationship which are also proved manually. Upon property violation in an abstract model, the validity of the counter-example is checked manually and the appropriate refinement is also chosen manually to eliminate spurious counter-examples. 
+\input{relatedWorks}
+
 
 \subsection{Contributions}
-In this paper we propose a framework for environment modeling in closed-loop model checking of medical device software, which separates physiological knowledge and formal method knowledge required during each model checking steps. We use implantable pacemaker and heart modeling as an example. An expandable set of heart models are first developed to represent different physiological conditions. A set of physiological abstraction rules are then developed based on physiological knowledge, which ensure the physiological relevance of the behaviors introduced into the abstract models. Then the rules are applied to the initial set of physiological models to obtain an abstraction tree, which will be used for closed-loop model checking of pacemaker. A simple search procedure is then used to conduct model checking using suitable heart models and return the most concrete an unambiguous counter-examples to the physicians for analysis. In this framework, physiological knowledge is only needed when constructing the initial model set and analyzing counter-examples. The application of physiological abstraction rules and performing model checking can be automated.
-
+In this paper we propose a framework for environment modeling in closed-loop model checking of medical device software.
+We use the pacemaker as an example of applying this framework.
+An expandable set of heart models are first developed to represent different physiological conditions. 
+A set of domain-specific abstraction rules are then developed based on physiological knowledge, which help ensure the physiological relevance of the behaviors introduced into the abstract models. 
+Then the rules are applied to the initial set of physiological models to obtain an abstraction tree, which will be used for closed-loop model checking of the pacemaker. 
+A simple search procedure is then used to conduct model checking using suitable heart models and return the most concrete and unambiguous counter-examples to the physicians for analysis. 
+In this framework, physiological knowledge is only needed when constructing the initial model set and when analyzing counter-examples. 
+The application of the physiological abstraction rules and the verification procedure can be automated.
+The proposed method can potentially generalized to other domains in which the dvice operates in a large variety of environmental conditions.
 %During the closed-loop model checking, the most abstract model(s) that are appropriate to the requirement are automatically selected as the initial environment models. If the requirement is satisfied, the system is safe under the environment conditions covered by the initial environment models. If the requirement is violated in certain initial environment model, the children of the model in the abstraction tree are used for model checking until 1) the leaves of the tree is reached, or 2) there is no violations in the child nodes. The counter-examples obtained at the most refined models are returned to the physician for validity check. This process is automated so that no domain knowledge is required for the person who performs model checking. It also ensures the most concrete counter-examples with unambiguous physiological context are returned to the physician for analysis. 
 %The first challenge in closed-loop model checking of pacemakers is that the human heart displays a large number of different conditions, henceforth referred to as `physiological conditions'.
 %E.g., one heart may display \emph{atrial fibrillation} where the upper chambers of the heart (the atria) produce an exceedingly fast beat that prevents proper blood pumping.
@@ -71,5 +92,5 @@ In this paper we propose a framework for environment modeling in closed-loop mod
 %Using the models and the rules, we build an abstraction tree which serves to perform model checking of physiological requirements for the heart+pacemaker closed loop in Section ???.
 %We illustrate the approach via case studies in Section ???, and conclude in Section ???
 %
-The proposed method can potentially generalized to other domains in which the system operates in a large variety of environmental conditions.
+
 %
