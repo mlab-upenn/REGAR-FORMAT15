@@ -1,7 +1,6 @@
 param nvertices integer >= 1;
 param nedges    integer >= 1;
 param N         integer >= 1;
-param nelements integer >= 1;
 set ZERO; 
 
 set ELEMENTS   ;
@@ -10,8 +9,6 @@ set SUBGRAPHS  ;
 set TIME       ;
 set TIME0      ;
 
-
-check card(ELEMENTS) = nelements;#nvertices + nedges;
 check card(TIME) = N;
 
 # The initial values of vertex parameters
@@ -30,12 +27,6 @@ set KRULES within {RULES, SUBGRAPHS};
 set DESTROYED {KRULES} within {SUBGRAPHS};
 # Abstractness for every rule
 param deltaRS {RULES} integer >= 0;
-
-# (i,x) in FUCKED means that vertex x (given by its identity in G) is disabled by applying Ri.
-# This is regardless of which subgraph Ri is applied to, we're looking at all ogf them
-#set FUCKED  = {(i,x) in RULES cross ELEMENTS: 
-#					exists {subgraph in setof {(i,s) in KRULES} s} (subgraph,x) in KX 
-#               };
 
 # optimization var: 
 var a {KRULES, TIME0} binary := 0;
@@ -59,28 +50,13 @@ maximize abstractness:
 subject to InitialP0 {x in ELEMENTS}:
 	Px[x,0] = Px0[x];
 
-# The update equations have to be input manually since the update functions change and we can not model that in AMPL (or generated from MATLAB)
-# We will have as many such constraints as there are different update functions.
-# Here I'm giving everything the same form, max.
-# But say if Ri is applied to Ks at j-1, then x gets updated via max, and if Rj is applied
-# to Ks at j-1 then x is updated by sum, then those are two different constraints.	
-#
-#subject to Parameter_update {(x,j) in ELEMENTS cross TIME}:
-#	Px[x,j] = Px[x,j-1] + sum {(i,s) in KRULES: s in mySUBGRAPHS[x]}  a[i,s,j]*(-Px[x,j-1] + max( 430, Px[x, j-1]));
-
-subject to Parameter_update1 {(x,j) in {ELEMENTS cross TIME} diff {{65} cross TIME}}:
-	Px[x,j] = Px[x,j-1] + sum {(i,s) in KRULES: s in mySUBGRAPHS[x]}  a[i,s,j]*(-Px[x,j-1] + max( 430, Px[x, j-1]));
-		
-subject to Parameter_update2 {j in TIME}:
-	Px[65,j] = Px[65,j-1] + sum {(i,s) in KRULES: s in mySUBGRAPHS[65]}  a[5,'S4',j]*(-Px[65,j-1] + Px[65,j-1] + 200);
-
 # If at some j no rule is applied, then this means applications are over, and no rules can be further applied
 #       Arithmetic version
 subject to Regular_application {j in 1..N-1}:
-	(sum {(i,s) in KRULES} a[i,s,j]) - (sum{(i,s) in KRULES, jp in j+1..N} a[i,s,jp]) >= 0;
+	(sum {(i,s) in KRULES} a[i,s,j]) - (sum{(ip,sp) in KRULES} a[ip,sp,j+1]) >= 0;
 #  		Logic version
 #subject to Regular_application {j in 1..N-1}:
-#	sum {(i,s) in KRULES} a[i,s,j] = 0 ==> sum{(i,s) in KRULES, jp in j+1..N} a[i,s,jp] = 0;
+#	sum {(i,s) in KRULES} a[i,s,j] = 0 ==> sum{(i,s) in KRULES} a[i,s,j+1] = 0;
 
 # One rule at the most is applied per step
 subject to One_rule_at_a_time {j in TIME}:
@@ -88,11 +64,11 @@ subject to One_rule_at_a_time {j in TIME}:
 
 #       Arithmetic version
 subject to Disabling_by_structure {(i,s) in KRULES, j in 1..N-1}:
-	a[i,s,j]*(sum {jp in {j+1..N}, ip in RULES, sp in DESTROYED[i,s] : (ip,sp) in KRULES  }
+	a[i,s,j]*(sum {jp in {j+1..N}, (ip,sp) in KRULES: sp in DESTROYED[i,s] }
 	               a[ip,sp,jp]) = 0;
 #       Logic version
 #subject to Disabling_by_structure {(i,s) in KRULES, j in 1..N-1}:
-#	a[i,s,j] = 1 ==> sum {jp in {j+1..N}, ip in RULES, sp in DESTROYED[i,s] : (ip,sp) in KRULES  }
+#	a[i,s,j] = 1 ==> sum {jp in {j+1..N}, (ip,sp) in KRULES: sp in DESTROYED[i,s] }
 #	               a[ip,sp,jp] <= 0;
 
 # subject to Precedence:
@@ -108,6 +84,22 @@ set PROHIBITED_APPS = {(i,s) in KRULES :
 				};
 subject to Model_appropriateness {j in TIME, (i,s) in PROHIBITED_APPS}:
 	a[i,s,j]=0;
+
+# The update equations have to be input manually since the update functions change and we can not model that in AMPL (or generated from MATLAB)
+# We will have as many such constraints as there are different update functions.
+# Here I'm giving everything the same form, max.
+# But say if Ri is applied to Ks at j-1, then x gets updated via max, and if Rj is applied
+# to Ks at j-1 then x is updated by sum, then those are two different constraints.	
+#
+subject to Parameter_update {(x,j) in ELEMENTS cross TIME}:
+	Px[x,j] = Px[x,j-1] ;#+ sum {(i,s) in KRULES: s in mySUBGRAPHS[x]}  a[i,s,j]*(-Px[x,j-1] + max( 430, Px[x, j-1]));
+
+#subject to Parameter_update1 {(x,j) in {ELEMENTS cross TIME} diff {{65} cross TIME}}:
+#	Px[x,j] = Px[x,j-1] + sum {(i,s) in KRULES: s in mySUBGRAPHS[x]}  a[i,s,j]*(-Px[x,j-1] + max( 200, Px[x, j-1]));
+		
+#subject to Parameter_update2 {j in TIME}:
+#	Px[65,j] = Px[65,j-1] + sum {(i,s) in KRULES: s in mySUBGRAPHS[65]}  a['R5','S4',j]*(-Px[65,j-1] + Px[65,j-1] + 200);
+
 	
 
 
