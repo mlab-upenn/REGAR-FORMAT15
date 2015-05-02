@@ -1,14 +1,14 @@
 \section{Physiological Abstraction rules}
 \label{abstractionRules}
-In the last section we presented a formal model of the human heart as a labeled graph, where each vertex and edge are labeled by a timed automaton.
-A given choice of graph structure and of invariant and guard parameters for the automata results in a model that exhibits a given physiological condition, like atrial fibrillation, atrial flutter, etc.
-Because a pacemaker is meant to control and improve a range of physiological conditions, there is a need to verify it in a closed loop with all corresponding models.
-However this is not possible in practice, since any set of models we explicitly generate will necessarily be incomplete. 
-Thus in this section, we present domain-specific abstraction rules that can introduce new behavior to a given model. 
-This new behavior is physiologically meaningful and might be manifested by a heart condition not explicitly modeled in the initial set of models.
+%In the last section we presented a formal model of the human heart as a labeled graph, where each vertex and edge are labeled by a timed automaton.
+%A given choice of graph structure and of invariant and guard parameters for the automata results in a model that exhibits a given physiological condition, like atrial fibrillation, atrial flutter, etc.
+%Because a pacemaker is meant to control and improve a range of physiological conditions, there is a need to verify it in a closed loop with all corresponding models.
+%However this is not possible in practice, since any set of models we explicitly generate will necessarily be incomplete. 
+In this section, we present domain-specific abstraction rules that can introduce new behaviors to a given model. 
+These new behaviors are physiologically meaningful and might be manifested by a heart condition not explicitly modeled in the initial set of models.
 The physician (or domain expert) remains the ultimate arbiter of what is physiologically meaningful.
 Due to space limit we only introduce a subset of abstraction rules. 
-The full set is in the technical report [???].
+The full set is in the technical report \cite{regar_tech}.
 
 We introduce some notation: given a graph $G$ and an element $x \in V(G) \cup E(G)$ of $G$, we write $A_x$ for the automaton labeling that element.
 We write $\Ac(G)$ for the set of automata of a graph: $\Ac(G) = \{A_x : x \in V(G) \cup E(G)\}$.
@@ -20,8 +20,8 @@ Recall that a parameter $\theta$ has both a minimum $\theta_{min}$ (which is use
 
 \subsection{Rule 4: Merge Parameter Ranges}
 \textbf{Physiological intuition}. 
-The guards and invariants of node automata define timing periods of the heart, like the Effective Refractory Period (ERP) and Rest period. 
-By expanding these periods, we introduce new behavior where a heart may stay in rest for longer, or (self-)activate a node faster, or tissue can conduct current sooner, etc.
+Timing periods of heart tissue is modeled as locations in the node and path automata. The minimum and maximum time an automaton can stay in the location is governed by the parameters in the guards and invariants. By combining parameter ranges for two automata with same structure the new automaton covers the behaviors of both automata.
+%By expanding these periods, we introduce new behavior where a heart may stay in rest for longer, or (self-)activate a node faster, or tissue can conduct current sooner, etc.
 
 \textbf{(Sub)graph(s) to which it applies}.
 This rule applies to a set of graphs $G_i$ with the same structure (i.e. isomorphic) but possibly with different parameters: $R(G_1,\ldots,G_n) = G'$.
@@ -36,18 +36,18 @@ Thus $R$ plays the role of an isomorphism between every $G_i$ and $G'$.
 Given an element $x$ of $G'$, we abuse notation by writing $R^{-1}(x') = \{x_1,\dots,x_n\}$ is the set of elements that map to it via $R$.
 
 \textbf{Effect on parameters}
-Recall Def.~\ref{def:labeledGraph}
+%Recall Def.~\ref{def:labeledGraph}
 For every automaton $A_{x'} \in \Ac(G')$, and every parameter $\theta^{x'}$ of $A_{x'}$, 
 \[\theta_{min}^{x'} = \min(\theta^x_{min})_{x \in R^{-1}(x') }\]
 \[\theta_{max}^{x'} = \max(\theta^x_{max})_{x \in R^{-1}(x') }\]
 
-\textbf{Proof of abstraction}.
+\textbf{Proof of abstraction} Detailed proof can be found in \cite{regar_tech}.
 
 %\input{rule5}
 
 \subsection{Rule 6: Replace Blocking With Non-deterministic Conduction}
 \textbf{Physiological intuition}. 
-Consider the structure $N_1 P_1 N_2 P_2 N-3$ with three nodes and two paths, where $N_2$ is a passive node (i.e. not self-activating).
+Consider the structure $N_1 P_1 N_2 P_2 N_3$ with three nodes and two paths, where $N_2$ is a passive node (i.e. not self-activating).
 If $N_2$ blocks an activation signal from $N_1$ to $N_3$, this is equivalent to the paths $P_1$ or $P_2$ not conducting.
 In this rule, we replace the structure $P_1 N_2 P_2$ by a path $P$ whose automaton can take a self loop when it receives an activation signal, thus effectively stopping the conduction. 
 This is shown in Fig.~\ref{fig:rule5}: the extra transitions are marked {\quattrofont Act\_path\_1?} and {\quattrofont Act\_path\_2?}.
@@ -60,6 +60,7 @@ Line graphs with 3 vertices $N_1 P_1 N_2 P_2 N_3$, and self-activating nodes.
 $N_2$ is a passive node.
 
 \textbf{Output subgraph}.
+$N'_1 P' N'_3$
 A path $P$ whose path automaton is as shown in Fig.~\ref{fig:rule5}.
 The self-activating nodes $N$ are replaced by nodes $N'$ with automata shown in Fig.~\ref{fig:rule5}.
 
@@ -70,7 +71,7 @@ For the new nodes, $N'.Trest_{min}=N.TERP_{min}+N.Trest_{min}$ and
 $N'.Trest_{max}=N.TERP_{max}+N.Trest_{max}$.
 
 
-\textbf{Proof of abstraction}.
+\textbf{Proof of abstraction} Timed simulation relationship between $N_1 P_1 N_2 P_2 N_3$ and $N'_1 P' N'_3$ are proved in \cite{sttt13}.
 
 \begin{figure}[!h]
 	\centering
@@ -112,11 +113,11 @@ For every node automaton $N$ in $G'$, $N.Trest = +\infty$.
 \end{figure}
 
 \subsection{Heart Model Abstraction Tree}
-We first develop a list of concrete heart models corresponding to common heart conditions. 
-By systematically applying rules from Section \ref{ruleBasedHeartModelAbstraction} we created an abstraction tree $HM\_tree$ for the heart (\figref{HM_abs}). 
-Note that applying rules in different order results different abstraction tree. 
-The order used to obtain $HM\_tree$ is based on the domain knowledge that certain heart conditions may have similar behaviors and similar inputs to the pacemaker. 
-This systematic grouping maintains the physiological-relevance of the heart model even at higher abstraction levels, and reduce the necessity to resolve ambiguities at lower abstraction levels when model checking certain requirements.
+We first develop a list of heart models corresponding to common heart conditions. The list can be expanded as new heart conditions are discovered.
+By systematically applying rules in this section we created an abstraction tree $HM\_tree$ for the heart (\figref{HM_abs}). 
+%Note that applying rules in different order results different abstraction tree. 
+%The order used to obtain $HM\_tree$ is based on the domain knowledge that certain heart conditions may have similar behaviors and similar inputs to the pacemaker. 
+%This systematic grouping maintains the physiological-relevance of the heart model even at higher abstraction levels, and reduce the necessity to resolve ambiguities at lower abstraction levels when model checking certain requirements.
 \begin{figure}[!t]
 	\centering
 	\includegraphics[width=0.9\textwidth]{figs/abs.pdf}
@@ -126,13 +127,6 @@ This systematic grouping maintains the physiological-relevance of the heart mode
 	\label{fig:HM_abs}
 \end{figure}
 
-Besides model structure changes, applying abstraction rules also merges the behaviors of the model, which is documented for each abstraction. Here we demonstrate the behavior merging process on a subset of the abstraction tree (\figref{HM_abs}). In $H_{vt}''$, we have self activation behavior $NA.self$ and $NV.self$ for node $NA$ and conduction behavior $NV$,$(NA,AV').cond$ and $(AV',NV).cond$ for path $(NA,AV')$ and $(AV',NV)$. After applying Rule 6 we obtain $H_{vt}''$ with
-$$NA'.self=\{NA.self\},NV'.self=\{NV.self\}$$
-$$(NA',NV').cond=\{AV'.block,(NA,AV').cond,(AV',NV).cond\}$$
-After applying Rule 7 we obtain $H_{all}$ with:
-$$NA''.self=\{NA.self,(NA',NV').cond\}$$
-$$NV''.self=\{NV.self,(NA',NV').cond\}$$
-These information on behavior abstractions are useful to determine whether a model is appropriate for a requirement.
 \begin{figure}[!t]
 	\centering
 	\includegraphics[width=0.5\textwidth]{figs/abs_sim.pdf}

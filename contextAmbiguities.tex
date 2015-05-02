@@ -3,7 +3,7 @@ After the abstraction tree is built, it can be used for closed-loop model checki
 \subsection{Select Initial Abstraction(s) Appropriate For the Requirement}
 %Physiological requirements are in general conditional in the sense that they require conditions to hold under certain open-loop physiological constraints. These constraints map to parameters for certain transitions of the physiological models, which may be merged during the abstraction process.
 For a requirement $Req$ and its auxiliary monitor $Mon$, an environment model $M_E$ is appropriate for $Req$ if the variables contained in $M_E$ is a superset of the variables in the requirement and its auxiliary monitor: 
-$$Var(Req)\cap Var(Mon)\subseteq Var(M_E)$$
+$$Var(Req)\cup Var(Mon)\subseteq Var(M_E)$$
 The following algorithm selects the most abstract models from the abstraction tree $HM\_tree$ that are appropriate for a requirement $Req$.
 %The most abstract model in the abstraction tree is built to cover the input space to the device as much as possible, thus it may not have enough details to constrain the behaviors of the model according to the constraints in the requirement. Thus the first step of closed-loop model checking is to select the most abstract models which are appropriate for the requirement. A model $M$ is appropriate for a requirement $Req$ if the environment transitions mentioned in the requirement, denoted as $EnvT(Req)$, is a subset of the environment transitions associated with the model $EnvT(M$). The following algorithm finds the most abstract heart models in the abstraction tree $HM\_tree$ that are appropriate for a requirement $Req$.
 \begin{Verbatim}
