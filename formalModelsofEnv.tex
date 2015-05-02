@@ -22,7 +22,7 @@ The implantable cardiac pacemakers are rhythm management devices designed to tre
 	\caption{\small (a) Action potential for a heart tissue and its tissue nearby (dashed). (b) Node automaton. (c) Path automaton. (d) An example model of the heart consist of a network of node and path automata}
 	\label{fig:nodepathTA}
 \end{figure}
-\todo[inline]{explaoin hte condition represetned by the heart in fig.\ref{fig:nodepathTA}}
+
 \subsection{Timed-automata Models of the Heart}
 \label{labeledGraph}
 %In a healthy heart, specialized tissue in the \emph{SA node} self-activate periodically. The signal conducts throughout both atria, causing them to contract and push the blood into the ventricles
@@ -32,6 +32,7 @@ Different heart conditions can be distinguished by the \emph{timing} of the elec
 The node automaton initializes with \textsf{Rest} state.
 From \textsf{Rest} state, the node can either self-activate or be activated by external activations (indicated by Act\_node). Upon activation the node transition to the \textsf{ERP} state and activate all the paths connecting to the node (indicated by Act\_path). 
 In the \textsf{ERP} state the node does not respond to external activations. At the end of \textsf{ERP} state the node transition to the \textsf{Rest} state. 
+For heart tissue without the capability to self-activate, the parameters $Trest\_min$ and $Trest\_max$ are set to $\infty$.
 
 The initial state of a path automaton is \textsf{Idle}, which corresponds to no conduction. 
 A path has two conduction directions, forward and backward.
@@ -59,24 +60,19 @@ At the end of \textsf{Ante} and \textsf{Retro} state the path will transition to
 %For a heart model $G$ with $n$ nodes and $m$ paths (thus, $n$ vertices and $m$ edges), the node automata are denoted as $N_i, i\in[n]$ and path automata are denoted as $P_j,j\in[m]$. 
 %\todo[inline]{change to $V_i$ and $E_i$ to stay consistent with definition of graph?}
 %The parameters for the nodes are $Trest$ (with range $[Trest_{min}$),TERP,TRRP and the parameters for the paths are $\{Tante,Tretro\}$. 
-The spatial and temporal properties of a given human heart condition can be modeled by a network of node and path automata with different parameters (\figref{nodepathTA}.(d)). We use node automata to represent key structures of the heart and the path automata specifies the connectivities of those key structures and the conduction delays among them. The network can be viewed as a labeled directed graph: the vertices of the graph represent \emph{nodes}, or locations, in the heart, while edges represent conduction \emph{paths} between the nodes. 
+The spatial and temporal properties of a given human heart condition can be modeled by a network of node and path automata with different parameters (\figref{nodepathTA}.(d)). We use node automata to represent key structures of the heart and the path automata specifies the connectivities of those key structures and the conduction delays among them. The network can be viewed as a labeled directed graph: the vertices of the graph represent nodes, or locations, in the heart, while edges represent conduction paths between the nodes. 
 \begin{defn}
-	\label{def:labeledGraph}
 	[Labeled graph]
 	A \textbf{labeled graph} is a directed graph $G = (V,E,A)$ where 
 	$V$ is a finite set of vertices, $E \subset V\times V$ is a finite set of directed edges,
 	and $A$ is a total labeling function $A: V \cup E \rightarrow TA$
-	where $TA$ is the set of timed automata.
-	The function $A$ labels each vertex $v$ with a \emph{node automaton} $A_v$, and each edge $e$ with a \emph{path automaton} $A_e$.
-	We write $\Ec(G) = V(G) \cup E(G)$ for the elements of $G$.
-	
-	We define the following sets of parameters: for a node automaton $N = A(v), v  \in V(G)$
-	\[\Theta_N  = \{Trest_{min}, Trest_{max}, TERP_{min}, TERP_{max}\}\]
-	and for a path automaton $P = A(e), e \in E(G)$, 
-	\[\Theta_P = \{Tcond_{min}, Tcond_{max}\}\]
-	All node (resp. path) automata share the same structure shown in Fig.???, and differ only in the values of their parameters.
+	where $TA$ is the set of parametrized timed automata.
+	The function $A$ labels each vertex with a \emph{node automaton}, and each edge with an \emph{edge automaton}.
+	All node (resp. path) automata share the same structure, and differ only in the values of their parameters.
+	%The parameters of a timed automaton are variables that appear in the right-hand side of guard and invariant conditions, and whose value can only be changed by a reset that occurs at a transition.	
+	%Both node and path automata are shown in Fig.~\ref{fig:nodepathTA}
 \end{defn}
-The heart model structure has been used to model various heart conditions and all of them have been validated by electrophysiologists \cite{vhm_ecrts10,vhm_embc10}.
+The heart model structure has been used to model varies heart conditions and all of them have been validated by Electrophysiologists \cite{vhm_ecrts10,vhm_embc10}.
 
 %\subsection{Describe Model Behaviors with Physiological Context}
 %During model abstractions, the abstract model covers all transitions of the more refined model. Transitions corresponding to physiological behaviors may be merged or replaced by other transitions. Without documenting these information, the abstract models lose their physiological context. 

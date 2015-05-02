@@ -14,19 +14,6 @@ We introduce some notation: given a graph $G$ and an element $x \in V(G) \cup E(
 We write $\Ac(G)$ for the set of automata of a graph: $\Ac(G) = \{A_x : x \in V(G) \cup E(G)\}$.
 The set of parameters of the automaton is written $\Pc(A_x) = \{\theta_1^x,\theta_2^x,\ldots\}$. 
 Recall that a parameter $\theta$ has both a minimum $\theta_{min}$ (which is used in the guard definitions of the automaton) and a maximum $\theta_{max}$ (which is used in the invariant definition of the automaton).
-%The rules are based on the combination of physiological domain knowledge and formal method. %During the rule applications the transition groups incorporated with the models are also merged. These information maintains the physiological meanings of the transitions of the abstract models and are helpful to determine whether the models are appropriate for physiological requirements.%Unlike system modeling in which there is only one concrete system, during environment modeling there are infinite number of environmental conditions that can be generalize by abstractions. In this section, we model the heart as the physiological environment for implantable pacemakers and try to cover different heart conditions and the closed-loop interactions between the heart and the pacemaker. Then using abstraction rules defined over physiological knowledge and principles for over-approximation we construct a series of heart model abstractions with different complexity and coverage. During the rule applications the merging of transition groups are documented thus can be used during model refinements.
-
-\todo[inline]{For each rule, must 
-
-0) give physiological intuition
-
-1) describe the graph to which it applies (could be the whole graph) 
-
-2) describe The conditions on that graph under which it applies (including any assumptions about previously applied rules. Could be empty) 
-\\
-3) The effect of applying it on both a) the graph (either as pseudo-code or by describing the output graph), and b) the automata 
-\\
-4) show that is an over-approximation of the relevant behavior (so must define irrelevant behavior)}
 
 %\input{rule1}
 %\input{rule2}
@@ -55,16 +42,8 @@ For every automaton $A_{x'} \in \Ac(G')$, and every parameter $\theta^{x'}$ of $
 \[\theta_{max}^{x'} = \max(\theta^x_{max})_{x \in R^{-1}(x') }\]
 
 \textbf{Proof of abstraction}.
-%
-%For heart models $H_i,i=[1\dots p]$ with parameter set $\Theta$
-%$$\forall i,j,H_a.\theta^j_{min}=min(H_i.\theta^j_{min})$$ 
-%$$\forall i,j,H_a.\theta^j_{max}=max(H_i.\theta^j_{max})$$ 
-%$H_a$ covers all possible behaviors, thus is an abstraction of $H_i, i\in [1,p]$. The added behaviors in the abstract model do not affect the number of transition groups
 
-
-%\subsection{Rule 5: Merge Self-activation Nodes with Interaction Nodes}
-%%\todo[inline]{not clear}
-%The effect of self-activation nodes on the interaction of the pacemaker is triggering sensing events within certain delay. In this rule we merge all the self-activation nodes to their neariest interaction nodes. If there exists multiple self-activation nodes merging to the same interaction node, the parameters of the new model are determined following Rule 3.
+%\input{rule5}
 
 \subsection{Rule 6: Replace Blocking With Non-deterministic Conduction}
 \textbf{Physiological intuition}. 
@@ -87,8 +66,8 @@ The self-activating nodes $N$ are replaced by nodes $N'$ with automata shown in 
 \textbf{Effect on parameters}
 For the new path, $P.cond_{min}=P_1.cond_{min}+P_2.cond_{min}$ and 
 $P.cond_{max}=P_1.cond_{max}+P_2.cond_{max}$
-For the new nodes, $N'.rest_{min}=N.ERP_{min}+N.rest_{min}$ and 
-$N'.rest_{max}=N.ERP_{max}+N.rest_{max}$.
+For the new nodes, $N'.Trest_{min}=N.TERP_{min}+N.Trest_{min}$ and 
+$N'.Trest_{max}=N.TERP_{max}+N.Trest_{max}$.
 
 
 \textbf{Proof of abstraction}.
@@ -184,10 +163,3 @@ These information on behavior abstractions are useful to determine whether a mod
 %%\vspace{-15pt}
 %\label{fig:abs_exam}
 %\end{figure}
-
-
-
-
-
-
-
