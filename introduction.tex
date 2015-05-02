@@ -4,7 +4,7 @@
 Implantable medical devices like pacemakers are designed to improve physiological conditions with very little human intervention. 
 Their ability of autonomously affecting the physiological state of the patient makes the medical devices safety-critical, and sufficient evidence for their safety and efficacy should be provided before the devices can be implanted in the patients. 
 As more functionality is added to the devices
-\footnote{In what follows, we use the word `device' to refer both to the software of the device.}
+\footnote{In what follows, we use the word `device' to refer both to the hardware and the software of the device.}
 , the complexity of the software component of the device is increasing dramatically, leading to a large number of potential safety violations due to software bugs \cite{recall_stats}.
 
 
@@ -37,14 +37,39 @@ Counter-Example Guided Abstraction and Refinement (CEGAR) \cite{CEGAR} has been 
 
 In \cite{sttt13} we developed a set of heart models with different abstraction levels for closed-loop model checking of implantable pacemaker. The models were constructed and abstracted manually using domain knowledge. Models at different abstraction levels have a timed simulation relationship which are also proved manually. Upon property violation in an abstract model, the validity of the counter-example is checked manually and the appropriate refinement is also chosen manually to eliminate spurious counter-examples. This framework requires extensive domain expertise in each step which is not easy to use in real applications.
 
-\subsection{Contributions}
-In this paper we propose a semi-automated framework for environment modeling in closed-loop model checking of medical device software. 
-We use implantable pacemaker and heart modeling as an example. 
-An expandable set of heart models are first developed to represent different physiological conditions. 
-A set of domain-specific abstraction rules are then developed based on physiological knowledge, which ensure the physiological relevance of the behaviors introduced into the abstract models. Then the rules are applied onto the initial set of heart models to obtain an abstraction tree, which will be used for closed-loop model checking of the pacemaker. 
-Domain knowledge is only needed when constructing the initial model set and defining the abstraction rules. 
-Once the abstraction tree is constructed, no domain knowledge is needed. 
-We propose an algorithm for performing model-checking of the closed loop using the abstraction tree.
-The algorithm returns the most concrete counter-example (if it exists) to be examined by the domain expert, along with the heart models that produce it.
+\subsection{Contribution}
+In this paper we propose a semi-automated framework for environment modeling in closed-loop model checking of medical device software. We use implantable pacemaker and heart modeling as an example. An expandable set of heart models are first developed to represent different physiological conditions. A set of physiological abstraction rules are then developed based on physiological knowledge, which ensure the physiological relevance of the behaviors introduced into the abstract models. Then the rules are applied in certain order onto the initial set of physiological models to obtain an abstraction tree, which will be used for closed-loop model checking of pacemaker. Domain knowledge is only needed when constructing the initial model set and choosing the order for applying physiological abstraction rules. Once the abstraction tree is constructed, no domain knowledge is needed. 
+
+During the closed-loop model checking, the most abstract model(s) that are appropriate to the requirement are automatically selected as the initial environment models. If the requirement is satisfied, the system is safe under the environment conditions covered by the initial environment models. If the requirement is violated in certain initial environment model, the children of the model in the abstraction tree are used for model checking until 1) the leaves of the tree is reached, or 2) there is no violations in the child nodes. The counter-examples obtained at the most refined models are returned to the physician for validity check. This process is automated so that no domain knowledge is required for the person who performs model checking. It also ensures the most concrete counter-examples with unambiguous physiological context are returned to the physician for analysis. 
+%The first challenge in closed-loop model checking of pacemakers is that the human heart displays a large number of different conditions, henceforth referred to as `physiological conditions'.
+%E.g., one heart may display \emph{atrial fibrillation} where the upper chambers of the heart (the atria) produce an exceedingly fast beat that prevents proper blood pumping.
+%Another heart may display Premature Ventricular Contraction (PVC) where a location in the ventricles produces electrical impulses at erratic time instants.\Hao{I don't think these two conditions make sense to the reader}
+%Each such condition will require its own formal model, and some models may display more than one condition.
+%In this paper, we build such a set of formal heart models using the timed automata formalism in Section ???.
+%Performing model checking with each model separately, we seek a method that can combine models, and perform model checking on the merged model. 
+%The combination of models must be such that if the merged model is correct (according to the requirements) then so is every model that was combined into it.
+%We present \emph{abstraction rules} in Section ?? which allow us to do precisely that.
+
+%This initial set of models will necessarily be \emph{incomplete} because the number of physiological conditions is too large, and some of the conditions are too ill-understood for modeling.
+%Thus, unlike system modeling in which one typically starts from one ground truth model to be verified, our starting point is an \emph{incomplete set of environment models}.
+%Because of this incompleteness, we seek abstraction rules that introduce new \emph{physiologically meaningful} behavior which might actually be produced by heart models not in the initial set.
+%These then correspond to heart conditions not taken explicitly into account. 
+%This provides a second motivation for the domain-specific abstraction rules $R$ in Section ???, which can be thought of as relaxations of the conditions governing the model's behavior. 
+%Like predicate abstraction, they produce models that over-approximate the behavior of the model they are applied to (i.e., $\beh(R(M)) \supset \beh(M)$).
+%However, the new behavior they introduce might not be spurious. 
+%We demonstrate such a case in Section ???.
+%If model checking returns a counter-example on $R(M)$, the physician can decide whether this is actually physiologically plausible behavior and therefore the pacemaker needs to be debugged, or this is indeed spurious and should be thrown out (and the abstraction refined).
+%
+%Note this is different from classical predicate abstraction [???], which adds behavior in a domain-agnostic fashion. In fact, predicate abstraction is a fist step in the timed automata model checking procedure as presented in [ALur and Dill 1994].
+%Our abstraction rules are used to combine and and abstract models \emph{prior} to model checking.
+%%tttt
+%
+%\subsubsection{Contributions}
+%In this paper we propose a framework for environment modeling and model checking of medical device software, in particular, pacemakers.
+%Specifically, we present several extended timed automata models of various heart conditions in Section ???. 
+%We define domain-specific abstraction rules for these models, and demonstrate how these can be applied to gradually add physiologically meaningful behavior in Section ???. 
+%Using the models and the rules, we build an abstraction tree which serves to perform model checking of physiological requirements for the heart+pacemaker closed loop in Section ???.
+%We illustrate the approach via case studies in Section ???, and conclude in Section ???
+%
 The proposed method can potentially generalized to other domains in which the system operates in a large variety of environmental conditions.
 %
