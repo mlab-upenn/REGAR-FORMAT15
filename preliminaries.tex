@@ -1,6 +1,11 @@
 \section{Technical preliminaries}
 \label{preliminaries}
-For a model $M$ with state space $S$, we define a behavior of the model as an execution trace $\delta\in S^\omega$. The reachable behavior space of the model $M$ is denoted as $\mathbb{B}(M)\subset S^\omega$. A property $\varphi$ defines a region in the behavior space within which the property is satisfied, which can be denoted as $\mathbb{B}(\varphi)$. A model checking problem is to use mathematical tool to explore all of the reachable behaviors of a model $M$ against a property $\varphi$ such that $\mathbb{B}(M)\subseteq \mathbb{B}(\varphi)$. We denote it as $M\models\varphi$. Execution traces $\delta_v\in\mathbb{B}(M)\backslash (\mathbb{B}(M)\cap\mathbb{B}(\varphi))$ will be returned by the model checker as property violations so that the designer can analyze and address the problem. 
+For a model $M$ with state space $S$, a \emph{trace} is an infinite sequence $\delta\in S^\omega$. 
+The reachable behavior space of the model $M$ is denoted as $\beh(M)\subset S^\omega$. 
+A property $\varphi$ defines a region in $\beh(M)$ within which the property is satisfied, which can be denoted as $\beh(\varphi)$.
+A \emph{model checker} takes a system model $M$ and a formal requirement $\varphi$, and returns whether $\beh(M) \subset \beh(\varphi)$, which is denoted by $M\models\varphi$. 
+If the inclusion doesn't hold, the model checker returns a \emph{counter-example} $\delta_v\in\beh(M) \setminus \beh(\varphi)$.
+This counter-example is used by the designer to debug the problem. 
 
 \subsection{Closed-loop Physiological Requirements}
 In closed-loop model checking, the closed-loop system $M_E||M_D$ consists of the device under check $M_D$, and environment conditions modeled as $M_E$. In the case of medical devices, the devices are designed to \emph{improve} certain physiological conditions. For an unhealthy open-loop physiological condition that a device is designed to improve, the closed-loop condition should be healthy. Software developers are also particularly interested in the scenario in which a healthy open-loop physiological condition became an unhealthy closed-loop condition due to device intervention, which is a bug in the device.
@@ -26,12 +31,7 @@ Over-approximation can also be used to cover the behaviors of multiple models. A
 $$\forall \delta\in \mathbb{B}(M_1)\cup\mathbb{B}(M_2),\exists \delta'\in\mathbb{B}(M')\text{ s.t. } h(\delta)=\delta'$$
 We denote it as $\{M_1,M_2\}\triangleleft_h M'$, such that $h(\mathbb{B}(M_1)\cup\mathbb{B}(M_2))\subseteq\mathbb{B}(M')$.
 
-\subsection{Appropriateness of a Model for a Requirement}
-The state of a model $M$ is represented as $s=(s_1,s_2\cdots s_n)$ in which $s_i, i\in [1,n]$ are the substates. We use $Var(M)={s_1,s_2\cdots s_n}$ to represent all the substates variables in $M$. For an abstraction function $h$ which removes $s_i$ from the substates, we have:
-$$\forall s_j,j\in [1,n], h(s_1,s_2\cdots s_n)=(s_1\cdots s_{i-1},s_{i+1}\cdots s_n)$$
-It shows that $h$ is an over-approximation and in the new model $M$ we have $Var(M')\subset Var(M)$.
-
-A requirement is defined on a set of atomic propositions involving the substates of the model, which we denote as $Var(\varphi)$. If we have $Var(\varphi)\subseteq Var(M')$, all the atomic propositions can be evaluated in $M'$. And if $M'\models \varphi$, we have $M\models\varphi$ as discussed above. In this case we say that $M'$ is \emph{appropriate} for $\varphi$. However if during the over-approximation, certain variables that are in $Var(\varphi)$ are removed from $Var(M)$, such that $Var(\varphi)\not\subseteq Var(M')$, certain atomic propositions cannot be evaluated in $M'$, In this case, $M'$ is not appropriate for $\varphi$. More detailed proof for appropriateness can be found in \cite{regar_tech}.
+%\input{appropriateness}
 
 \subsection{Ambiguities Caused by Over-approximation}
 Since $h$ is non-surjective, there exists behaviors in $M'$ that do not exists in the original model $M$:
