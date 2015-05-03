@@ -4,24 +4,32 @@ After the abstraction tree is built, it can be used for closed-loop model checki
 %Physiological requirements are in general conditional in the sense that they require conditions to hold under certain open-loop physiological constraints. These constraints map to parameters for certain transitions of the physiological models, which may be merged during the abstraction process.
 For a requirement $Req$ and its auxiliary monitor $Mon$, an environment model $M_E$ is appropriate for $Req$ if the variables contained in $M_E$ is a superset of the variables in the requirement and its auxiliary monitor: 
 $$Var(Req)\subseteq Var(M_E)\cup Var(Mon)$$
-The following algorithm selects the most abstract models from the abstraction tree $HM\_tree$ that are appropriate for a requirement $Req$.
+Algorithm 1 (\figref{algorithm}) selects the most abstract models from the abstraction tree $HM\_tree$ that are appropriate for a requirement $Req$.
+\begin{figure}[!t]
+		\centering
+		\includegraphics[width=0.9\textwidth]{figs/algorithm.pdf}
+		%\vspace{-5pt}
+		\caption{\small Algorithms for closed-loop model checking with abstraction tree}
+		  %\vspace{-15pt}
+		\label{fig:algorithm}
+\end{figure}
 %The most abstract model in the abstraction tree is built to cover the input space to the device as much as possible, thus it may not have enough details to constrain the behaviors of the model according to the constraints in the requirement. Thus the first step of closed-loop model checking is to select the most abstract models which are appropriate for the requirement. A model $M$ is appropriate for a requirement $Req$ if the environment transitions mentioned in the requirement, denoted as $EnvT(Req)$, is a subset of the environment transitions associated with the model $EnvT(M$). The following algorithm finds the most abstract heart models in the abstraction tree $HM\_tree$ that are appropriate for a requirement $Req$.
-\begin{Verbatim}
-Algorithm 1
-function [HM]=eligible(HM_tree,Req)
-BM = root of HM_tree
-while (BM is not empty)
- For every model M in BM
-  If (Var(Req) is a subset of Var(M)+Var(Mon))
-   Remove M from BM
-   save M in HM
-  else
-   add children of M in BM
-  endif
- endfor
-endwhile
-Return HM
-\end{Verbatim}
+%\begin{Verbatim}
+%Algorithm 1
+%function [HM]=eligible(HM_tree,Req)
+%BM = root of HM_tree
+%while (BM is not empty)
+ %For every model M in BM
+  %If (Var(Req) is a subset of Var(M)+Var(Mon))
+   %Remove M from BM
+   %save M in HM
+  %else
+   %add children of M in BM
+  %endif
+ %endfor
+%endwhile
+%Return HM
+%\end{Verbatim}
 %BM = all models in HM_tree with all Prop(Req)
 %For all M in BM
  %while (in the parent of M no behavior in Prop(Req) is abstracted with other behaviors)
@@ -33,27 +41,27 @@ Return HM
 %One challenge for modeling physiological environment of medical devices is the large variety of physiological conditions that the devices may encounter. %It is impossible to exhaustively model the conditions with concrete physiological models. 
 %The set of concrete models (the leave nodes in the abstraction tree) only represent a subset of all possible physiological conditions, thus model checking the device on all of the concrete models is not enough to guarantee the satisfaction of the requirement. By applying physiological abstraction rules, additional physiological-relevant behaviors are incorporated into the abstract models by over-approximation, providing more coverage. 
 %However, if model checking on an abstract model returns a counter-example, if is difficult to determine whether the counter-example is a valid execution. Due to the incomplete nature of the set of concrete models, if the counter-example cannot be concretized on all the concrete models, it does not mean it is invalid. Therefore it is up to the physician to decide whether a counter-example is valid or not. The algorithm below explore the abstraction tree during model checking and provide the physician the most concrete counter-example(s), if there exists any. 
-Upon requirement violation, an abstract counter-example is returned during closed-loop model checking. The counter-example may contain context ambiguities that should be resolved before sending to the physician. An abstraction tree contains the information of how different environment conditions are over-approximated by more abstract models. By exploring the abstraction tree, the most concrete yet unambiguous counter-examples can be sent to the physicians for analysis. The following algorithm describes the process for closed-loop model checking with an abstraction tree.
-\begin{Verbatim}
-Algorithm 2
-Input: system model PM, abstraction tree for environment HM_tree, requirement Req
-Output: Counter examples CE and corresponding model refinements, if any
-[HM]=eligible(HM_tree,Req);
-Mc= HM;
- while (Mc is not empty)
-  For all M in Mc
-   [satisfied,CE]=ModelChecking(M,PM,Req);
-	 Remove M from Mc
-	 If satisfied==0
-	  add the children of M to Mc
-		cache CE
-	else
-		save CE from the parent model
-	endif
- endfor
-endwhile
-Return all saved CEs and their corresponding models
-\end{Verbatim}
+Upon requirement violation, an abstract counter-example is returned during closed-loop model checking. The counter-example may contain context ambiguities that should be resolved before sending to the physician. An abstraction tree contains the information of how different environment conditions are over-approximated by more abstract models. By exploring the abstraction tree, the most concrete yet unambiguous counter-examples can be sent to the physicians for analysis. Algorithm 2 (\figref{algorithm}) describes the process for closed-loop model checking with an abstraction tree.
+%\begin{Verbatim}
+%Algorithm 2
+%Input: system model PM, abstraction tree for environment HM_tree, requirement Req
+%Output: Counter examples CE and corresponding model refinements, if any
+%[HM]=eligible(HM_tree,Req);
+%Mc= HM;
+ %while (Mc is not empty)
+  %For all M in Mc
+   %[satisfied,CE]=ModelChecking(M,PM,Req);
+	 %Remove M from Mc
+	 %If satisfied==0
+	  %add the children of M to Mc
+		%cache CE
+	%else
+		%save CE from the parent model
+	%endif
+ %endfor
+%endwhile
+%Return all saved CEs and their corresponding models
+%\end{Verbatim}
 
 \begin{figure}[!t]
 		\centering
@@ -97,12 +105,13 @@ Then we run Algorithm 2. By model checking on all 3 initial models in UPPAAL we 
 $$[1,[]]=ModelChecking(H_n'',PM,Req1)$$
  $$[0,CE_1]=ModelChecking(H_{at}'''',PM,Req1)$$
 $$[0,CE_2]=ModelChecking(H_{vt}''',PM,Req1)$$
-For the two heart models $H_{at}'''',H_{vt}'''$ in which the requirement is violated, the algorithm keeps going down the abstraction tree, and upon termination the following results are returned:
-$$[0,CE_{at}]=ModelChecking(H_{at},PM,Req1)$$
-$$[0,CE_{pvc}]=ModelChecking(H_{pvc},PM,Req1)$$
-$$[0,CE_{af}]=ModelChecking(H_{af},PM,Req1)$$
-$$[0,CE_{avn}]=ModelChecking(H_{avn},PM,Req1)$$
-$$[0,CE_{afib}]=ModelChecking(H_{afib},PM,Req1)$$
+For the two heart models $H_{at}'''',H_{vt}'''$ in which the requirement is violated, the algorithm keeps going down the abstraction tree, and upon termination counter-examples are returned for the following heart models:
+$$H_{at};H_{pvc};H_{af};H_{avn};H_{afib}$$
+%$$[0,CE_{at}]=ModelChecking(H_{at},PM,Req1)$$
+%$$[0,CE_{pvc}]=ModelChecking(H_{pvc},PM,Req1)$$
+%$$[0,CE_{af}]=ModelChecking(H_{af},PM,Req1)$$
+%$$[0,CE_{avn}]=ModelChecking(H_{avn},PM,Req1)$$
+%$$[0,CE_{afib}]=ModelChecking(H_{afib},PM,Req1)$$
 
 \begin{figure}[!t]
 		\centering
