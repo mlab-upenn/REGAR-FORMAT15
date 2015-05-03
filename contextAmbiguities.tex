@@ -75,12 +75,13 @@ The requirement below is designed to prevent the pacemaker from pacing too fast.
 \textsf{If intervals between self-activations of the atria is between 300ms to 1000ms, the intervals between ventricular paces should be no shorter than 500ms.}
 
 With parameter mapping and a monitor $M_{sing}(VP,500,\infty)$, the requirement can be translated to:
-$$Req1: N_A.Trest\_min=300 \&\& N_A.Trest\_max=1000 \Rightarrow \neg M_{sing}.Err$$
+$$Req1: N_A.loc=Rest \&\& N_A.t\in [300,1000] \Rightarrow \neg M_{sing}.Err$$
+
  \subsection{Choosing Appropriate Heart Model For the Requirement}
 To verify the closed-loop system with pacemaker model $PM$ and heart model abstraction tree $HM\_tree$ (\figref{HM_abs}) against requirement $Req1$, we start by searching for the most abstract appropriate models from the abstraction tree. We call the function specified in Algorithm 1: $[HM]=eligible(HM\_tree,Req1)$. The variables in the requirement and the corresponding monitor are:
-$$Var(Req1)\cup Var(M_{sing})=\{N_A.Trest\_min,N_A.Trest\_max, Vpace\}$$
+$$Var(Req1)\cup Var(M_{sing})=\{N_A.t,N_A.loc, VP\}$$
 
-At the root level heart model $H_{all}$, we have $\{N_A.Trest\_min,N_A.Trest\_max\}\not\in Var(H_{all})$. As the result, $H_{all}$ is not appropriate for $Req1$. For all the children of $H_{all}$: $H_n'',H_{at}'''',H_{vt}'''$, we have $Var(Req1)\cup Var(M_{sing})\subseteq Var(H_n'')=Var(H_{at}'''')=Var(H_{vt}''')$, thus these 3 heart models are outputted as the most abstract models that are appropriate for $Req1$.
+At the root level heart model $H_{all}$, we have $\{N_A.t,N_A.loc\}\not\in Var(H_{all})$. As the result, $H_{all}$ is not appropriate for $Req1$. For all the children of $H_{all}$: $H_n'',H_{at}'''',H_{vt}'''$, we have $Var(Req1)\cup Var(M_{sing})\subseteq Var(H_n'')=Var(H_{at}'''')=Var(H_{vt}''')$, thus these 3 heart models are outputted as the most abstract models that are appropriate for $Req1$.
 \begin{figure}[!t]
 	\centering
 	\includegraphics[width=0.5\textwidth]{figs/abs_sim.pdf}
