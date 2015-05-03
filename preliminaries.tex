@@ -2,13 +2,13 @@
 \label{preliminaries}
 For a model $M$ with state space $S$, we define a behavior of the model as an execution trace $\delta\in S^\omega$. The reachable behavior space of the model $M$ is denoted as $\mathbb{B}(M)\subset S^\omega$. A property $\varphi$ defines a region in the behavior space within which the property is satisfied, which can be denoted as $\mathbb{B}(\varphi)$. A model checking problem is to use mathematical tool to explore all of the reachable behaviors of a model $M$ against a property $\varphi$ such that $\mathbb{B}(M)\subseteq \mathbb{B}(\varphi)$. We denote it as $M\models\varphi$. Execution traces $\delta_v\in\mathbb{B}(M)\backslash (\mathbb{B}(M)\cap\mathbb{B}(\varphi))$ will be returned by the model checker as property violations so that the designer can analyze and address the problem. 
 
-\subsection{Closed-loop Physiological Requirements}
-In closed-loop model checking, the closed-loop system $M_E||M_D$ consists of the device under check $M_D$, and environment conditions modeled as $M_E$. In the case of medical devices, the devices are designed to \emph{improve} certain physiological conditions. For an unhealthy open-loop physiological condition that a device is designed to improve, the closed-loop condition should be healthy. Software developers are also particularly interested in the scenario in which a healthy open-loop physiological condition became an unhealthy closed-loop condition due to device intervention, which is a bug in the device.
-
-In general, a closed-loop requirement $\varphi$ is in the form of $\varphi_E\Rightarrow \varphi_C$, in which $\varphi_E$ is the open-loop physiological condition that the device encounters, often in form of parameter ranges in the environment models, and $\varphi_C$ is the closed-loop physiological condition that the device should achieve. Then we have:
- \begin{equation}\label{req_def}
-M_E\models\varphi_E, M_E||M_D\models \varphi_C\Rightarrow M_E||M_D\models\varphi
-\end{equation}
+%\subsection{Closed-loop Physiological Requirements}
+%In closed-loop model checking, the closed-loop system $M_E||M_D$ consists of the device under check $M_D$, and environment conditions modeled as $M_E$. In the case of medical devices, the devices are designed to \emph{improve} certain physiological conditions. For an unhealthy open-loop physiological condition that a device is designed to improve, the closed-loop condition should be healthy. Software developers are also particularly interested in the scenario in which a healthy open-loop physiological condition became an unhealthy closed-loop condition due to device intervention, which is a bug in the device.
+%
+%In general, a closed-loop requirement $\varphi$ is in the form of $\varphi_E\Rightarrow \varphi_C$, in which $\varphi_E$ is the open-loop physiological condition that the device encounters, often in form of parameter ranges in the environment models, and $\varphi_C$ is the closed-loop physiological condition that the device should achieve. Then we have:
+% \begin{equation}\label{req_def}
+%M_E\models\varphi_E, M_E||M_D\models \varphi_C\Rightarrow M_E||M_D\models\varphi
+%\end{equation}
 
 \subsection{Model Abstraction with Over-approximation}
 %The behavior space of the actual system is too large for model checker to exhaustively explore. 
