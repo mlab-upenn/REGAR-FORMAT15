@@ -7,13 +7,13 @@ A \emph{model checker} takes a system model $M$ and a formal requirement $\varph
 If the inclusion doesn't hold, the model checker returns a \emph{counter-example} $\delta_v\in\beh(M) \setminus \beh(\varphi)$.
 This counter-example is used by the designer to debug the problem. 
 
-\subsection{Closed-loop Physiological Requirements}
-In closed-loop model checking, the closed-loop system $M_E||M_D$ consists of the device under check $M_D$, and environment conditions modeled as $M_E$. In the case of medical devices, the devices are designed to \emph{improve} certain physiological conditions. For an unhealthy open-loop physiological condition that a device is designed to improve, the closed-loop condition should be healthy. Software developers are also particularly interested in the scenario in which a healthy open-loop physiological condition became an unhealthy closed-loop condition due to device intervention, which is a bug in the device.
-
-In general, a closed-loop requirement $\varphi$ is in the form of $\varphi_E\Rightarrow \varphi_C$, in which $\varphi_E$ is the open-loop physiological condition that the device encounters, often in form of parameter ranges in the environment models, and $\varphi_C$ is the closed-loop physiological condition that the device should achieve. Then we have:
- \begin{equation}\label{req_def}
-M_E\models\varphi_E, M_E||M_D\models \varphi_C\Rightarrow M_E||M_D\models\varphi
-\end{equation}
+%\subsection{Closed-loop Physiological Requirements}
+%In closed-loop model checking, the closed-loop system $M_E||M_D$ consists of the device under check $M_D$, and environment conditions modeled as $M_E$. In the case of medical devices, the devices are designed to \emph{improve} certain physiological conditions. For an unhealthy open-loop physiological condition that a device is designed to improve, the closed-loop condition should be healthy. Software developers are also particularly interested in the scenario in which a healthy open-loop physiological condition became an unhealthy closed-loop condition due to device intervention, which is a bug in the device.
+%
+%In general, a closed-loop requirement $\varphi$ is in the form of $\varphi_E\Rightarrow \varphi_C$, in which $\varphi_E$ is the open-loop physiological condition that the device encounters, often in form of parameter ranges in the environment models, and $\varphi_C$ is the closed-loop physiological condition that the device should achieve. Then we have:
+% \begin{equation}\label{req_def}
+%M_E\models\varphi_E, M_E||M_D\models \varphi_C\Rightarrow M_E||M_D\models\varphi
+%\end{equation}
 
 \subsection{Model Abstraction with Over-approximation}
 \label{overapx}
