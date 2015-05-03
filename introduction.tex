@@ -1,7 +1,7 @@
 \section{Introduction}
 \label{introduction}
 
-\todo[inline]{stress the timing aspect more}
+%\todo[inline]{stress the timing aspect more}
 Implantable medical devices such as pacemakers are designed to improve physiological conditions with very little human intervention. 
 Their ability of autonomously affecting the physiological state of the patient makes the medical devices safety-critical, and sufficient evidence for their safety and efficacy should be provided before the devices can be implanted in the patients. 
 As more functionality is added to the devices
@@ -33,8 +33,8 @@ However there can be a large number of environmental conditions which require di
 A set of initial models of the environment can be constructed but the set is inherently incomplete due to the large number of environment conditions and their combinations. 
 As a result, performing model checking using every model in the set cannot ensure full coverage of the environmental conditions. 
 
-In this paper, we design domain-specific over-approximation rules that produce abstract models that not only cover explicitly modeled environment conditions, but also cover physiological behaviors and conditions not modeled in the set of initial models. 
-The abstract models and the device model can be then used for closed-loop model checking. 
+In this paper, we design domain-specific over-approximation rules that produce abstract models that not only cover explicitly modeled environment conditions, but also cover physiological timing behaviors and conditions not modeled in the set of initial models. 
+The abstract models can be then used for closed-loop model checking of the device model. 
 If the closed-loop system satisfies a requirement, the device under verification satisfies the requirement under environment conditions covered by the abstract models. 
 However, if the requirement is unsatisfied, the model checker returns a counter-example. 
 In system modeling, the counter-example is considered \emph{spurious} if it can not be produced by the device.
