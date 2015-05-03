@@ -1,13 +1,11 @@
 \section{Physiological Abstraction rules}
-\label{abstractionRules}
-%In the last section we presented a formal model of the human heart as a labeled graph, where each vertex and edge are labeled by a timed automaton.
-%A given choice of graph structure and of invariant and guard parameters for the automata results in a model that exhibits a given physiological condition, like atrial fibrillation, atrial flutter, etc.
-%Because a pacemaker is meant to control and improve a range of physiological conditions, there is a need to verify it in a closed loop with all corresponding models.
-%However this is not possible in practice, since any set of models we explicitly generate will necessarily be incomplete. 
-In this section, we present domain-specific abstraction rules that can introduce new behaviors to a given model. 
+\label{abstractionRules} 
+In this section, we present domain-specific abstraction rules that can introduce new behaviors to a given model or set of models. 
 These new behaviors are physiologically meaningful and might be manifested by a heart condition not explicitly modeled in the initial set of models.
 The physician (or domain expert) remains the ultimate arbiter of what is physiologically meaningful.
-Due to space limit we only introduce a subset of abstraction rules. 
+This is a peculiarity of environment modeling, borne out of the fact that the initial set of models is necessarily incomplete, and does not represent all valid behaviors.
+We then show how the application of these rules can be automated, thus obviating the need for domain expertise.
+Due to space limits we only introduce a subset of the abstraction rules. 
 The full set is in the technical report \cite{regar_tech}.
 
 We introduce some notation: given a graph $G$ and an element $x \in V(G) \cup E(G)$ of $G$, we write $A_x$ for the automaton labeling that element.
@@ -20,10 +18,11 @@ Recall that a parameter $\theta$ has both a minimum $\theta_{min}$ (which is use
 
 \subsection{Rule 4: Merge Parameter Ranges}
 \textbf{Physiological intuition}. 
-Timing periods of heart tissue is modeled as locations in the node and path automata. The minimum and maximum time an automaton can stay in the location is governed by the parameters in the guards and invariants. By combining parameter ranges for two automata with same structure the new automaton covers the behaviors of both automata.\\
-%By expanding these periods, we introduce new behavior where a heart may stay in rest for longer, or (self-)activate a node faster, or tissue can conduct current sooner, etc.
+Timing periods of heart tissue, like Rest and ERP, are modeled as locations in the node and path automata. 
+The minimum and maximum time an automaton can stay in a location is governed by the parameters in the guards and invariants. 
+By expanding these periods, we introduce new behavior where a heart may stay in rest for longer, or (self-)activate a node faster, or tissue can conduct current sooner, etc.
 \textbf{(Sub)graph(s) to which it applies}.
-This rule applies to a set of graphs $G_i$ with the same structure (i.e. isomorphic) but possibly with different parameters: $R(G_1,\ldots,G_n) = G'$.
+This rule applies to a set of graphs $G_i$ with the same structure (i.e. which are isomorphic) but possibly with different parameters: $R(G_1,\ldots,G_n) = G'$.
 See Fig.~\ref{fig:HM_abs}.\\
 \textbf{Applicability conditions}.
 None.\\
@@ -96,6 +95,8 @@ For every node automaton $N$ in $G'$, the node automata are $N.Trest_min=0,N.Tre
 	%\vspace{-15pt}
 	\label{fig:rule6}
 \end{figure}
+
+\input{automatedApplication}
 
 \subsection{Heart Model Abstraction Tree}
 We first develop a list of heart models corresponding to common heart conditions. The list can be expanded as new heart conditions are discovered.
