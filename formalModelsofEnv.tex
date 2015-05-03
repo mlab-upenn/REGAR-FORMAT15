@@ -62,6 +62,7 @@ At the end of \textsf{Ante} and \textsf{Retro} state the path will transition to
 %The parameters for the nodes are $Trest$ (with range $[Trest_{min}$),TERP,TRRP and the parameters for the paths are $\{Tante,Tretro\}$. 
 The spatial and temporal properties of a given human heart condition can be modeled by a network of node and path automata with different parameters (i.e. \figref{nodepathTA}.(d)). We use node automata to represent physiological structures of the heart and the path automata specifies the connectivities of the nodes and the conduction delays among them. The network can be viewed as a labeled directed graph: %the vertices of the graph represent nodes, or locations, in the heart, while edges represent conduction paths between the nodes. 
 \begin{defn}
+	\label{def:labeledGraph}
 	[Labeled graph]
 	A \textbf{labeled graph} is a directed graph $G = (V,E,A)$ where 
 	$V$ is a finite set of vertices, $E \subset V\times V$ is a finite set of directed edges,
