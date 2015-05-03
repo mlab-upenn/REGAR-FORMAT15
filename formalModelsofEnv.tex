@@ -1,6 +1,6 @@
 \section{Formal Models of the Environment}
 \label{formalModelsofEnv}
-To perform closed-loop model checking of medical devices, we need formal models of their physiological environment to represent different physiological conditions the devices may encounter. Physiological requirements which the closed-loop system should satisfy are also formalized. In this section, we use implantable pacemakers as example. Timed-automata \cite{timed_automata} models of the human heart are developed as the environment model. Physiological requirements are formalized with monitors and TCTL formula  \cite{TCTL}. Model checking can then be performed on the closed-loop system in model checker UPPAAL \cite{uppaal}. %The physiological knowledge required during closed-loop model checking of medical devices are associated with the \emph{physiological models} and the \emph{physiological requirements}. It is thus important to maintain the physiological context of the models and link model behaviors to physiological requirements. In this section we use heart modeling as example to demonstrate physiological knowledge encoding. %First, we introduce the physiological basis for our heart modeling. Then we demonstrate our heart model structure which can be used to model different heart conditions. We link transitions in the models to physiological behaviors
+To perform closed-loop model checking of medical devices, we need formal models of their physiological environment to represent different physiological conditions the devices may encounter. In this section, we use implantable pacemakers as example. Timed-automata \cite{timed_automata} models of the human heart are developed as the environment model. Physiological requirements are formalized with monitors and TCTL formula  \cite{TCTL}. Model checking can then be performed on the closed-loop system in model checker UPPAAL \cite{uppaal}. %The physiological knowledge required during closed-loop model checking of medical devices are associated with the \emph{physiological models} and the \emph{physiological requirements}. It is thus important to maintain the physiological context of the models and link model behaviors to physiological requirements. In this section we use heart modeling as example to demonstrate physiological knowledge encoding. %First, we introduce the physiological basis for our heart modeling. Then we demonstrate our heart model structure which can be used to model different heart conditions. We link transitions in the models to physiological behaviors
 \begin{figure}[!t]
 	\centering
 	\includegraphics[width=0.7\textwidth]{figs/egm.pdf}
@@ -31,13 +31,13 @@ Different heart conditions can be distinguished by the \emph{timing} of the elec
 
 The node automaton initializes with \textsf{Rest} state.
 From \textsf{Rest} state, the node can either self-activate or be activated by external activations (indicated by Act\_node). Upon activation the node transition to the \textsf{ERP} state and activate all the paths connecting to the node (indicated by Act\_path). 
-In the \textsf{ERP} state the node does not respond to external activations. At the end of \textsf{ERP} state the node transition to the \textsf{Rest} state. 
+In the \textsf{ERP} state the node does not respond to external activations. At the end of \textsf{ERP} state the node transition to the \textsf{Rest} state. The time a node automaton can stay in each state is from a non-deterministic range $[Trest\_min,Trest\_max]$.
 For heart tissue without the capability to self-activate, the parameters $Trest\_min$ and $Trest\_max$ are set to $\infty$.
 
 The initial state of a path automaton is \textsf{Idle}, which corresponds to no conduction. 
 A path has two conduction directions, forward and backward.
-These are represented by the states Ante and Retro, named after their standard physiological terms Antegrade and Retrograde.
-If \textsf{Act\_path} event is received from one of the nodes (1 or 2) connected to the path, the a transition to either \textsf{Ante} or \textsf{Retro} state will occur in the path automaton. 
+These are represented by the states \textsf{Ante} and \textsf{Retro}, named after their standard physiological terms Antegrade and Retrograde.
+If \textsf{Act\_path} event is received from one of the nodes (1 or 2) connected to the path, the a transition to \textsf{Ante} or \textsf{Retro} state will occur in the path automaton. 
 At the end of \textsf{Ante} and \textsf{Retro} state the path will transition to \textsf{Idle} state and send Act\_node signal to the node automaton connected to the other end of the path (2 or 1).
 %A node automaton models the conduction states of heart tissue, and changes therein. 
 %Its three states correspond to 3 timing periods of the action potential. 
@@ -60,14 +60,14 @@ At the end of \textsf{Ante} and \textsf{Retro} state the path will transition to
 %For a heart model $G$ with $n$ nodes and $m$ paths (thus, $n$ vertices and $m$ edges), the node automata are denoted as $N_i, i\in[n]$ and path automata are denoted as $P_j,j\in[m]$. 
 %\todo[inline]{change to $V_i$ and $E_i$ to stay consistent with definition of graph?}
 %The parameters for the nodes are $Trest$ (with range $[Trest_{min}$),TERP,TRRP and the parameters for the paths are $\{Tante,Tretro\}$. 
-The spatial and temporal properties of a given human heart condition can be modeled by a network of node and path automata with different parameters (\figref{nodepathTA}.(d)). We use node automata to represent key structures of the heart and the path automata specifies the connectivities of those key structures and the conduction delays among them. The network can be viewed as a labeled directed graph: the vertices of the graph represent nodes, or locations, in the heart, while edges represent conduction paths between the nodes. 
+The spatial and temporal properties of a given human heart condition can be modeled by a network of node and path automata with different parameters (i.e. \figref{nodepathTA}.(d)). We use node automata to represent physiological structures of the heart and the path automata specifies the connectivities of the nodes and the conduction delays among them. The network can be viewed as a labeled directed graph: %the vertices of the graph represent nodes, or locations, in the heart, while edges represent conduction paths between the nodes. 
 \begin{defn}
 	[Labeled graph]
 	A \textbf{labeled graph} is a directed graph $G = (V,E,A)$ where 
 	$V$ is a finite set of vertices, $E \subset V\times V$ is a finite set of directed edges,
 	and $A$ is a total labeling function $A: V \cup E \rightarrow TA$
 	where $TA$ is the set of parametrized timed automata.
-	The function $A$ labels each vertex with a \emph{node automaton}, and each edge with an \emph{edge automaton}.
+	The function $A$ labels each vertex with a \emph{node automaton}, and each edge with an \emph{path automaton}.
 	All node (resp. path) automata share the same structure, and differ only in the values of their parameters.
 	%The parameters of a timed automaton are variables that appear in the right-hand side of guard and invariant conditions, and whose value can only be changed by a reset that occurs at a transition.	
 	%Both node and path automata are shown in Fig.~\ref{fig:nodepathTA}
