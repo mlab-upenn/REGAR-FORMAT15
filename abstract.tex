@@ -1,14 +1,14 @@
 \begin{abstract}
-This paper proposes a methodology for formal verification of medical devices, and illustrates it with a case study in verifying pacemakers.
-To understand the effect of an implantable medical device on the human body, a model of the device's physiological environment must be developed, and the closed loop consisting of device (e.g., pacemaker) and environment (e.g., the human heart) is model-checked.
-Formal modeling and model checking of the environment poses several challenges that are addressed in this paper.
-First, we develop a set of timed automata models of various heart conditions and anomalies.
-We then introduce a set of domain-specific abstraction rules that abstract from these models, such that the new behavior introduced by abstraction is physiologically meaningful, and not necessarily spurious as in traditional abstraction.
-Thus the rules serve as a systematic method to model new conditions not explicitly accounted for in the initial set of models.
-Because we abstract from several initial models, we obtain an abstraction tree.
-This tree is then used to perform a model checking loop where we seek the most concrete model that displays a given counter-example.
-This counter-example is then presented to the physician along with the heart model that generated it, so the physician can determine whether it is physiologically plausible or not.
-The proposed methodology creates a separation between steps requiring domain expertise (model creation and abstraction rules definition) and steps that can be automated (rule application, model checking, and abstraction refinement).
+This paper proposes a methodology for closed-loop model checking of medical devices, and illustrates it with a case study on implantable pacemakers.
+To evaluate the performance of a medical device on the human body, a model of the device's physiological environment must be developed, and the closed loop consisting of device (e.g., pacemaker) and environment (e.g., the human heart) is model-checked.
+Formal modeling of the environment and its application in model checking pose several challenges that are addressed in this paper.
+Pacemakers should guarantee safe operations within large varieties of heart conditions, which are modeled by a set of timed automata models.
+A set of domain-specific abstraction rules are developed that can over-approximate the timing behaviors of a heart model or a group of heart models, such that the new behaviors introduced by abstraction are mostly physiologically meaningful.
+The rules serve as a systematic method to cover heart conditions that may not be explicitly accounted for in the initial set of heart models.
+Automated applications of the abstraction rules result in an abstraction tree.
+Closed-loop model checking is systematically performed using the heart models in the abstraction tree, to obtain the most concrete counter-example(s) correspond to property violation.
+These counter-example, along with their physiological context, are then presented to the physician to determine its physiological validity.
+The proposed methodology creates a separation between steps requiring physiological domain expertise (model creation and abstraction rules definition) and steps that can be automated (rule application, model checking, and abstraction refinement).
 While we illustrate the methodology for pacemaker verification, it is more broadly applicable to the verification of other medical devices.
 
 %Over-approximation can be used to not only reduce model complexity, but also cover physiological-relevant behaviors from multiple physiological conditions in an abstract model. 
