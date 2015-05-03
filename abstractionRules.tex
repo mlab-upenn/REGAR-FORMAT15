@@ -27,7 +27,7 @@ This rule applies to a set of graphs $G_i$ with the same structure (i.e. isomorp
 See Fig.~\ref{fig:HM_abs}.\\
 \textbf{Applicability conditions}.
 None.\\
-\textbf{Output (sub)graph $G'$}.
+\textbf{Output (sub)graph}.
 $G'$ has same structure as the $G_i$.
 Thus $R$ plays the role of an isomorphism between every $G_i$ and $G'$.
 Given an element $x$ of $G'$, we abuse notation by writing $R^{-1}(x') = \{x_1,\dots,x_n\}$ is the set of elements that map to it via $R$.\\
@@ -42,6 +42,7 @@ For every automaton $A_{x'} \in \Ac(G')$, and every parameter $\theta^{x'}$ of $
 
 \subsection{Rule 6: Replace Blocking With Non-deterministic Conduction}
 \textbf{Physiological intuition}. 
+\todo[inline]{in modeling section mention self-activating and passive nodes}
 If a node automaton is in its \textsf{ERP} state, a \textsf{Act\_node} event is "blocked" and will not trigger corresponding path conduction. If we add non-deterministic transitions to the path automata such that a \textsf{Act\_path} event do not trigger state transitions to \textsf{ante} or \textsf{retro} (\figref{rule5}), the blocking behavior of the node is covered. We can then merge the \textsf{ERP} state with the \text{Rest} state in the node automata, and all passive nodes can be removed. An application of Rule 6 is shown in \figref{abs_exam}.\\
 %Consider the structure $N_1 P_1 N_2 P_2 N_3$ with three nodes and two paths, where $N_2$ is a passive node (i.e. not self-activating).
 %If $N_2$ blocks an activation signal from $N_1$ to $N_3$, this is equivalent to the paths $P_1$ or $P_2$ not conducting.
