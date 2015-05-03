@@ -2,26 +2,26 @@
 \label{introduction}
 
 \todo[inline]{stress the timing aspect more}
-Implantable medical devices like pacemakers are designed to improve physiological conditions with very little human intervention. 
+Implantable medical devices such as pacemakers are designed to improve physiological conditions with very little human intervention. 
 Their ability of autonomously affecting the physiological state of the patient makes the medical devices safety-critical, and sufficient evidence for their safety and efficacy should be provided before the devices can be implanted in the patients. 
 As more functionality is added to the devices
 \footnote{In what follows, we use the word `device' to refer to the software of the device.}
 , the complexity of the software component of the device is increasing dramatically, leading to a large number of potential safety violations due to software bugs \cite{recall_stats}.
 
 There are two categories of device bugs: 
-1) the device may fail to conform to its \emph{specifications}, i.e. the prescription of how it should react to certain inputs.  
+1) the device may fail to conform to its \emph{specifications}, that is, the prescription of how it should react to certain inputs.  
 2) the device may fail to improve the conditions of the patient as promised, even if it conforms to its specifications. 
-The desired physiological conditions that the closed-loop system should achieve are captured in the \emph{physiological requirements}; e.g., for a pacemaker, the heart rate should always be maintained above a certain threshold. 
+The desired physiological conditions that the closed-loop system should achieve are captured in the \emph{physiological requirements}; for example, for a pacemaker, the heart rate should always be maintained above a certain threshold. 
 %In what follows, the word `requirement' always refers to such physiological requirements.
 %Note that requirements are about \emph{the closed-loop system}: they prescribe the behavior of both device and environment (e.g. both pacemaker and heart).
 
 Bugs in the first category (non-conformance to specification) can be detected via systematic and extensive open-loop testing in which a set of input sequences is fed to the device, and its output is compared with the expected output.
 Bugs in the second category (violation of physiological requirements), on the other hand, require the availability of the \emph{closed-loop system}, which consists of the device and its environment.
-E.g., the pacemaker and the heart as its environment. 
+For instance, the pacemaker and the heart as its environment. 
 In the medical device industry, closed-loop verification of the physiological requirements is mostly performed in terms of clinical trials, in which the actual devices are implanted in human subjects over an extended duration.
 Unfortunately, due to the extremely high cost, the amount and variety of human subjects during the clinical trials are limited, which reduces the chances of finding bugs. 
 \todo{give dollar amount}
-Moreover, clinical trials are often conducted at the last design stage. Fixing bugs at this stage is very costly.
+Moreover, clinical trials are often conducted at the final design stage. Fixing bugs at this stage is very costly.
 
 Closed-loop model checking enables closed-loop evaluation of the physiological requirements at an earlier design stage, which requires formal model(s) of the physiological environment. 
 %Depending on the formalism used to model the environment (and device) and the language used to express the requirements, this allows the usage of formal methods to perform the verification.
