@@ -3,18 +3,15 @@
 Let $S$ be a set. 
 A \emph{trace} is an infinite sequence $\delta\in S^\omega$.
 For a model $M$ with state space $S$, the reachable behavior space of the model $M$ is denoted as $\beh(M)\subset S^\omega$. 
-A property $\varphi$ defines a region in $\beh(M)$ within which the property is satisfied, which can be denoted as $\beh(\varphi)$.
+Let $Var(M)$ be the set of variables of model $M$.
+Then $AP$ is a set of \emph{atomic propositions} $p$, which are expressions on $Var(M)$, e.g. $p \defeq V_1 + V_2 > 4$ where $V_i \in Var(M)$.
+Let $Var(p)$ be the set of variables that appear in the atomic proposition $p$.
+Given a formula $\varphi$ on $AP$ in some logic, $Var(\varphi) = \cup_{p \textrm{ in }\varphi} Var(p)$.
+
+A formula $\varphi$ defines a region in $\beh(M)$ within which the formula is satisfied, which can be denoted as $\beh(\varphi)$.
 A \emph{model checker} takes a system model $M$ and a formal requirement $\varphi$, and returns whether $\beh(M) \subset \beh(\varphi)$, which is denoted by $M\models\varphi$. 
 If the inclusion doesn't hold, the model checker returns a \emph{counter-example} $\delta_v\in\beh(M) \setminus \beh(\varphi)$.
 This counter-example is used by the designer to debug the problem. 
-
-%\subsection{Closed-loop Physiological Requirements}
-%In closed-loop model checking, the closed-loop system $M_E||M_D$ consists of the device under check $M_D$, and environment conditions modeled as $M_E$. In the case of medical devices, the devices are designed to \emph{improve} certain physiological conditions. For an unhealthy open-loop physiological condition that a device is designed to improve, the closed-loop condition should be healthy. Software developers are also particularly interested in the scenario in which a healthy open-loop physiological condition became an unhealthy closed-loop condition due to device intervention, which is a bug in the device.
-%
-%In general, a closed-loop requirement $\varphi$ is in the form of $\varphi_E\Rightarrow \varphi_C$, in which $\varphi_E$ is the open-loop physiological condition that the device encounters, often in form of parameter ranges in the environment models, and $\varphi_C$ is the closed-loop physiological condition that the device should achieve. Then we have:
-% \begin{equation}\label{req_def}
-%M_E\models\varphi_E, M_E||M_D\models \varphi_C\Rightarrow M_E||M_D\models\varphi
-%\end{equation}
 
 \subsection{Model Abstraction with Over-approximation}
 \label{overapx}
@@ -23,15 +20,14 @@ This counter-example is used by the designer to debug the problem.
 A model of the system that covers all behaviors of the system can be developed which can not only reduce complexity, but also having the suitable formalism for the model checker. 
 \hatodo{Previous statement is too vague: "suitable"? Might be best to remove it.}
 An abstraction function $\absfun$ abstracting model $M$ to $M'$ is a function from state space $S$ to the new abstract state space $S'$ such that: 
-\hatodoin{HA: removed non-surjective because it's not necessary for over-approximation. See Fig.1 in Clarke's JACM paper: his function is surjective, but still introduces over-approximation.}
+\hatodoin{removed non-surjective because it's not necessary for over-approximation. See Fig.1 in Clarke's JACM paper: his function is surjective, but still introduces over-approximation.}
 $$\forall s\in S, \exists s'\in S' \text{ s.t. } \absfun(s)=s'$$
 This definition can be extended to behaviors $\delta\in \mathbb{B}(M)$, such that:
 $$\forall \delta\in \mathbb{B}(M),\exists \delta'\in\mathbb{B}(M')\text{ s.t. } \absfun(\delta)=\delta'$$
 From the definition, we know that the more abstract model $M'$ covers all behaviors of $M$, which is referred to as \emph{over-approximation}. 
 We represent the over-approximation relationship as $M\triangleleft_h M'$, and the relationship between reachable behavior spaces as $\absfun(\mathbb{B}(M))\subseteq\mathbb{B}(M')$. 
 
-\hatodoin{Let $\varphi$ be a requirement on $M$ expressed in ACTL$^*$. 
-	The abstraction function is \emph{appropriate} for the requirement $\varphi$ if 
+\hatodoin{Let $\varphi$ be a requirement on $M$ expressed in ACTL$^*$, and $\absfun$ be an abstraction function. The model $\absfun(M)$ is \emph{appropriate} for the requirement $\varphi$ if 
 	$\absfun(M) \models \varphi \implies M \models \varphi$
 	}
 
@@ -78,7 +74,6 @@ $$\forall i\not\exists \delta\in\mathbb{B}(M_i)\text{ s.t. }\absfun(\delta)=\del
 Since there may be a valid environment model $M_c\not\in\{M_1,M_2,...M_n\}$ and $\mathbb{B}(M_c)\subset\mathbb{B}(M')$ and $\delta'\in\mathbb{B}(M_c)$. 
 \hatodoin{no need to repeat the equation, just point to the previous one}
 It is thus up to the domain experts to determine the validity of the counter-example.
-\hatodo{Why make this argument here? This is Technical Preliminaries, where we just define a few things so we can go on with the paper...}
 %\begin{figure}[!b]
 %		\centering
 %		\includegraphics[width=0.6\textwidth]{figs/env_sys.png}
