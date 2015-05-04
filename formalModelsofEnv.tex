@@ -58,7 +58,15 @@ Tachycardia features undesirable fast heart rate which results in inefficient bl
 %
 %The electrical conduction through the tissue \emph{between} nodes is abstracted using \emph{path automata}. 
 %The path automata are used to represent structural or functional electrical connections between nodes. 
- 
+ \begin{figure}[!t]
+	\centering
+	\includegraphics[width=0.7\textwidth]{figs/egm.pdf}
+	
+	%\vspace{-10pt}
+	\caption{\small (a) Lead placement for a dual chamber pacemaker (b) Electrogram (EGM) signals from pacemaker leads and corresponding internal event markers}
+	\label{fig:probes}
+	%\vspace{-15pt}
+\end{figure} 
 %%At the same time the clock invariant of the state is modified according to the shared variable $C(a/b)$. 
 %%This corresponds to the change of the conduction delay that is caused by early activation. 
 %Similarly to a node automaton, the changing trend is extracted from clinical data. 
@@ -84,15 +92,7 @@ The heart model structure has been used to model various heart conditions and al
 
 Implantable cardiac pacemakers are rhythm management devices designed to treat bradycardia. 
 A typical dual chamber pacemaker has two leads inserted into the heart through the veins which can measure the local electrical activities of the right atrium and right ventricle, respectively. According to the timing between sensed impulses the pacemaker can deliver electrical pacing to the corresponding chamber to maintain proper heart rhythm (\figref{probes}).  
-\begin{figure}[!t]
-	\centering
-	\includegraphics[width=0.7\textwidth]{figs/egm.pdf}
-	
-	%\vspace{-10pt}
-	\caption{\small (a) Lead placement for a dual chamber pacemaker (b) Electrogram (EGM) signals from pacemaker leads and corresponding internal event markers}
-	\label{fig:probes}
-	%\vspace{-15pt}
-\end{figure} 
+
 
 
 %\subsection{Describe Model Behaviors with Physiological Context}
@@ -128,7 +128,7 @@ M_E\models\varphi_E \text{ \&\& }M_E||M_D\models \varphi_C\Rightarrow M_E||M_D\m
 The substates for a heart model are clocks and locations for each node and path automata. In \cite{vhm_iccps11}, physiological heart conditions are mapped to constraints on substate variables of the heart models, which can be written as atomic propositions. General monitors are also developed in Stateflow \cite{stateflow} for closed-loop testing of physiological requirements. The timed-automata version are shown in \figref{monitor}. The $M_{sing}(event,thresh\_min, thresh\_max)$ enforces the time interval between two $event$ signals within $[thresh\_min,thresh\_max]$. \\
 $M_{doub}(event1,event2,thresh\_min,thresh\_max)$ enforces the time interval between $event1$ and $event2$ signals within $[thresh\_min,thresh\_max]$. Model checking is performed on the closed-loop system including the heart model $M_H$, the pacemaker model $M_P$, and the monitor $M$. The requirement $\varphi_P$ can be then represented with TCTL formula:
  \textsf{A[] (not M.Err)}
-\begin{figure}[!b]
+\begin{figure}[!t]
 		\centering
 		\includegraphics[width=0.8\textwidth]{figs/monitor.pdf}
 		%\vspace{-5pt}

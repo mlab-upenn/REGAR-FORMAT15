@@ -21,13 +21,7 @@ The requirement below is designed to prevent the pacemaker from pacing too fast.
 
 With parameter mapping and a monitor $M_{sing}(VP,500,\infty)$, the requirement can be translated to:
 $$Req1: N_A.loc=Rest \&\& N_A.t\in [300,1000] \Rightarrow \neg M_{sing}.Err$$
-
- \subsection{Choosing Appropriate Heart Model For the Requirement}
-To verify the closed-loop system with pacemaker model $PM$ and heart model abstraction tree $HM\_tree$ (\figref{HM_abs}) against requirement $Req1$, we start by searching for the most abstract appropriate models from the abstraction tree. We call the function specified in Algorithm 1: $[HM]=eligible(HM\_tree,Req1)$. The variables in the requirement and the corresponding monitor are:
-$$Var(Req1)\cup Var(M_{sing})=\{N_A.t,N_A.loc, VP\}$$
-
-At the root level heart model $H_{all}$, we have $\{N_A.t,N_A.loc\}\not\in Var(H_{all})$. As the result, $H_{all}$ is not appropriate for $Req1$. For all the children of $H_{all}$: $H_n'',H_{at}'''',H_{vt}'''$, we have $Var(Req1)\cup Var(M_{sing})\subseteq Var(H_n'')=Var(H_{at}'''')=Var(H_{vt}''')$, thus these 3 heart models are outputted as the most abstract models that are appropriate for $Req1$.
-\begin{figure}[!t]
+\begin{figure}[!b]
 	\centering
 	\includegraphics[width=0.5\textwidth]{figs/abs_sim.pdf}
 	%\vspace{-5pt}
@@ -35,6 +29,12 @@ At the root level heart model $H_{all}$, we have $\{N_A.t,N_A.loc\}\not\in Var(H
 	%\vspace{-15pt}
 	\label{fig:abs_exam}
 \end{figure}
+ \subsection{Choosing Appropriate Heart Model For the Requirement}
+To verify the closed-loop system with pacemaker model $PM$ and heart model abstraction tree $HM\_tree$ (\figref{HM_abs}) against requirement $Req1$, we start by searching for the most abstract appropriate models from the abstraction tree. We call the function specified in Algorithm 1: $[HM]=eligible(HM\_tree,Req1)$. The variables in the requirement and the corresponding monitor are:
+$$Var(Req1)\cup Var(M_{sing})=\{N_A.t,N_A.loc, VP\}$$
+
+At the root level heart model $H_{all}$, we have $\{N_A.t,N_A.loc\}\not\in Var(H_{all})$. As the result, $H_{all}$ is not appropriate for $Req1$. For all the children of $H_{all}$: $H_n'',H_{at}'''',H_{vt}'''$, we have $Var(Req1)\cup Var(M_{sing})\subseteq Var(H_n'')=Var(H_{at}'''')=Var(H_{vt}''')$, thus these 3 heart models are outputted as the most abstract models that are appropriate for $Req1$.
+
 \subsection{Providing Unambiguous Counter-examples to the Physicians}
 After we choose the appropriate models for $Req1$, we have: 
 $$HM=\{H_n'',H_{at}'''',H_{vt}'''\}$$
