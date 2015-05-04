@@ -95,8 +95,11 @@ For every node automaton $N$ in $G'$, the node automata are $N.Trest_{min}=0,N.T
 %\input{automatedApplication}
 
 \subsection{Heart Model Abstraction Tree}
-A list of heart models corresponding to common heart conditions are first developed. The list can be expanded as new heart conditions are discovered.
-By systematically applying rules in this section an abstraction tree $HM\_tree$ for the heart is created (\figref{HM_abs}). 
+A set of heart models corresponding to different heart conditions are first developed. 
+The list can be expanded as new heart conditions are discovered.
+Because we start from a set of initial models, and each one may be abstracted using a number of abstraction rules, we have a choice of which rules to apply to which models, and the order in which to apply them.
+Depending on which rule is applied when, we end up with different abstract models.
+Thus we end with an abstraction tree $T_{HM}$ for the heart is created, as shown in \figref{HM_abs}. 
 %Note that applying rules in different order results different abstraction tree. 
 %The order used to obtain $HM\_tree$ is based on the domain knowledge that certain heart conditions may have similar behaviors and similar inputs to the pacemaker. 
 %This systematic grouping maintains the physiological-relevance of the heart model even at higher abstraction levels, and reduce the necessity to resolve ambiguities at lower abstraction levels when model checking certain requirements.
