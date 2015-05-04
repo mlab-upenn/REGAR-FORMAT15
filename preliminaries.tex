@@ -25,13 +25,13 @@ $$\forall s\in S, \exists s'\in S' \text{ s.t. } \absfun(s)=s'$$
 This definition can be extended to behaviors $\delta\in \mathbb{B}(M)$, such that:
 $$\forall \delta\in \mathbb{B}(M),\exists \delta'\in\mathbb{B}(M')\text{ s.t. } \absfun(\delta)=\delta'$$
 From the definition, we know that the more abstract model $M'$ covers all behaviors of $M$, which is referred to as \emph{over-approximation}. 
-We represent the over-approximation relationship as $M\triangleleft_h M'$, and the relationship between reachable behavior spaces as $\absfun(\mathbb{B}(M))\subseteq\mathbb{B}(M')$. 
+The over-approximation relationship is denoted as $M\triangleleft_h M'$, and the relationship between reachable behavior spaces as $\absfun(\mathbb{B}(M))\subseteq\mathbb{B}(M')$. 
 
-\hatodoin{Let $\varphi$ be a requirement on $M$ expressed in ACTL$^*$, and $\absfun$ be an abstraction function. The model $\absfun(M)$ is \emph{appropriate} for the requirement $\varphi$ if 
+\hatodoin{Let $\varphi$ be a requirement on $M$ expressed in ATCTL$^*$, and $\absfun$ be an abstraction function. The model $\absfun(M)$ is \emph{appropriate} for the requirement $\varphi$ if 
 	$\absfun(M) \models \varphi \implies M \models \varphi$
 	}
 
-With a requirement $\varphi$ in $ACTCL^*$\hatodo{what's this logic? give a reference}, we have:
+With a requirement $\varphi$ in $ATCTL^*$\hatodo{what's this logic? give a reference}, we have:
 $$\absfun(\mathbb{B}(M))\subseteq \mathbb{B}(M'),\mathbb{B}(M')\subseteq \mathbb{B}(\varphi) \Rightarrow \absfun(\mathbb{B}(M))\subseteq \mathbb{B}(\varphi)\Rightarrow M\models\varphi$$
 \hatodoin{the last implication requires appropriateness, it doesn't follow automatically for any abstraction function}
 In general the state space of $S'$ is smaller than $S$ while preserving the property, thus preferable during model checking. 
@@ -41,7 +41,7 @@ In general the state space of $S'$ is smaller than $S$ while preserving the prop
 Over-approximation can also be used to cover the behaviors of multiple models. 
 A model $M'$ is an over-approximation of model $M_1$ and $M_2$ if 
 $$\forall \delta\in \mathbb{B}(M_1)\cup\mathbb{B}(M_2),\exists \delta'\in\mathbb{B}(M')\text{ s.t. } \absfun(\delta)=\delta'$$
-We denote it as $\{M_1,M_2\}\triangleleft_h M'$, such that $\absfun(\mathbb{B}(M_1)\cup\mathbb{B}(M_2))\subseteq\mathbb{B}(M')$.
+which is denoted as $\{M_1,M_2\}\triangleleft_h M'$, such that $\absfun(\mathbb{B}(M_1)\cup\mathbb{B}(M_2))\subseteq\mathbb{B}(M')$.
 
 
 %\input{appropriateness}
@@ -66,13 +66,13 @@ We denote it as $\{M_1,M_2\}\triangleleft_h M'$, such that $\absfun(\mathbb{B}(M
 \end{figure}
 
 \subsection{Validity of a counter-example }
-Behaviors introduced into the over-approximation of a system \hatodo{device?} model are all \emph{spurious}, or invalid.\hatodo{stick to one word, either spurious or invalid} 
+Behaviors introduced into the over-approximation of a device model are all \emph{spurious}.
 For two models such that $M\triangleleft_h M'$, $\delta'$ is spurious if the following condition holds: 
 $$\not\exists \delta\in\mathbb{B}(M) \text{ s.t. }\absfun(\delta)=\delta'$$
 However, for environment models such that $\{M_1,M_2,...M_n\}\triangleleft_h M'$, and an execution $\delta'\in\mathbb{B}(M')$, the following condition is not enough to prove $\delta'$ is spurious.
 $$\forall i\not\exists \delta\in\mathbb{B}(M_i)\text{ s.t. }\absfun(\delta)=\delta'$$
 Since there may be a valid environment model $M_c\not\in\{M_1,M_2,...M_n\}$ and $\mathbb{B}(M_c)\subset\mathbb{B}(M')$ and $\delta'\in\mathbb{B}(M_c)$. 
-\hatodoin{no need to repeat the equation, just point to the previous one}
+%\hatodoin{no need to repeat the equation, just point to the previous one}
 It is thus up to the domain experts to determine the validity of the counter-example.
 %\begin{figure}[!b]
 %		\centering

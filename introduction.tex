@@ -19,8 +19,8 @@ Bugs in the first category (non-conformance to specification) can be detected vi
 Bugs in the second category (violation of physiological requirements), on the other hand, require the availability of the \emph{closed-loop system}, which consists of the device and its environment.
 For instance, the pacemaker and the heart as its environment. 
 In the medical device industry, closed-loop verification of the physiological requirements is mostly performed in terms of clinical trials, in which the actual devices are implanted in human subjects over an extended duration.
-Unfortunately, due to the extremely high cost, the amount and variety of human subjects during the clinical trials are limited, which reduces the chances of finding bugs. 
-\todo{give dollar amount}
+Unfortunately, due to the extremely high cost of clinical trials (\$0.30
+million to \$24.03 million.\cite{trial_cost}) , the amount and variety of human subjects during the clinical trials are limited, which reduces the chances of finding bugs. 
 Moreover, clinical trials are often conducted at the final design stage. Fixing bugs at this stage is very costly.
 
 Closed-loop model checking enables closed-loop evaluation of the physiological requirements at an earlier design stage, which requires formal model(s) of the physiological environment. 
@@ -33,7 +33,7 @@ However there can be a large number of environmental conditions which require di
 A set of initial models of the environment can be constructed but the set is inherently incomplete due to the large number of environment conditions and their combinations. 
 As a result, performing model checking using every model in the set cannot ensure full coverage of the environmental conditions. 
 
-In this paper, we design domain-specific over-approximation rules that produce abstract models that not only cover explicitly modeled environment conditions, but also cover physiological timing behaviors and conditions not modeled in the set of initial models. 
+In this paper, domain-specific over-approximation rules are developed that produce abstract models that not only cover explicitly modeled environment conditions, but also cover physiological timing behaviors and conditions not modeled in the set of initial models. 
 The abstract models can be then used for closed-loop model checking of the device model. 
 If the closed-loop system satisfies a requirement, the device under verification satisfies the requirement under environment conditions covered by the abstract models. 
 However, if the requirement is unsatisfied, the model checker returns a counter-example. 
@@ -51,8 +51,8 @@ Another challenge for closed-loop model checking of medical devices is the amoun
 
 
 \subsection{Contributions}
-In this paper we propose a framework for environment modeling in closed-loop model checking of medical device software.
-We use the pacemaker as an example of applying this framework.
+In this paper a framework is proposed for environment modeling in closed-loop model checking of medical device software.
+Implantable pacemaker is used as an example of applying this framework.
 An expandable set of heart models are first developed to represent different physiological conditions. 
 A set of domain-specific abstraction rules are then developed based on physiological knowledge, which help ensure the physiological relevance of the behaviors introduced into the abstract models. 
 Then the rules are applied to the initial set of physiological models to obtain an abstraction tree, which will be used for closed-loop model checking of the pacemaker. 

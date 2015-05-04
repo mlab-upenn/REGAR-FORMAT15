@@ -1,9 +1,18 @@
 \section{Case Study: Closed-loop Model Checking of a Dual Chamber Pacemaker}
 \label{caseStudy}
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figs/PM_timers.pdf}
+	%\vspace{-5pt}
+	\caption{\small Basic timers for a dual chamber pacemaker. AS: Atrial Sense, VS: Ventricular Sense, AP: Atrial Pacing, VP: Ventricular Pacing.}
+	%\vspace{-15pt}
+	\label{fig:PM_timers}
+\end{figure}
+
 \subsection{Pacemaker Model}
 A pacemaker diagnoses heart conditions and deliver electrical pacing to the heart according to the timing intervals among timing events from the heart and the pacemaker itself. In this section we use a simple dual chamber pacemaker as example for closed-loop model checking. The detailed UPPAAL timed automata implementation of the model can be found in \cite{sttt13}. A dual chamber pacemaker has several basic timers, which are shown in \figref{PM_timers}:\\
 \textbf{Atrial Escape Interval (AEI)} defines the maximum interval between the last ventricular event (VS,VP) to an atrial event (AS,AP). If no AS happened before AEI timer runs out, atrial pacing (AP) is delivered to the heart (Marker 1 in \figref{PM_timers}). \\
-\textbf{Atrio-Ventricular Interval (AVI)} defines the maximum interval between the last atrial event (AS,AP) to an ventricular event (VS,VP). If no VS happened before AVI timer runs out, and the time since the last ventricular event (VS,VP) is no less than URI, ventricular pacing (VP) is delivered to the heart (Marker 3 in \figref{PM_timers}).
+\textbf{Atrio-Ventricular Interval (AVI)} defines the maximum interval between the last atrial event (AS,AP) to an ventricular event (VS,VP). If no VS happened before AVI timer runs out, and the time since the last ventricular event (VS,VP) is no less than URI, ventricular pacing (VP) is delivered to the heart (Marker 3 in \figref{PM_timers}).\\
 \textbf{Post-Ventricular Atrial Refractory Period (PVARP) and Ventricular Refractory Period (VRP)} define the minimum period that a AS or VS can happen since the last ventricular event (VS,VP). 
 
 \subsection{Requirement Encoding}

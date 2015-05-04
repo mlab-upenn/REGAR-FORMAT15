@@ -12,20 +12,12 @@ Algorithm 1 (\figref{algorithm}) selects the most abstract models from the abstr
 		\includegraphics[width=0.9\textwidth]{figs/algorithm.pdf}
 		%\vspace{-5pt}
 		\caption{\small Algorithms for closed-loop model checking with abstraction tree}
-		  %\vspace{-15pt}
+		  \vspace{-10pt}
 		\label{fig:algorithm}
 \end{figure}
 
 Upon requirement violation, an abstract counter-example is returned during closed-loop model checking. The counter-example may contain context ambiguities that should be resolved before sending to the physician. An abstraction tree contains the information of how different environment conditions are over-approximated by more abstract models. By exploring the abstraction tree, the most concrete yet unambiguous counter-examples can be sent to the physicians for analysis. Algorithm 2 (\figref{algorithm}) describes the process for closed-loop model checking with an abstraction tree.
 
-\begin{figure}[!t]
-	\centering
-	\includegraphics[width=0.8\textwidth]{figs/PM_timers.pdf}
-	%\vspace{-5pt}
-	\caption{\small Basic timers for a dual chamber pacemaker. AS: Atrial Sense, VS: Ventricular Sense, AP: Atrial Pacing, VP: Ventricular Pacing.}
-	%\vspace{-15pt}
-	\label{fig:PM_timers}
-\end{figure}
 
 
 %The most abstract model in the abstraction tree is built to cover the input space to the device as much as possible, thus it may not have enough details to constrain the behaviors of the model according to the constraints in the requirement. Thus the first step of closed-loop model checking is to select the most abstract models which are appropriate for the requirement. A model $M$ is appropriate for a requirement $Req$ if the environment transitions mentioned in the requirement, denoted as $EnvT(Req)$, is a subset of the environment transitions associated with the model $EnvT(M$). The following algorithm finds the most abstract heart models in the abstraction tree $HM\_tree$ that are appropriate for a requirement $Req$.
