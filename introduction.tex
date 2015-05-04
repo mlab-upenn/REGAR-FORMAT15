@@ -47,7 +47,7 @@ Thus, a rigorous framework is needed to balance the need to cover a wide range o
 
 Another challenge for closed-loop model checking of medical devices is the amount of domain expertise needed during: 1) physiological modeling, 2) physiological model abstraction and refinement, and 3) checking the validity of counter-examples, which is not ideal in real world applications. 
 
-\input{relatedWorks}
+
 
 
 \subsection{Contributions}
@@ -60,6 +60,7 @@ A simple search procedure is then used to conduct model checking using suitable 
 In this framework, physiological knowledge is only needed when constructing the initial model set and when analyzing counter-examples. 
 The application of the physiological abstraction rules and the verification procedure can be automated.
 The proposed method can potentially generalized to other domains in which the device operates in a large variety of environmental conditions.
+\input{relatedWorks}
 %During the closed-loop model checking, the most abstract model(s) that are appropriate to the requirement are automatically selected as the initial environment models. If the requirement is satisfied, the system is safe under the environment conditions covered by the initial environment models. If the requirement is violated in certain initial environment model, the children of the model in the abstraction tree are used for model checking until 1) the leaves of the tree is reached, or 2) there is no violations in the child nodes. The counter-examples obtained at the most refined models are returned to the physician for validity check. This process is automated so that no domain knowledge is required for the person who performs model checking. It also ensures the most concrete counter-examples with unambiguous physiological context are returned to the physician for analysis. 
 %The first challenge in closed-loop model checking of pacemakers is that the human heart displays a large number of different conditions, henceforth referred to as `physiological conditions'.
 %E.g., one heart may display \emph{atrial fibrillation} where the upper chambers of the heart (the atria) produce an exceedingly fast beat that prevents proper blood pumping.

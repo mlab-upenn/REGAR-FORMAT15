@@ -7,17 +7,17 @@ Recall the definition of appropriateness from Section \ref{preliminaries}.
 In the technical report \cite{regar_tech}, we show that a sufficient condition for a model $M$ to be appropriate for a requirement $\varphi$ with monitor $Mon$ is
 $Var(\varphi) \subset Var(M) \cup Var(Mon)$.
 
-Algorithm 1 (\figref{algorithm}) selects the most abstract models from the abstraction tree $T_{HM}$ that are appropriate for a requirement $Req$.
-\begin{figure}[!t]
-		\centering
-		\includegraphics[width=0.9\textwidth]{figs/algorithm.pdf}
-		%\vspace{-5pt}
-		\caption{\small Algorithms for closed-loop model checking with abstraction tree}
-		  \vspace{-10pt}
-		\label{fig:algorithm}
-\end{figure}
+An algorithm is developed to select the most abstract models from the abstraction tree $T_{HM}$ that are appropriate for a requirement $Req$. The detailed implementation of the algorithm can be found in \cite{regar_tech}.
+%\begin{figure}[!t]
+		%\centering
+		%\includegraphics[width=0.9\textwidth]{figs/algorithm.pdf}
+		%%\vspace{-5pt}
+		%\caption{\small Algorithms for closed-loop model checking with abstraction tree}
+		  %\vspace{-10pt}
+		%\label{fig:algorithm}
+%\end{figure}
 
-Upon requirement violation, an abstract counter-example is returned during closed-loop model checking. The counter-example may contain context ambiguities that should be resolved before sending to the physician. An abstraction tree contains the information of how different environment conditions are over-approximated by more abstract models. By exploring the abstraction tree, the most concrete yet unambiguous counter-examples can be sent to the physicians for analysis. Algorithm 2 (\figref{algorithm}) describes the process for closed-loop model checking with an abstraction tree.
+Upon requirement violation, an abstract counter-example is returned during closed-loop model checking. The counter-example may contain context ambiguities that should be resolved before sending to the physician. An abstraction tree contains the information of how different environment conditions are over-approximated by more abstract models. By exploring the abstraction tree, the most concrete yet unambiguous counter-examples can be sent to the physicians for analysis. The detailed implementation of the algorithm can be found in \cite{regar_tech}.%Algorithm 2 (\figref{algorithm}) describes the process for closed-loop model checking with an abstraction tree.
 
 
 
