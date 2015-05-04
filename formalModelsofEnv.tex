@@ -1,6 +1,7 @@
 \section{Formal Models of the Environment}
 \label{formalModelsofEnv}
-To perform closed-loop model checking of medical devices, we need formal models of their physiological environment to represent different physiological conditions the devices may encounter. In this section, implantable pacemakers are used as example. Timed-automata \cite{timed_automata} models of the human heart are developed as the environment model \cite{sttt13,VHM_proc}. Physiological requirements are formalized with monitors and TCTL formula  \cite{TCTL}. Model checking can then be performed on the closed-loop system in model checker UPPAAL \cite{uppaal}. %The physiological knowledge required during closed-loop model checking of medical devices are associated with the \emph{physiological models} and the \emph{physiological requirements}. It is thus important to maintain the physiological context of the models and link model behaviors to physiological requirements. In this section we use heart modeling as example to demonstrate physiological knowledge encoding. %First, we introduce the physiological basis for our heart modeling. Then we demonstrate our heart model structure which can be used to model different heart conditions. We link transitions in the models to physiological behaviors
+To perform closed-loop model checking of medical devices, we need formal models of their physiological environment to represent different physiological conditions the devices may encounter. In this section, implantable pacemakers are used as example. Timed-automata \cite{timed_automata} models of the human heart are developed as the environment model \cite{sttt13,VHM_proc}. Physiological requirements are formalized with monitors and TCTL formula \hatodo{this is a different logic from what you have in section 2...} \cite{TCTL}. 
+Model checking can then be performed on the closed-loop system with UPPAAL \cite{uppaal}. %The physiological knowledge required during closed-loop model checking of medical devices are associated with the \emph{physiological models} and the \emph{physiological requirements}. It is thus important to maintain the physiological context of the models and link model behaviors to physiological requirements. In this section we use heart modeling as example to demonstrate physiological knowledge encoding. %First, we introduce the physiological basis for our heart modeling. Then we demonstrate our heart model structure which can be used to model different heart conditions. We link transitions in the models to physiological behaviors
 \begin{figure}[!t]
 	\centering
 	\includegraphics[width=0.9\textwidth]{figs/init_abs.pdf}
@@ -10,18 +11,34 @@ To perform closed-loop model checking of medical devices, we need formal models 
 \end{figure}
 
 \subsection{Timed-automata Models of the Heart}
-At cellular level, a heart tissue can be activated by external voltage. Certain tissue also has capability to self-activate, which contribute to natural heart beats. Once activated (Marker 1 in \figref{nodepathTA}), the voltage outside the tissue changes over time, which is referred to as \emph{Action Potential} (\figref{nodepathTA}.(a)). The action potential can be divided into two functional timing periods: The \emph{Effective Refractory Period (ERP)}, during which the tissue cannot be triggered by another activation; and the \emph{Rest} period, during which the tissue can be activated and at the end of which the tissue will self-activate. The timing behaviors of the action potential are modeled as \emph{node automaton} (\figref{nodepathTA}.(b)). A node automaton initializes with \textsf{Rest} state.
-From \textsf{Rest} state, the node can either self-activate or be activated by external activations (indicated by Act\_node). Upon activation the node transition to the \textsf{ERP} state and activate all the paths connecting to the node (indicated by Act\_path). 
-In the \textsf{ERP} state the node does not respond to external activations. At the end of \textsf{ERP} state the node transition to the \textsf{Rest} state. The time a node automaton can stay in each state is from a non-deterministic range $[Trest\_min,Trest\_max]$.
+At cellular level, a heart tissue can be activated by external voltage. Certain tissue also has capability to self-activate, which contribute to natural heart beats. Once activated (Marker 1 in \figref{nodepathTA}), the voltage outside the tissue changes over time, which is referred to as \emph{Action Potential} (\figref{nodepathTA}.(a)). 
+The action potential can be divided into two functional timing periods: The \emph{Effective Refractory Period (ERP)}, during which the tissue cannot be triggered by another activation; and the \emph{Rest} period, during which the tissue can be activated and at the end of which the tissue will self-activate. 
+The timing behaviors of the action potential are modeled as \emph{node automaton} $A_v$ (\figref{nodepathTA}.(b)). 
+A node automaton initializes with \textsf{Rest} state.
+From \textsf{Rest} state, the node can either self-activate or be activated by external activations (indicated by Act\_node). 
+Upon activation the node transition to the \textsf{ERP} state and activate all the paths connecting to the node (indicated by Act\_path). 
+In the \textsf{ERP} state the node does not respond to external activations. 
+At the end of \textsf{ERP} state the node transition to the \textsf{Rest} state. 
+The duration a node automaton can stay in \textsf{Rest} is in the range $[Trest\_min,Trest\_max]$, and the duration it can stay in \textsf{ERP} is in the range $[Terp\_min, Terp\_max]$.
 For heart tissue without the capability to self-activate, the parameters $Trest\_min$ and $Trest\_max$ are set to $\infty$.
+We refer to $Trest$ and $Terp$ as \emph{parameters} of the automaton $A_v$.
 
-The voltage change of the heart tissue will activate the tissue nearby with certain delay (Marker 2 in \figref{nodepathTA}). This timing delay between heart tissue is modeled using \emph{path automata} (\figref{nodepathTA}.(c)). The initial state of a path automaton is \textsf{Idle}, which corresponds to no conduction. 
+The voltage change of the heart tissue will activate the tissue nearby with certain delay (Marker 2 in \figref{nodepathTA}). 
+This timing delay between heart tissue is modeled using \emph{path automata} $A_e$ (\figref{nodepathTA}.(c)). 
+The initial state of a path automaton is \textsf{Idle}, which corresponds to no conduction. 
 A path has two conduction directions, forward and backward.
 These are represented by the states \textsf{Ante} and \textsf{Retro}, named after their standard physiological terms Antegrade and Retrograde.
-If \textsf{Act\_path} event is received from one of the nodes (1 or 2) connected to the path, the a transition to \textsf{Ante} or \textsf{Retro} state will occur in the path automaton. 
+If \textsf{Act\_path} event is received from one of the nodes (1 or 2) connected to the path, the transition to \textsf{Ante} or \textsf{Retro} state will occur in the path automaton. 
 At the end of \textsf{Ante} and \textsf{Retro} state the path will transition to \textsf{Idle} state and send Act\_node signal to the node automaton connected to the other end of the path (2 or 1).
+The parameters of the path automaton $A_e$ are $Tcond$.
 
-A healthy heart generates periodic electrical impulses to control heart rates according to physiological needs. These impulses propergate through the heart, triggering coordinated muscle contractions and pump blood to the rest of the body. The underlying pattern and timing of these impulses determine the heart's rhythm and are the key to proper heart functions. Derangements in this rhythm are referred to as \emph{arrhythmia}, which impair the heart's ability to pump blood and compromise the patients' health. Arrhythmia are categorized into so-called \textsf{Tachycardia} and \textsf{Bradycardia}. Tachycardia features undesirable fast heart rate which results in inefficient blood pumping. Bradycardia features slow heart rate which results in insufficient blood supply. Different heart conditions can be distinguished by the \emph{timing} of the electrical conduction, and the \emph{topology} of the electrical conduction system of the heart, which are researched in clinical setting referred to as \emph{Electrophysiology (EP)}\cite{josephson}. Heart tissue can be modeled as \emph{Node automata} and the conduction delays between nodes are modeled as \emph{Path automata} (\figref{nodepathTA}). 
+A healthy heart generates periodic electrical impulses to control heart rates according to physiological needs. 
+These impulses propagate through the heart, triggering coordinated muscle contractions and pump blood to the rest of the body. 
+The underlying pattern and timing of these impulses determine the heart's rhythm and are the key to proper heart functions. 
+Derangements in this rhythm are referred to as \emph{arrhythmia}, which impair the heart's ability to pump blood and compromise the patients' health. 
+Arrhythmias are categorized into so-called Tachycardia and Bradycardia. 
+Tachycardia features undesirable fast heart rate which results in inefficient blood pumping. Bradycardia features slow heart rate which results in insufficient blood supply. Different heart conditions can be distinguished by the \emph{timing} of the electrical conduction, and the \emph{topology} of the electrical conduction system of the heart, which are researched in clinical setting referred to as \emph{Electrophysiology (EP)}\cite{josephson}. 
+Heart tissue can be modeled as \emph{Node automata} and the conduction delays between nodes are modeled as \emph{Path automata} (\figref{nodepathTA}). 
 
 
 %\subsection{Timed-automata Models of the Heart}
@@ -50,22 +67,22 @@ A healthy heart generates periodic electrical impulses to control heart rates ac
 %For a heart model $G$ with $n$ nodes and $m$ paths (thus, $n$ vertices and $m$ edges), the node automata are denoted as $N_i, i\in[n]$ and path automata are denoted as $P_j,j\in[m]$. 
 %\todo[inline]{change to $V_i$ and $E_i$ to stay consistent with definition of graph?}
 %The parameters for the nodes are $Trest$ (with range $[Trest_{min}$),TERP,TRRP and the parameters for the paths are $\{Tante,Tretro\}$. 
-The spatial and temporal properties of a given human heart condition can be modeled by a network of node and path automata with different parameters (i.e. \figref{nodepathTA}.(d)). Physiological structures of the heart are represented as node automata and the path automata specifies the connectivities of the nodes and the conduction delays among them. The network can be viewed as a labeled directed graph: %the vertices of the graph represent nodes, or locations, in the heart, while edges represent conduction paths between the nodes. 
+The spatial and temporal properties of a given human heart condition can be modeled by a network of node and path automata with different parameters (i.e., \figref{nodepathTA}.(d)). Physiological structures of the heart are represented as node automata and the path automata specify the connectivities of the nodes and the conduction delays among them. 
+The network can be viewed as a labeled directed graph: %the vertices of the graph represent nodes, or locations, in the heart, while edges represent conduction paths between the nodes. 
 \begin{defn}
 	\label{def:labeledGraph}
 	[Labeled graph]
 	A \textbf{labeled graph} is a directed graph $G = (V,E,A)$ where 
 	$V$ is a finite set of vertices, $E \subset V\times V$ is a finite set of directed edges,
 	and $A$ is a total labeling function $A: V \cup E \rightarrow TA$
-	where $TA$ is the set of parametrized timed automata.
+	where $TA$ is the set of timed automata.
 	The function $A$ labels each vertex with a \emph{node automaton}, and each edge with an \emph{path automaton}.
-	All node (resp. path) automata share the same structure, and differ only in the values of their parameters.
-	%The parameters of a timed automaton are variables that appear in the right-hand side of guard and invariant conditions, and whose value can only be changed by a reset that occurs at a transition.	
-	%Both node and path automata are shown in Fig.~\ref{fig:nodepathTA}
+	For a graph $G$, we write $\Ec(G) \defeq V(G) \cup E(G)$.
 \end{defn}
-The heart model structure has been used to model various heart conditions and all of them have been validated by Electrophysiologists \cite{vhm_ecrts10,vhm_embc10}.
+The heart model structure has been used to model various heart conditions and all of them have been validated by electrophysiologists \cite{vhm_ecrts10,vhm_embc10}.
 
-The implantable cardiac pacemakers are rhythm management devices designed to treat bradycardia. A typical dual chamber pacemaker has two leads inserted into the heart through the veins which can measure the local electrical activities of the right atrium and right ventricle, respectively. According to the timing between sensed impulses the pacemaker can deliver electrical pacing to the corresponding chamber to maintain proper heart rhythm (\figref{probes}).  
+Implantable cardiac pacemakers are rhythm management devices designed to treat bradycardia. 
+A typical dual chamber pacemaker has two leads inserted into the heart through the veins which can measure the local electrical activities of the right atrium and right ventricle, respectively. According to the timing between sensed impulses the pacemaker can deliver electrical pacing to the corresponding chamber to maintain proper heart rhythm (\figref{probes}).  
 \begin{figure}[!t]
 	\centering
 	\includegraphics[width=0.7\textwidth]{figs/egm.pdf}
@@ -105,6 +122,7 @@ In general, a closed-loop requirement $\varphi$ is in the form of $\varphi_E\Rig
 \begin{equation}\label{req_def}
 M_E\models\varphi_E, M_E||M_D\models \varphi_C\Rightarrow M_E||M_D\models\varphi
 \end{equation}
+\hatodoin{What is this comma in the equation? is is AND, or OR, or something else?}
 %A requirement $\varphi: \varphi_E\Rightarrow \varphi_C$ contains open-loop environmental constraints in $\varphi_E$ and desired closed-loop condition specified in $\varphi_C$.  
 The substates for a heart model are clocks and locations for each node and path automata. In \cite{vhm_iccps11}, physiological heart conditions are mapped to constraints on substate variables of the heart models, which can be written as atomic propositions. General monitors are also developed in Stateflow \cite{stateflow} for closed-loop testing of physiological requirements. The timed-automata version are shown in \figref{monitor}. The $M_{sing}(event,thresh\_min, thresh\_max)$ enforces the time interval between two $event$ signals within $[thresh\_min,thresh\_max]$. \\
 $M_{doub}(event1,event2,thresh\_min,thresh\_max)$ enforces the time interval between $event1$ and $event2$ signals within $[thresh\_min,thresh\_max]$. Model checking is performed on the closed-loop system including the heart model $M_H$, the pacemaker model $M_P$, and the monitor $M$. The requirement $\varphi_P$ can be then represented with TCTL formula:

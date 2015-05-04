@@ -59,7 +59,7 @@ $\theta_{max}^{x'} = \max(\theta^x_{max})_{x \in f^{-1}(x') }$
 Consider the structure $N_1 P_1 N_2 P_2 N_3$ with three nodes and two paths, where $N_2$ is a passive node (i.e. not self-activating).
 If $N_2$ blocks an activation signal from $N_1$ to $N_3$, this is equivalent to the paths $P_1$ or $P_2$ not conducting.
 In this rule, the structure $P_1 N_2 P_2$ is replaced by a path $P$ whose automaton can take a self loop when it receives an activation signal, thus effectively stopping the conduction. 
-This is shown in Fig.~\ref{fig:rule5}: the extra transitions are marked {\quattrofont Act\_path\_1?} and {\quattrofont Act\_path\_2?}.
+This is shown in Fig.~\ref{fig:rule5}: the extra transitions are marked Act\_path\_1? and Act\_path\_2?.
 Because the blocking effect of nodes is now incorporated into the paths, the node automata of self-activating nodes can be modified to the one shown in Fig.~\ref{fig:rule5}, which doesn't have the (now useless) ERP period.
 \\
 \textbf{Subgraph to which it applies}.

@@ -1,7 +1,8 @@
 \section{Technical preliminaries}
 \label{preliminaries}
-For a model $M$ with state space $S$, a \emph{trace} is an infinite sequence $\delta\in S^\omega$. 
-The reachable behavior space of the model $M$ is denoted as $\beh(M)\subset S^\omega$. 
+Let $S$ be a set. 
+A \emph{trace} is an infinite sequence $\delta\in S^\omega$.
+For a model $M$ with state space $S$, the reachable behavior space of the model $M$ is denoted as $\beh(M)\subset S^\omega$. 
 A property $\varphi$ defines a region in $\beh(M)$ within which the property is satisfied, which can be denoted as $\beh(\varphi)$.
 A \emph{model checker} takes a system model $M$ and a formal requirement $\varphi$, and returns whether $\beh(M) \subset \beh(\varphi)$, which is denoted by $M\models\varphi$. 
 If the inclusion doesn't hold, the model checker returns a \emph{counter-example} $\delta_v\in\beh(M) \setminus \beh(\varphi)$.
@@ -17,40 +18,42 @@ This counter-example is used by the designer to debug the problem.
 
 \subsection{Model Abstraction with Over-approximation}
 \label{overapx}
+\hatodo{save spce by not making this a separate subsection.}
 %The behavior space of the actual system is too large for model checker to exhaustively explore. 
-A model of the system that covers all behaviors of the system can be developed which can not only reduce complexity, but also having the suitable formalism for the model checker. An abstraction function $h$ abstracting model $M$ to $M'$ is a non-surjective function from state space $S$ to the new abstract state space $S'$ such that: 
-$$\forall s\in S, \exists s'\in S' \text{ s.t. } h(s)=s'$$
+A model of the system that covers all behaviors of the system can be developed which can not only reduce complexity, but also having the suitable formalism for the model checker. 
+\hatodo{Previous statement is too vague: "suitable"? Might be best to remove it.}
+An abstraction function $\absfun$ abstracting model $M$ to $M'$ is a function from state space $S$ to the new abstract state space $S'$ such that: 
+\hatodoin{HA: removed non-surjective because it's not necessary for over-approximation}
+$$\forall s\in S, \exists s'\in S' \text{ s.t. } \absfun(s)=s'$$
 This definition can be extended to behaviors $\delta\in \mathbb{B}(M)$, such that:
-$$\forall \delta\in \mathbb{B}(M),\exists \delta'\in\mathbb{B}(M')\text{ s.t. } h(\delta)=\delta'$$
-From the definition, we know that the more abstract model $M'$ covers all behaviors of $M$, which is referred to as \emph{over-approximation}. We represent the over-approximation relationship as $M\triangleleft_h M'$, and the relationship between reachable behavior spaces as $h(\mathbb{B}(M))\subseteq\mathbb{B}(M')$. With a requirement $\varphi$ in $ACTCL^*$, we have:
-$$h(\mathbb{B}(M))\subseteq \mathbb{B}(M'),\mathbb{B}(M')\subseteq \mathbb{B}(\varphi)\Rightarrow h(\mathbb{B}(M))\subseteq \mathbb{B}(\varphi)\Rightarrow M\models\varphi$$
-%\todo[inline]{The behavior space in which $\varphi$ is defined need to be clarified.}
-In general the state space of $S'$ is smaller than $S$ while preserving the property, thus preferable during model checking. 
+$$\forall \delta\in \mathbb{B}(M),\exists \delta'\in\mathbb{B}(M')\text{ s.t. } \absfun(\delta)=\delta'$$
+From the definition, we know that the more abstract model $M'$ covers all behaviors of $M$, which is referred to as \emph{over-approximation}. 
+We represent the over-approximation relationship as $M\triangleleft_h M'$, and the relationship between reachable behavior spaces as $\absfun(\mathbb{B}(M))\subseteq\mathbb{B}(M')$. 
 
-Over-approximation can also be used to cover the behaviors of multiple models. A model $M'$ is an over-approximation of model $M_1$ and $M_2$ if 
-$$\forall \delta\in \mathbb{B}(M_1)\cup\mathbb{B}(M_2),\exists \delta'\in\mathbb{B}(M')\text{ s.t. } h(\delta)=\delta'$$
-We denote it as $\{M_1,M_2\}\triangleleft_h M'$, such that $h(\mathbb{B}(M_1)\cup\mathbb{B}(M_2))\subseteq\mathbb{B}(M')$.
+\hatodoin{Let $\varphi$ be a requirement on $M$ expressed in ACTL$^*$. 
+	The abstraction function is \emph{appropriate} for the requirement $\varphi$ if 
+	$\absfun(M) \models \varphi \implies M \models \varphi$
+	}
+
+With a requirement $\varphi$ in $ACTCL^*$\hatodo{what's this logic? give a reference}, we have:
+$$\absfun(\mathbb{B}(M))\subseteq \mathbb{B}(M'),\mathbb{B}(M')\subseteq \mathbb{B}(\varphi) \Rightarrow \absfun(\mathbb{B}(M))\subseteq \mathbb{B}(\varphi)\Rightarrow M\models\varphi$$
+\hatodoin{the last implication requires appropriateness, it doesn't follow automatically for any abstraction function}
+In general the state space of $S'$ is smaller than $S$ while preserving the property, thus preferable during model checking. 
+\hatodoin{I'm concerned that stressing that over-apx reduces the state space is the wrong emphasis: we don't use abstraction to reduce the tate space because our models are very small. We use to cover new behaviors.}
+\hatodoin{Also, be vareful: your state spaces are infinite, so what does it mean that one is smaller than the other? I suggest not making incomplete arguments here, just define things.}
+
+Over-approximation can also be used to cover the behaviors of multiple models. 
+A model $M'$ is an over-approximation of model $M_1$ and $M_2$ if 
+$$\forall \delta\in \mathbb{B}(M_1)\cup\mathbb{B}(M_2),\exists \delta'\in\mathbb{B}(M')\text{ s.t. } \absfun(\delta)=\delta'$$
+We denote it as $\{M_1,M_2\}\triangleleft_h M'$, such that $\absfun(\mathbb{B}(M_1)\cup\mathbb{B}(M_2))\subseteq\mathbb{B}(M')$.
+
 
 %\input{appropriateness}
-\subsection{Appropriateness of a Model for a Requirement}
-The state of a model $M$ is represented as $s=(s_1,s_2\cdots s_n)$ in which $s_i, i\in [1,n]$ are the substates variables. We use $Var(M)={s_1,s_2\cdots s_n}$ to represent all the substates variables in $M$. For an abstraction function $h$ which removes $s_i$ from the variables, we have:
-$$\forall s_j,j\in [1,n], h(s_1,s_2\cdots s_n)=(s_1\cdots s_{i-1},s_{i+1}\cdots s_n)$$
-It shows that $h$ is an over-approximation and in the new model $M$ we have $Var(M')\subset Var(M)$.
-
-A requirement is defined on a set of atomic propositions involving the variables of the model, which we denote as $Var(\varphi)$. If we have $Var(\varphi)\subseteq Var(M')$, all the atomic propositions can be evaluated in $M'$. And if $M'\models \varphi$, we have $M\models\varphi$ as discussed above. In this case we say that $M'$ is \emph{appropriate} for $\varphi$. However if during the over-approximation, certain variables that are in $Var(\varphi)$ are removed from $Var(M)$, such that $Var(\varphi)\not\subseteq Var(M')$, certain atomic propositions cannot be evaluated in $M'$, In this case, $M'$ is not appropriate for $\varphi$. More detailed proof for appropriateness can be found in \cite{regar_tech}.
-\subsection{Ambiguities Caused by Over-approximation}
-Since $h$ is non-surjective, there exists behaviors in $M'$ that do not exists in the original model $M$:
-$$\exists\delta'\in\mathbb{B}(M')\text{ s.t. }h^{-1}(\delta')\not\subset\mathbb{B}(M)$$
-These invalid behaviors may contribute to false-negatives during model checking.
-
-For models over-approximated to cover the behaviors of multiple models, distinct behaviors from different models can be indistinguishable in the abstract model. For $\{M_1,M_2\}\triangleleft_h M'$, we may have :
-$$ \delta_1\in\mathbb{B}(M_1),\delta_2\in \mathbb{B}(M_2)\text{ s.t. }h(\delta_1)=h(\delta_2)=\delta',\delta'\in \mathbb{B}(M')$$
-It is not a problem if $M'\models\varphi$, however if $\delta'\not\models\varphi$ is returned as a counter-example, it loses the context in which the property is violated and is difficult to interpret the result. A small example is shown in \figref{ambiguity} to illustrate the potential ambiguities due to over-approximation. 
 
 %\todo[inline]{The following example seems important but has a lot of overlap with the text above}
 %We use a small example to illustrate the ambiguities. In .(a) %we have two models such that $\{Sys1,Sys2\}\triangleleft_h M$. An over-approximation function $h_a$ is applied to $M$ to obtain $M'$. By model checking the abstract model $M'$ against property $\varphi$ we have $M'\not\models\varphi$ and $\delta'$ is returned as counter-example. However, $\delta'$ corresponds to 3 different behaviors in the original behavior space:
 %Since $h_a$ is non-surjective, for two models with $M\triangleleft_h M'$, we may have:
-%$$\exists s_1,s_2\in S \text{ s.t. }h(s_1)=h(s_2)=s',s'\in S'$$
+%$$\exists s_1,s_2\in S \text{ s.t. }\absfun(s_1)=\absfun(s_2)=s',s'\in S'$$
 %For behaviors we have:
 %$$ \delta_1\in\mathbb{B}(Sys1),\delta_2\in \mathbb{B}(Sys2), \delta_3\in\mathbb{B}(M)/(\mathbb{B}(Sys1)\cup\mathbb{B}(Sys2))$$
 %s.t. 
@@ -61,21 +64,21 @@ It is not a problem if $M'\models\varphi$, however if $\delta'\not\models\varphi
 		\centering
 		\includegraphics[width=0.7\textwidth]{figs/distinction.png}
 		%\vspace{-5pt}
-		\caption{\small Two models $Sys1,Sys2$ are over-approximated by model $M$ such that $\{Sys1,Sys2\}\triangleleft_h M$. An over-approximation function $h_a$ is applied to $M$ to obtain $M'$. By model checking the abstract model $M'$ against property $\varphi$ we have $M'\not\models\varphi$ and $\delta'$ is returned as counter-example. However, $\delta'$ corresponds to 3 different behaviors in the original behavior space: $\delta_1$ satisfies $\formula$ and is produced by $Sys1$, $\delta_2$ falsifies $\formula$ and is produced by $Sys2$, and $\delta_3$ unsatisfied and invalid}
+		\caption{\small Two models $Sys1,Sys2$ are over-approximated by model $M$ such that $\{Sys1,Sys2\}\triangleleft_h M$. An over-approximation function $h_a$ is applied to $M$ to obtain $M'$. By model checking the abstract model $M'$ against property $\varphi$ we have $M'\not\models\varphi$ and $\delta'$ is returned as counter-example. However, $\delta'$ corresponds to 3 different behaviors in the original behavior space: $\delta_1$ satisfies $\formula$ and is produced by $Sys1$, $\delta_2$ falsifies $\formula$ and is produced by $Sys2$, and $\delta_3$ falsifies $\varphi$ and belongs to neither behavior space.}
 		  %\vspace{-15pt}
 		\label{fig:ambiguity}
 \end{figure}
 
-%\subsection{System Modeling vs. Environment Modeling}
-%During closed-loop model checking, there are different focuses on the system model and the model of its environment, thus modeling them require different strategy.
-%\subsubsection{Over-approximation: }In closed-loop model checking, there is only one concrete system. However there can be countless number of environmental conditions which require different models to represent. While over-approximating the system model aim to reduce its state space and computational cost, over-approximating the environment models aim to cover the behaviors of multiple environmental conditions that are explicitly modeled, or implicitly included. Since it is impossible to exhaustively model all possible environment conditions, over-approximation is a good way to cover multiple environment condition without increasing computational cost. %\figref{distinction}
-
 \subsection{Validity of a counter-example }
-Behaviors introduced into the over-approximation of a system model are all \emph{spurious}, or invalid. For two models such that $M\triangleleft_h M'$, $\delta'$ is spurious if the following condition holds: 
-$$\not\exists \delta\in\mathbb{B}(M) \text{ s.t. }h(\delta)=\delta'$$
+Behaviors introduced into the over-approximation of a system \hatodo{device?} model are all \emph{spurious}, or invalid.\hatodo{stick to one word, either spurious or invalid} 
+For two models such that $M\triangleleft_h M'$, $\delta'$ is spurious if the following condition holds: 
+$$\not\exists \delta\in\mathbb{B}(M) \text{ s.t. }\absfun(\delta)=\delta'$$
 However, for environment models such that $\{M_1,M_2,...M_n\}\triangleleft_h M'$, and an execution $\delta'\in\mathbb{B}(M')$, the following condition is not enough to prove $\delta'$ is spurious.
-$$\forall i\not\exists \delta\in\mathbb{B}(M_i)\text{ s.t. }h(\delta)=\delta'$$
-Since there may be a valid environment model $M_c\not\in\{M_1,M_2,...M_n\}$ and $\mathbb{B}(M_c)\subset\mathbb{B}(M')$ and $\delta'\in\mathbb{B}(M_c)$. It is thus up to the domain experts to determine the validity of the counter-example.
+$$\forall i\not\exists \delta\in\mathbb{B}(M_i)\text{ s.t. }\absfun(\delta)=\delta'$$
+Since there may be a valid environment model $M_c\not\in\{M_1,M_2,...M_n\}$ and $\mathbb{B}(M_c)\subset\mathbb{B}(M')$ and $\delta'\in\mathbb{B}(M_c)$. 
+\hatodoin{no need to repeat the equation, just point to the previous one}
+It is thus up to the domain experts to determine the validity of the counter-example.
+\hatodo{Why make this argument here? This is Technical Preliminaries, where we just define a few things so we can go on with the paper...}
 %\begin{figure}[!b]
 %		\centering
 %		\includegraphics[width=0.6\textwidth]{figs/env_sys.png}
