@@ -47,7 +47,10 @@ Counter-examples returned from abstract models can be hard to interpret by domai
 One abstract counter-example could be produced by multiple physiologically valid conditions, which causes ambiguity.
 Thus, a rigorous framework is needed to balance the need to cover a wide range of environmental conditions and the need to provide counter-examples to the physicians within their physiological context.
 
-Another challenge for closed-loop model checking of medical devices is the amount of domain expertise needed during: 1) physiological modeling, 2) physiological model abstraction and refinement, and 3) checking the validity of counter-examples, which is not ideal in real world applications. 
+Another challenge for closed-loop model checking of medical devices is the amount of domain expertise needed during: 1) physiological modeling, 2) model abstraction and refinement, and 3) checking the validity of counter-examples.
+Thus the framework must also allow non-domain experts to perform verification (item 2 above),
+and establish `hand-off' points where the results of verification can be handed back 
+to the experts for interpretation.
 
 \begin{figure}[!t]
 		\centering
