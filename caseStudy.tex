@@ -15,6 +15,11 @@ A pacemaker diagnoses heart conditions and deliver electrical pacing to the hear
 \textbf{Atrio-Ventricular Interval (AVI)} defines the maximum interval between the last atrial event (AS,AP) to an ventricular event (VS,VP). If no VS happened before AVI timer runs out, and the time since the last ventricular event (VS,VP) is no less than URI, ventricular pacing (VP) is delivered to the heart (Marker 3 in \figref{PM_timers}).\\
 \textbf{Post-Ventricular Atrial Refractory Period (PVARP) and Ventricular Refractory Period (VRP)} define the minimum period that a AS or VS can happen since the last ventricular event (VS,VP). 
 
+%The interactions between the heart and the pacemaker are modeled by using binary event channels. For the atrial lead, we have:
+%\textsf{$N_A.Act\_path!\rightarrow$AS!},
+%and for ventricular lead we have
+%\textsf{$N_V.Act\_path!\rightarrow$VS!}.\\
+%The pacemaker accordingly generates atrial or ventricular pacing actions \textsf{AP!$\rightarrow N_A.Act\_node!$} and \textsf{VP!$\rightarrow N_V.Act\_node!$}.
 \subsection{Step 2: Requirement Encoding}
 The requirement below is designed to prevent the pacemaker from pacing too fast.\\
 \textsf{If the intervals between self-activations of the atria is between 300ms to 1000ms (60bps-200bps), the interval between ventricular paces should be no shorter than 500ms.}\\
@@ -40,9 +45,9 @@ At the root level heart model $H_{all}$, we have $\{N_A.t,N_A.loc\} \not \subset
 thus these 3 heart models are outputted as the most abstract models that are appropriate for $Req1$.
 \begin{figure}[!t]
 	\centering
-	\includegraphics[width=1.05\textwidth]{figs/abs_rev.pdf}
+	\includegraphics[width=0.9\textwidth]{figs/abs_rev.pdf}
 	%\vspace{-5pt}
-	\caption{\small Heart Model Abstraction Tree}
+	\caption{\small Finding the most concrete counter-examples using the abstraction tree}
 	\vspace{-10pt}
 	\label{fig:CE}
 \end{figure}

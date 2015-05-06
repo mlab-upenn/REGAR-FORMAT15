@@ -56,7 +56,7 @@ to the experts for interpretation.
 		\centering
 		\includegraphics[width=\textwidth]{figs/distinction.pdf}
 		%\vspace{-5pt}
-		\caption{\small (a) Device modeling with CEGAR framework (b) Closed-loop model checking with environment abstraction tree. The initial set of heart conditions are first abstracted and/or merged using abstraction rules $h_1,h_2$ (Marker 1). The abstract model is first used for closed-loop model checking. When a property violation happens, refined models in the abstraction tree are used for model checking. The most concrete counter-examples may be available in the initial model(s) (Marker 2). In the scenario where counter-examples do not exist in explicitly modeled Heart condition 2 and 3, the counter-example in Abstraction 1.2 may correspond to a valid heart condition introduced during abstraction $h_1$. The physician decides the validity of the counter-examples.}
+		\caption{\small (a) Device modeling with CEGAR framework (b) Closed-loop model checking with environment abstraction tree.}% The initial set of heart conditions are first abstracted and/or merged using abstraction rules $h_1,h_2$ (Marker 1). The abstract model is first used for closed-loop model checking. When a property violation happens, refined models in the abstraction tree are used for model checking. The most concrete counter-examples may be available in the initial model(s) (Marker 2). In the scenario where counter-examples do not exist in explicitly modeled Heart condition 2 and 3, the counter-example in Abstraction 1.2 may correspond to a valid heart condition introduced during abstraction $h_1$. The physician decides the validity of the counter-examples.}
 		  \vspace{-10pt}
 		\label{fig:distinction}
 \end{figure}
@@ -65,10 +65,10 @@ to the experts for interpretation.
 \subsection{Contributions}
 In this paper a framework is proposed for environment modeling in closed-loop model checking of medical device software.
 The cardiac pacemaker is used as an example of applying this framework.
-An expandable set of timed-automata heart models are first developed to represent different physiological conditions. 
-A set of domain-specific abstraction rules are then developed based on physiological knowledge, which help ensure the physiological relevance of the behaviors introduced into the abstract models. 
+An expandable set of timed-automata heart models are first developed to represent different physiological conditions. (\figref{distinction} Marker 1)
+A set of domain-specific abstraction rules are then developed based on physiological knowledge, which help ensure the physiological relevance of the behaviors introduced into the abstract models. (\figref{distinction} Marker 2)
 Then the rules are applied to the initial set of physiological models to obtain an abstraction tree, which will be used for closed-loop model checking of the pacemaker. 
-A simple search procedure is then used to conduct model checking using suitable heart models and return the most concrete and unambiguous counter-examples to the physicians for analysis. 
+A simple search procedure is then used to conduct model checking using suitable heart models and return the most concrete and unambiguous counter-examples to the physicians for analysis. (\figref{distinction} Marker 3)
 In this framework, physiological knowledge is only needed when constructing the initial model set and when analyzing counter-examples. 
 The application of the physiological abstraction rules and the verification procedure can be automated.
 The proposed method can potentially generalized to other domains in which the device operates in a large variety of environmental conditions.

@@ -5,7 +5,7 @@ Model checking can then be performed on the closed-loop system with UPPAAL \cite
 \begin{figure}[!t]
 	\centering
 	\includegraphics[width=0.9\textwidth]{figs/init_abs.pdf}
-	\vspace{-10pt}
+	\vspace{-15pt}
 	\caption{\small (a) Action potential for a heart tissue and its tissue nearby (dashed). (b) Node automaton. (c) Path automaton. (d) An example model of the heart consist of a network of node and path automata. The nodes are labeled with the name of the corresponding physiological structures.}
 	\label{fig:nodepathTA}
 \end{figure}
@@ -106,7 +106,14 @@ A typical dual chamber pacemaker has two leads inserted into the heart through t
 %	\item \textbf{cond:} The conduction property of the path automata. The \emph{min} and \emph{max} parameters equal to $Tcond\_min$ and $Tcond\_max$ parameters in the node automata, which specify the minimum and maximum delays between a node activation on one end and the activation on the other end.
 %\end{itemize}
 %As an example, a node automata $NA$ has two transition groups, which can be represented by $NA.self$ and $NA.block$
-
+\begin{figure}[!t]
+		\centering
+		\includegraphics[width=0.8\textwidth]{figs/monitor.pdf}
+		%\vspace{-5pt}
+		\caption{\small (a) $M_{sing}$ for single event; (b) $M_{doub}$ for two events}
+		  \vspace{-10pt}
+		\label{fig:monitor}
+\end{figure}
 \subsection{Formalizing Physiological Requirements}
 %Devices are designed to improve certain physiological conditions, the performance of the devices is evaluated on the difference between the patient conditions without the device and with the device. The device should also avoid deteriorating certain patient conditions, physiological requirements are specified in the form of:
 %$$C_{pre}\rightarrow C_{post}$$
@@ -128,12 +135,5 @@ M_E\models\varphi_E \land M_E||M_D\models \varphi_C\Rightarrow M_E||M_D\models\v
 The substates for a heart model are clocks and locations for each node and path automata. In \cite{vhm_iccps11}, physiological heart conditions are mapped to constraints on substate variables of the heart models, which can be written as atomic propositions. General monitors are also developed in Stateflow \cite{stateflow} for closed-loop testing of physiological requirements. The timed-automata version are shown in \figref{monitor}. The $M_{sing}(event,thresh\_min, thresh\_max)$ enforces the time interval between two $event$ signals within $[thresh\_min,thresh\_max]$. \\
 $M_{doub}(event1,event2,thresh\_min,thresh\_max)$ enforces the time interval between $event1$ and $event2$ signals within $[thresh\_min,thresh\_max]$. Model checking is performed on the closed-loop system including the heart model $M_H$, the pacemaker model $M_P$, and the monitor $M$. The requirement $\varphi_P$ can be then represented with TCTL formula:
  \textsf{A[] (not M.Err)}
-\begin{figure}[!t]
-		\centering
-		\includegraphics[width=0.8\textwidth]{figs/monitor.pdf}
-		%\vspace{-5pt}
-		\caption{\small (a) $M_{sing}$ for single event; (b) $M_{doub}$ for two events}
-		  \vspace{-10pt}
-		\label{fig:monitor}
-\end{figure}
+
 %\input{statespaceformulation}

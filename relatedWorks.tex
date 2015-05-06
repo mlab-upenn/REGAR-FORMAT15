@@ -1,6 +1,6 @@
 \subsection{Related Work}
 %\todo[inline]{complete}
-Counter-Example Guided Abstraction Refinement (CEGAR) \cite{CEGAR} has been proposed to over-approximate the device using predicate abstraction. 
+Counter-Example Guided Abstraction Refinement (CEGAR) \cite{CEGAR} has been proposed to over-approximate the device using predicate abstraction. (\figref{distinction}.(a))
 %Upon property violation the abstract counter-example is checked for its validity on the actual system. If the counter-example is \emph{spurious} the model is then refined to eliminate the spurious counter-example. 
 %This process is then continued on the refined model until either a valid counter-example returns or no counter-examples are returned. 
 CEGAR works well during device modeling, however, it cannot be applied to environment modeling for two reasons: 1) predicate abstraction does not guarantee the validity of behaviors introduced into the model. In fact, for device modeling, all additional behaviors introduced into the abstract model are spurious. 2) the validity of a counter-example cannot be checked automatically as in device modeling. 
