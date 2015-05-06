@@ -20,18 +20,20 @@
 	All our abstraction rules are projections: i.e., associated to each abstraction function $\absfun$ is a set $H \subset [n]$ of indices such that to for every $s = (a_1,a_2,\ldots,a_n) \in D$, $h(s) = \proj{s}{H}$.
 	For rule $\absfun_4$, $H = [n]$.
 	
-	Suppose that $Var(\varphi) \subset Var(M')$ and that $\absfun = \proj{\cdot}{1}$.
-	Thus $Var(M') = \{V_2 \ldots V_n\}$.
+	Now let $M$ be a model, 
+	$\absfun = \proj{\cdot}{2,\ldots,n}$, and $M' = h(M)$.
+	Suppose that $Var(\varphi) \subset Var(M')$.
 	Let $x \in \beh(M')$ such that
 	\[x = \hs_0 \hs_1 \hs_2 \ldots \models \varphi\] 
 	We want to prove that for any $y \in \absfun^{-1}(x)$, $y \models \varphi$.
-	Note that $\hs_i \in D_2 \times \ldots D_n$.
-	Let $p_0 p_1 \ldots$ be the run corresponding to $x$.
+	First note that $\hs_i \in D_2 \times \ldots \times D_n$.
+	Let $p_0 p_1 p_2 \ldots$ be the run corresponding to $x$.
+	By definition of run,
+	 $\hs_i \in \Oc(p_i) \cap \proj{D}{2,\ldots,n} = \proj{\Oc(p_i)}{2,\ldots,n}$.
 	Since $v_1 \notin Var(M')$, then $v_1 \notin Var(p_i)$ for all $p_i$ in $\varphi$.
 	Therefore 
-	\[\Oc(p_i) = D_1 \times D_{2-n}\; \forall i\]
-	For any $y \in \absfun^{-1}(x)$, $y = s_0 s_1 s_2 \ldots$ where $s_i = (a_i, \hs_i) \in D$
-	and $\hs_i \in D_{2-n}$ by definition of run.
+	\[\Oc(p_i) = D_1 \times \proj{\Oc(p_i)}{2,\ldots,n}\; \forall i\]
+	For any $y \in \absfun^{-1}(x)$, $y = s_0 s_1 s_2 \ldots$ where $s_i = (a_i, \hs_i) \in D$.
 	Thus $s_i \in \Oc(p_i)$, which means that $p_0 p_1 \ldots$ is a run of $y$ as well.
 	Therefore, $y \models \varphi$.
 	
