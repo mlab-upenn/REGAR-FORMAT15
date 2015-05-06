@@ -7,7 +7,7 @@ Their ability of autonomously affecting the physiological state of the patient m
 %As more functionality is added to the devices
 \footnote{In what follows, we use the word `device' to refer to the software of the device.}
 %, the complexity of the software component of the device is increasing dramatically, leading to a large number of potential safety violations because of software bugs. 
-During 2003-2012,  15\% of device recalls are because of software design failure is the most common cause for medical device recalls at 15\%~\cite{recall_stats}.
+During 2003-2012,  15\% of device recalls are because of software design failures, which is the most common cause for medical device recalls~\cite{recall_stats}.
 
 There are two categories of device bugs: 
 1) the device may fail to conform to its \emph{specifications}, that is, the prescription of how it should react to certain inputs.  
@@ -29,8 +29,8 @@ Closed-loop model checking enables closed-loop evaluation of the physiological r
 %Formal environment modeling introduces new challenges that do not arise when modeling the device alone, and this paper aims at addressing these issues in the context of pacemaker verification.
 %In the rest of this paper, we speak therefore of pacemaker as the Device Under Verification (DUV) and of the heart as being the environment, but it is understood that the discussion carries more broadly, with possible domain-specific adjustments.
 In closed-loop model checking, there is only one device model. 
-However there can be a large number of environmental conditions which require different models to represent them.
-\todo[inline]{should we give an example of a heart condition?}
+However there can be a large number of environmental conditions which require different models to represent them. For instance, a heart with atrial flutter has an additional conduction pathway that is not available in a healthy heart, causing fast atrial rate. The timing and structural differences should be distinguished in corresponding heart models.
+%\todo[inline]{should we give an example of a heart condition?}
 A set of initial models of the environment can be constructed but the set is inherently incomplete due to the large number of environment conditions and their combinations. 
 As a result, performing model checking using every model in the set cannot ensure full coverage of the environmental conditions. 
 
@@ -50,10 +50,10 @@ Another challenge for closed-loop model checking of medical devices is the amoun
 
 \begin{figure}[!t]
 		\centering
-		\includegraphics[width=1.05\textwidth]{figs/distinction.pdf}
+		\includegraphics[width=\textwidth]{figs/distinction.pdf}
 		%\vspace{-5pt}
-		\caption{\small (a) Device modeling with CEGAR framework (b) Closed-loop model checking with environment abstraction tree}
-		  %\vspace{-15pt}
+		\caption{\small (a) Device modeling with CEGAR framework (b) Closed-loop model checking with environment abstraction tree. The initial set of heart conditions are first abstracted and/or merged using abstraction rules $h_1,h_2$ (Marker 1). The abstract model is first used for closed-loop model checking. When a property violation happens, refined models in the abstraction tree are used for model checking. The most concrete counter-examples may be available in the initial model(s) (Marker 2). In the scenario where counter-examples do not exist in explicitly modeled Heart condition 2 and 3, the counter-example in Abstraction 1.2 may correspond to a valid heart condition introduced during abstraction $h_1$. The physician decides the validity of the counter-examples.}
+		  \vspace{-10pt}
 		\label{fig:distinction}
 \end{figure}
 

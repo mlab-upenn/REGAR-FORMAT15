@@ -56,7 +56,7 @@ $$H_n''||PM\not\models Req1;H_{at}''''||PM\not\models Req1;H_{vt}'''||PM\not\mod
 %$$[0,CE_2]=ModelChecking(H_{vt}''',PM,Req1)$$
 %\hatodoin{In the following text you use $CE_{at}$, etc. It's  best to use the letter subscripts in the above equations as well, so it's clear which cex comes from which heart model.}
 %For the two heart models $H_{at}'''',H_{vt}'''$ in which the requirement is violated, the algorithm keeps going down the abstraction tree, and upon termination counter-examples are returned for the following heart models
-The abstraction tree is then further explored and the most refined heart models with counter-examples are: $H_{n};H_{pvc};H_{af};H_{avn};H_{afib}$.
+The abstraction tree is then further explored. The heart models with counter-examples are illustrated in \figref{HM_abs}, and the most refined heart models with counter-examples are: $H_{n};H_{pvc};H_{af};H_{avn};H_{afib}$.
 %$$[0,CE_{at}]=ModelChecking(H_{at},PM,Req1)$$
 %$$[0,CE_{pvc}]=ModelChecking(H_{pvc},PM,Req1)$$
 %$$[0,CE_{af}]=ModelChecking(H_{af},PM,Req1)$$
@@ -72,21 +72,21 @@ The abstraction tree is then further explored and the most refined heart models 
 		%\label{fig:CE}
 %\end{figure}
 
-\subsection{Analysis of the Counter-examples}
-The counter-examples are then sent to physicians for analysis. In \figref{CE} we demonstrate 3 counter-examples from the case study. In the counter-examples, the first%We only show the activations of the atrial node and ventricle pacing. 
+\subsection{Step 5: Analysis of the Counter-examples}
+The counter-examples are then sent to physicians for analysis. In \figref{CE} we demonstrate 3 counter-examples from the case study. In the counter-examples, the first signal shows the intrinsic heart signals over time with up arrows as atrial activations and down arrows as ventricular activations. The second signal shows the pacemaker outputs with up arrows as atrial pacing and down arrows as ventricular pacing.%We only show the activations of the atrial node and ventricle pacing. 
 
-$CE_{n}$ corresponds to fast intrinsic heart rate. The pacemaker is pacing the ventricle after $AVI$ period %\hatodo{is it TAVI or AVI like in the previous seciton?}
-to maintain optimal A-V delay, which is a safe execution. 
-\hatodoin{Do you mean that $CE_{at}$ is not a bug? Does this mean that the requirement may be violated in ways that are not dangerous?}
-$CE_{pvc}$ has a very similar execution with $CE_{at}$. However, the activations of the atrial node is triggered by retrograde conduction from ventricular paces (marker \textsf{cond}). The atrial activations trigger another ventricular pace after $TAVI$, which will trigger another retrograde conduction. In this case the heart rate is controlled by $TAVI+Tcond$, which corresponds to an inappropriate closed-loop behavior called Endless Loop Tachycardia.
+$CE_{n}$ is returned by $H_n$ and none of its children models violate the requirement. By careful analysis we found that $CE_{n}$ features the combination of fast intrinsic atrial rate and prolonged A-V conduction delay, which is the combination of heart conditions $H_{st}$ and $H_{av}$. This scenario shows that the abstraction rules can introduce physiological heart conditions that were not explicitly modeled in the initial model set. The pacemaker improved the open-loop heart condition by pacing the ventricles $AVI$ after each atrial event, which is a correct operation of the pacemaker despite the requirement violation. %\hatodo{is it TAVI or AVI like in the previous seciton?}
 
-In $CE_{af}$ the atrial rate is very high, which is a sub-optimal heart condition. \hatodo{use a word other than sub-optimal. E.g., dangerous, harmful..}
+%\hatodoin{Do you mean that $CE_{at}$ is not a bug? Does this mean that the requirement may be violated in ways that are not dangerous?}
+$CE_{pvc}$ has a very similar execution with $CE_{n}$. However, the activations of the atrial node is triggered by retrograde conduction from ventricular paces (marker \textsf{cond}). The atrial activations trigger another ventricular pace after $TAVI$, which will trigger another retrograde conduction. In this case the heart rate is controlled by $TAVI+Tcond$, which corresponds to a dangerous closed-loop behavior referred to as Endless Loop Tachycardia.
+
+In $CE_{af}$ the atrial rate is very high, which is also a sub-optimal but not dangerous heart condition. \hatodo{use a word other than sub-optimal. E.g., dangerous, harmful..}
 However, the ventricular rate can stay normal due to the blocking property of the AV node. 
 Despite the filters in the pacemaker, the pacemaker still paces the ventricle for every 3 atrial activations, which extends fast atrial rate to more dangerous fast ventricular rate. 
 \hatodoin{Not very clear..do you mean that the intrinsoc centricular rate is fine because of AV filtering, but the PM is accelarating it?}
 This scenario is referred to as Atrial Tachycardia Response of a pacemaker. 
 
-From the analysis, pacemaker operations in $CE_{pvc}$ and $CE_{af}$ need to be revised. However, the revision should not affect the behavior in $CE_{at}$. This example demonstrates that counter-examples from more refined models provide more detailed mechanism of the requirement violations, and distinguish the physiological conditions that can trigger the violations. The information is helpful for debugging and improving the algorithm. The physicians can also improve the physiological requirement so that these heart conditions can be then considered case by case. %Both $CE_b$ and $CE_c$ are inappropriate executions of the pacemaker .$CE_a$ and $CE_b$ can have the same input-output executions on the pacemaker side and can only be differentiated on the heart model side. After the physician examines the counter-example the programmer can work on debugging. 
+From the analysis, pacemaker operations in $CE_{pvc}$ and $CE_{af}$ need to be revised. However, the revision should not affect the behavior in $CE_{n}$. This example demonstrates that counter-examples from more refined models provide more detailed mechanism of the requirement violations, and distinguish the physiological conditions that can trigger the violations. The information is helpful for debugging and improving the algorithm. The physicians can also improve the physiological requirement so that these heart conditions can be then considered case by case. %Both $CE_b$ and $CE_c$ are inappropriate executions of the pacemaker .$CE_a$ and $CE_b$ can have the same input-output executions on the pacemaker side and can only be differentiated on the heart model side. After the physician examines the counter-example the programmer can work on debugging. 
 %$NA\_self$ is in $H_3$, we go one level up, in $H_4$ the behavior is not merged with any other parameters. In $H_5$ $NA\_self$ is merged with  $NA'-NV'.cond$ so $H_4$ is returned as the appropriate heart model for R1. In \cite{STTT13} we used $H_4$ to verify the correctness of the ELT termination algorithm. With a basic DDD pacemaker we have $H_4 || P_{DDD}\models R1$. The counter-example returned is exactly the ELT behavior. Then we implement the ELT termination algorithm and we have  $H_4 || P_{ELT}\not\models R1$, meaning ELT has been successfully terminated, and only the ELT is terminated. 
 %
 %\subsection{Inappropriate Model Refinements}
