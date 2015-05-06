@@ -22,7 +22,7 @@ Bugs in the second category (violation of physiological requirements), on the ot
 For instance, the pacemaker and the heart as its environment. 
 In the medical device industry, closed-loop verification of the physiological requirements is mostly performed in terms of clinical trials, in which the actual devices are implanted in human subjects over an extended duration.
 Unfortunately, due to the extremely high cost of clinical trials (\$0.30
-million to \$24.03 million.\cite{trial_cost}) , the amount and variety of human subjects during the clinical trials are limited, which reduces the chances of finding bugs. 
+million to \$24.03 million.\cite{trial_cost} with cardiac devices closer to the higher end), the amount and variety of human subjects during the clinical trials are limited, which reduces the chances of finding bugs. 
 Moreover, clinical trials are often conducted at the final design stage. Fixing bugs at this stage is very costly.
 
 Closed-loop model checking enables closed-loop evaluation of the physiological requirements at an earlier design stage, which requires formal model(s) of the physiological environment. 
@@ -47,7 +47,10 @@ Counter-examples returned from abstract models can be hard to interpret by domai
 One abstract counter-example could be produced by multiple physiologically valid conditions, which causes ambiguity.
 Thus, a rigorous framework is needed to balance the need to cover a wide range of environmental conditions and the need to provide counter-examples to the physicians within their physiological context.
 
-Another challenge for closed-loop model checking of medical devices is the amount of domain expertise needed during: 1) physiological modeling, 2) physiological model abstraction and refinement, and 3) checking the validity of counter-examples, which is not ideal in real world applications. 
+Another challenge for closed-loop model checking of medical devices is the amount of domain expertise needed during: 1) physiological modeling, 2) model abstraction and refinement, and 3) checking the validity of counter-examples.
+Thus the framework must also allow non-domain experts to perform verification (item 2 above),
+and establish `hand-off' points where the results of verification can be handed back 
+to the experts for interpretation.
 
 \begin{figure}[!t]
 		\centering
@@ -61,7 +64,7 @@ Another challenge for closed-loop model checking of medical devices is the amoun
 
 \subsection{Contributions}
 In this paper a framework is proposed for environment modeling in closed-loop model checking of medical device software.
-Implantable pacemaker is used as an example of applying this framework.
+The cardiac pacemaker is used as an example of applying this framework.
 An expandable set of timed-automata heart models are first developed to represent different physiological conditions. 
 A set of domain-specific abstraction rules are then developed based on physiological knowledge, which help ensure the physiological relevance of the behaviors introduced into the abstract models. 
 Then the rules are applied to the initial set of physiological models to obtain an abstraction tree, which will be used for closed-loop model checking of the pacemaker. 
