@@ -6,7 +6,7 @@ Model checking can then be performed on the closed-loop system with UPPAAL \cite
 	\centering
 	\includegraphics[width=0.9\textwidth]{figs/init_abs.pdf}
 	%\vspace{-5pt}
-	\caption{\small (a) Action potential for a heart tissue and its tissue nearby (dashed). (b) Node automaton. (c) Path automaton. (d) An example model of the heart consist of a network of node and path automata}
+	\caption{\small (a) Action potential for a heart tissue and its tissue nearby (dashed). (b) Node automaton. (c) Path automaton. (d) An example model of the heart consist of a network of node and path automata. The nodes are labeled with the name of the corresponding physiological structures.}
 	\label{fig:nodepathTA}
 \end{figure}
 
@@ -121,7 +121,7 @@ Software developers are particularly interested in the scenario in which a healt
 
 In general, a closed-loop requirement $\varphi$ is in the form of $\varphi_E\Rightarrow \varphi_C$, in which $\varphi_E$ is the open-loop physiological condition that the device encounters, often in form of parameter ranges in the environment models, and $\varphi_C$ is the closed-loop physiological condition that the device should achieve. Then we have:
 \begin{equation}\label{req_def}
-M_E\models\varphi_E \text{ \&\& }M_E||M_D\models \varphi_C\Rightarrow M_E||M_D\models\varphi
+M_E\models\varphi_E \land M_E||M_D\models \varphi_C\Rightarrow M_E||M_D\models\varphi
 \end{equation}
 %\hatodoin{What is this comma in the equation? is is AND, or OR, or something else?}
 %A requirement $\varphi: \varphi_E\Rightarrow \varphi_C$ contains open-loop environmental constraints in $\varphi_E$ and desired closed-loop condition specified in $\varphi_C$.  

@@ -3,10 +3,11 @@
 
 %\todo[inline]{stress the timing aspect more}
 Implantable medical devices such as pacemakers are designed to improve physiological conditions with very little human intervention. 
-Their ability of autonomously affecting the physiological state of the patient makes the medical devices safety-critical, and sufficient evidence for their safety and efficacy should be provided before the devices can be implanted in the patients. 
-As more functionality is added to the devices
+Their ability of autonomously affecting the physiological state of the patient makes the medical devices safety-critical, and sufficient evidence for their safety and efficacy should be provided before the devices can be implanted in the patients. Medical devices increasingly rely on software, and device function and their clinical performance can be affected by seemingly minor changes to software.
+%As more functionality is added to the devices
 \footnote{In what follows, we use the word `device' to refer to the software of the device.}
-, the complexity of the software component of the device is increasing dramatically, leading to a large number of potential safety violations due to software bugs \cite{recall_stats}.
+%, the complexity of the software component of the device is increasing dramatically, leading to a large number of potential safety violations because of software bugs. 
+During 2003-2012,  15\% of device recalls are because of software design failure is the most common cause for medical device recalls at 15\%~\cite{recall_stats}.
 
 There are two categories of device bugs: 
 1) the device may fail to conform to its \emph{specifications}, that is, the prescription of how it should react to certain inputs.  
@@ -33,13 +34,13 @@ However there can be a large number of environmental conditions which require di
 A set of initial models of the environment can be constructed but the set is inherently incomplete due to the large number of environment conditions and their combinations. 
 As a result, performing model checking using every model in the set cannot ensure full coverage of the environmental conditions. 
 
-In this paper, domain-specific over-approximation rules are developed that produce abstract models that not only cover explicitly modeled environment conditions, but also cover physiological timing behaviors and conditions not modeled in the set of initial models. 
+In this paper, domain-specific over-approximation rules are developed that produce abstract models that not only cover explicitly modeled environment conditions, but also cover timing behaviors and conditions not modeled in the set of initial models. 
 The abstract models can be then used for closed-loop model checking of the device model. 
 If the closed-loop system satisfies a requirement, the device under verification satisfies the requirement under environment conditions covered by the abstract models. 
 However, if the requirement is unsatisfied, the model checker returns a counter-example. 
-In system modeling, the counter-example is considered \emph{spurious} if it can not be produced by the device.
+In device modeling, the counter-example is considered \emph{spurious} if it can not be produced by the device.
 However in environment modeling, even if the counter-example can not be produced by any of the initial environment models, it might still be a physiologically valid behavior.
-Thus the validity of a counter-example can only be determined by domain experts. 
+Thus the validity of a counter-example cannot be determined by refining the environment model, but can only be determined by domain experts. 
 
 Counter-examples returned from abstract models can be hard to interpret by domain experts.
 One abstract counter-example could be produced by multiple physiologically valid conditions, which causes ambiguity.
@@ -47,13 +48,20 @@ Thus, a rigorous framework is needed to balance the need to cover a wide range o
 
 Another challenge for closed-loop model checking of medical devices is the amount of domain expertise needed during: 1) physiological modeling, 2) physiological model abstraction and refinement, and 3) checking the validity of counter-examples, which is not ideal in real world applications. 
 
-
+\begin{figure}[!t]
+		\centering
+		\includegraphics[width=1.05\textwidth]{figs/distinction.pdf}
+		%\vspace{-5pt}
+		\caption{\small (a) Device modeling with CEGAR framework (b) Closed-loop model checking with environment abstraction tree}
+		  %\vspace{-15pt}
+		\label{fig:distinction}
+\end{figure}
 
 
 \subsection{Contributions}
 In this paper a framework is proposed for environment modeling in closed-loop model checking of medical device software.
 Implantable pacemaker is used as an example of applying this framework.
-An expandable set of heart models are first developed to represent different physiological conditions. 
+An expandable set of timed-automata heart models are first developed to represent different physiological conditions. 
 A set of domain-specific abstraction rules are then developed based on physiological knowledge, which help ensure the physiological relevance of the behaviors introduced into the abstract models. 
 Then the rules are applied to the initial set of physiological models to obtain an abstraction tree, which will be used for closed-loop model checking of the pacemaker. 
 A simple search procedure is then used to conduct model checking using suitable heart models and return the most concrete and unambiguous counter-examples to the physicians for analysis. 
