@@ -22,7 +22,7 @@ Bugs in the second category (violation of physiological requirements), on the ot
 For instance, the pacemaker and the heart as its environment. 
 In the medical device industry, closed-loop verification of the physiological requirements is mostly performed in terms of clinical trials, in which the actual devices are implanted in human subjects over an extended duration.
 Unfortunately, due to the extremely high cost of clinical trials (\$0.30
-million to \$24.03 million.\cite{trial_cost}) , the amount and variety of human subjects during the clinical trials are limited, which reduces the chances of finding bugs. 
+million to \$24.03 million.\cite{trial_cost} with cardiac devices closer to the higher end), the amount and variety of human subjects during the clinical trials are limited, which reduces the chances of finding bugs. 
 Moreover, clinical trials are often conducted at the final design stage. Fixing bugs at this stage is very costly.
 
 Closed-loop model checking enables closed-loop evaluation of the physiological requirements at an earlier design stage, which requires formal model(s) of the physiological environment. 
@@ -61,7 +61,7 @@ Another challenge for closed-loop model checking of medical devices is the amoun
 
 \subsection{Contributions}
 In this paper a framework is proposed for environment modeling in closed-loop model checking of medical device software.
-Implantable pacemaker is used as an example of applying this framework.
+The cardiac pacemaker is used as an example of applying this framework.
 An expandable set of timed-automata heart models are first developed to represent different physiological conditions. 
 A set of domain-specific abstraction rules are then developed based on physiological knowledge, which help ensure the physiological relevance of the behaviors introduced into the abstract models. 
 Then the rules are applied to the initial set of physiological models to obtain an abstraction tree, which will be used for closed-loop model checking of the pacemaker. 
