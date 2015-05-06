@@ -6,6 +6,7 @@ These counter-example are provided to the physicians, along with the heart model
 Recall the definition of appropriateness from Section \ref{preliminaries}.
 In the technical report \cite{regar_tech}, we show that a sufficient condition for a model $M$ to be appropriate for a requirement $\varphi$ with monitor $Mon$ is
 $Var(\varphi) \subset Var(M) \cup Var(Mon)$.
+\ifthenelse{\boolean{TECH_REPORT}}{\include{proofAppropriateness}}{}
 
 An algorithm is developed to select the most abstract models from the abstraction tree $T_{HM}$ that are appropriate for a requirement $Req$. The detailed implementation of the algorithm can be found in \cite{regar_tech}.
 %\begin{figure}[!t]
