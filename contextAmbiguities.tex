@@ -1,4 +1,21 @@
 \section{Closed-loop Model Checking Using the Abstraction Tree}
+\subsection{Heart Model Abstraction Tree}
+A set of heart models corresponding to different heart conditions are first developed. 
+The list can be expanded as new heart conditions are discovered.
+Because we start from a set of initial models, and each one may be abstracted using a number of abstraction rules, we have a choice of which rules to apply to which models, and the order in which to apply them.
+Depending on which rule is applied when, we end up with different abstract models.
+Thus we end with an abstraction tree $T_{HM}$ for the heart is created, as shown in \figref{HM_abs}. 
+%Note that applying rules in different order results different abstraction tree. 
+%The order used to obtain $HM\_tree$ is based on the domain knowledge that certain heart conditions may have similar behaviors and similar inputs to the pacemaker. 
+%This systematic grouping maintains the physiological-relevance of the heart model even at higher abstraction levels, and reduce the necessity to resolve ambiguities at lower abstraction levels when model checking certain requirements.
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=0.9\textwidth]{figs/abs.pdf}
+	%\vspace{-5pt}
+	\caption{\small Heart Model Abstraction Tree}
+	\vspace{-15pt}
+	\label{fig:HM_abs}
+\end{figure}
 After the abstraction tree is built, it can be used for closed-loop model checking by non-domain experts. 
 The question is which models to select from the abstraction tree to perform model checking, and provide the most concrete counter-examples.
 These counter-example are provided to the physicians, along with the heart models that generated them, to determine their physiological validity.
@@ -19,7 +36,14 @@ An algorithm is developed to select the most abstract models from the abstractio
 
 Upon requirement violation, an abstract counter-example is returned during closed-loop model checking. The counter-example may contain context ambiguities that should be resolved before sending to the physician. An abstraction tree contains the information of how different environment conditions are over-approximated by more abstract models. By exploring the abstraction tree, the most concrete yet unambiguous counter-examples can be sent to the physicians for analysis. The detailed implementation of the algorithm can be found in \cite{regar_tech}.%Algorithm 2 (\figref{algorithm}) describes the process for closed-loop model checking with an abstraction tree.
 
-
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=1.05\textwidth]{figs/abs_rev.pdf}
+	%\vspace{-5pt}
+	\caption{\small Heart Model Abstraction Tree}
+	%\vspace{-15pt}
+	\label{fig:abs_rev}
+\end{figure}
 
 %The most abstract model in the abstraction tree is built to cover the input space to the device as much as possible, thus it may not have enough details to constrain the behaviors of the model according to the constraints in the requirement. Thus the first step of closed-loop model checking is to select the most abstract models which are appropriate for the requirement. A model $M$ is appropriate for a requirement $Req$ if the environment transitions mentioned in the requirement, denoted as $EnvT(Req)$, is a subset of the environment transitions associated with the model $EnvT(M$). The following algorithm finds the most abstract heart models in the abstraction tree $HM\_tree$ that are appropriate for a requirement $Req$.
 %\begin{Verbatim}
