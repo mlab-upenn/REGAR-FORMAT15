@@ -1,17 +1,38 @@
 \section{Technical preliminaries}
 \label{preliminaries}
-Let $S$ be a set. 
-A \emph{trace} is a sequence $\delta\in S^\omega$.
-For a model $M$ with state space $S$, the reachable behavior space of the model $M$ is denoted as $\beh(M)\subset S^\omega$. 
-Let $Var(M)$ be the set of variables of model $M$.
-Then $AP$ is a set of \emph{atomic propositions} $p$, which are expressions on $Var(M)$, for instance, $p \defeq V_1 + V_2 > 4$ where $V_i \in Var(M)$.
-Let $Var(p)$ be the set of variables that appear in the atomic proposition $p$.
-Given a formula $\varphi$ on $AP$ in some logic, $Var(\varphi) = \cup_{p \textrm{ in }\varphi} Var(p)$.
+Timed automata \cite{timed_automata} are an extension of a finite automaton with a finite set of real-valued clocks. 
+A timed automaton \textbf{G} is a tuple $\left\langle S,S_0,\Sigma,X,inv,E\right\rangle$, where
+ $S$ is a finite set of locations.
+ $S_0\in S$ is the set of initial locations.
+ $\Sigma$ is the set of events.
+$X$ is the set of clocks.
+$inv$ is the set of invariants for clock constraints at each location.
+ $E$ is the set of edges. Each edge is a tuple $\left\langle s,\sigma,\Psi,\lambda,s'\right\rangle$ which consists of a source location $s$, an event $\sigma\in\Sigma$, clock constraints $\Psi$, $\lambda$ as a set of clocks to be reset and the target location $s'$. For the clock variables $X$, the clock constraints $\Psi\in\Psi^X$ can be inductively defined by $\Psi:=x\bot c\|\Psi_1\wedge\Psi_2$, where $\bot\in\{\leq,=,\geq\}$, and $c\in\mathbb{N}$.
+\vspace{-10pt}
+\subsubsection{Semantics of Timed Automata}
+A state of a timed automaton is a pair $\left\langle s,v\right\rangle$ which contains the location $s\in S$ and the valuation $v$ for all clocks. The set of all states is $\Omega$. For all $\lambda\in X$, $v[\lambda :=0]$ denotes the valuation which sets all clocks $x\in\lambda$ as zero and the rest of the clocks unchanged. For all $t\in \textbf{R}$, $v+t$ denotes the valuation which increase all the clock value by $t$. There are two kinds of transitions between states. The \textsf{discrete transition} happens when the condition of an edge has been met. So we have:
+$$\left\langle s,\sigma,\Psi,\lambda,s'\right\rangle\in E,v\models \Psi,v[\lambda :=0]\models inv(s')\Rightarrow (s,v)\xrightarrow{\sigma}(s',v[\lambda :=0])$$
+The \textsf{timed transition} happens when the timed automaton can stay in the same location for certain amount of time. We have:
+$$\delta\in \textsl{R},\forall \delta'\leq\delta, v+\delta'\models inv(s)\Rightarrow (s,v)\xrightarrow{\delta}(s,v+\delta)$$
+\vspace{-15pt}
+\subsubsection{Timed Simulation}
+For two timed automata $T^1=\left\langle S^1,S_0^1,\Sigma^1,X^1,inv^1,E^1\right\rangle$ and $T^2=\left\langle S^2,S_0^2,\Sigma^2,X^2,inv^2,E^2\right\rangle$, a timed simulation relation is a binary relation $\textsf{sim}\subseteq \Omega^1\times \Omega^2$ where $\Omega^1$ and $\Omega^2$ are sets of states of $T^1$ and $T^2$. We say $T^2$ \textsf{time simulates} $T^1$ ($T^1 \preceq_t T^2$) if the following conditions holds:
+\begin{itemize}
+	\item Initial states correspondence: $(\left\langle s_0^1,\textbf{0}\right\rangle,\left\langle s_0^2,\textbf{0}\right\rangle)\in \textsf{sim}$
+	\item Timed transition: For every $(\left\langle s_1,v_1\right\rangle,\left\langle s_2,v_2\right\rangle)\in\textsf{sim}$, if $\left\langle s_1,v_1\right\rangle\xrightarrow{\delta}\left\langle s_1,v_1+\delta\right\rangle$, there exists $\left\langle s_2,v_2+\delta\right\rangle$ such that $\left\langle s_2,v_2\right\rangle\xrightarrow{\delta}\left\langle s_2,v_2+\delta\right\rangle$ and \\$(\left\langle s_1,v_1+\delta\right\rangle,\left\langle s_2,v_2+\delta\right\rangle)\in\textsf{sim}$.
+	\item Discrete transition: For every $(\left\langle s_1,v_1\right\rangle,\left\langle s_2,v_2\right\rangle)\in\textsf{sim}$, if $\left\langle s_1,v_1\right\rangle\xrightarrow{\sigma}\left\langle s_1',v_1'\right\rangle$, there exists $\left\langle s_2',v_2'\right\rangle$ such that $\left\langle s_2,v_2\right\rangle\xrightarrow{\sigma}\left\langle s_2',v_2'\right\rangle$ and $(\left\langle s_1',v_1'\right\rangle,\left\langle s_2',v_2'\right\rangle)\in\textsf{sim}$.
+\end{itemize}
+Timed-simulation can also be used to cover the behaviors of multiple models. 
+A model $M'$ time-simulates models $M_1$ and $M_2$ if $M_1\preceq_t M'$ and $M_2\preceq_t M'$,
+%$$\forall \delta\in \mathbb{B}(M_1)\cup\mathbb{B}(M_2),\exists \delta'\in\mathbb{B}(M')\text{ s.t. } \absfun(\delta)=\delta'$$
+which is denoted as $\{M_1,M_2\}\preceq_t M'$.
 
-A formula $\varphi$ defines a region in $S^\omega$ within which the formula is satisfied, which can be denoted as $\beh(\varphi)$.
-A \emph{model checker} takes a system model $M$ and a formal requirement $\varphi$, and returns whether $\beh(M) \subset \beh(\varphi)$, which is denoted by $M\models\varphi$. 
-If the inclusion doesn't hold, the model checker returns a \emph{counter-example} $\delta_v\in\beh(M) \setminus \beh(\varphi)$.
-This counter-example is used by the designer to debug the problem. 
+
+
+%A formula $\varphi$ defines a region in $S^\omega$ within which the formula is satisfied, which can be denoted as $\beh(\varphi)$.
+%A \emph{model checker} takes a system model $M$ and a formal requirement $\varphi$, and returns whether $\beh(M) \subset \beh(\varphi)$, which is denoted by $M\models\varphi$. 
+%If the inclusion doesn't hold, the model checker returns a \emph{counter-example} $\delta_v\in\beh(M) \setminus \beh(\varphi)$.
+%This counter-example is used by the designer to debug the problem. 
 
 %\subsection{Model Abstraction with Over-approximation}
 %\label{overapx}
@@ -19,16 +40,16 @@ This counter-example is used by the designer to debug the problem.
 %%The behavior space of the actual system is too large for model checker to exhaustively explore. 
 %A model of the system that covers all behaviors of the system can be developed which can not only reduce complexity, but also having the suitable formalism for the model checker. 
 %\hatodo{Previous statement is too vague: "suitable"? Might be best to remove it.}
-An abstraction function $\absfun$ abstracting model $M$ to $M'$ is a function from state space $S$ to the new abstract state space $S'$ such that: 
-%\hatodoin{removed non-surjective because it's not necessary for over-approximation. See Fig.1 in Clarke's JACM paper: his function is surjective, but still introduces over-approximation.}
-$$\forall s\in S, \exists s'\in S' \text{ s.t. } \absfun(s)=s'$$
-This definition can be extended to behaviors $\delta\in \mathbb{B}(M)$, such that:
-$$\forall \delta\in \mathbb{B}(M),\exists \delta'\in\mathbb{B}(M')\text{ s.t. } \absfun(\delta)=\delta'$$
-From the definition, we know that the more abstract model $M'$ covers all behaviors of $M$, which is referred to as \emph{over-approximation}. 
-The over-approximation relationship is denoted as $M\triangleleft_h M'$, and the relationship between reachable behavior spaces as $\absfun(\mathbb{B}(M))\subseteq\mathbb{B}(M')$. 
-
-Let $\varphi$ be a requirement on $M$ expressed in ATCTL$^*$, and $\absfun$ be an abstraction function. The model $\absfun(M)$ is \emph{appropriate} for the requirement $\varphi$ if 
-	$\absfun(M) \models \varphi \implies M \models \varphi$. 
+%An abstraction function $\absfun$ abstracting model $M$ to $M'$ is a function from state space $S$ to the new abstract state space $S'$ such that: 
+%%\hatodoin{removed non-surjective because it's not necessary for over-approximation. See Fig.1 in Clarke's JACM paper: his function is surjective, but still introduces over-approximation.}
+%$$\forall s\in S, \exists s'\in S' \text{ s.t. } \absfun(s)=s'$$
+%This definition can be extended to behaviors $\delta\in \mathbb{B}(M)$, such that:
+%$$\forall \delta\in \mathbb{B}(M),\exists \delta'\in\mathbb{B}(M')\text{ s.t. } \absfun(\delta)=\delta'$$
+%From the definition, we know that the more abstract model $M'$ covers all behaviors of $M$, which is referred to as \emph{over-approximation}. 
+%The over-approximation relationship is denoted as $M\triangleleft_h M'$, and the relationship between reachable behavior spaces as $\absfun(\mathbb{B}(M))\subseteq\mathbb{B}(M')$. 
+%
+%Let $\varphi$ be a requirement on $M$ expressed in ATCTL$^*$, and $\absfun$ be an abstraction function. The model $\absfun(M)$ is \emph{appropriate} for the requirement $\varphi$ if 
+	%$\absfun(M) \models \varphi \implies M \models \varphi$. 
 	
 
 %With a requirement $\varphi$ in $ATCTL^*$\hatodo{what's this logic? give a reference}, we have:
@@ -38,12 +59,15 @@ Let $\varphi$ be a requirement on $M$ expressed in ATCTL$^*$, and $\absfun$ be a
 %\hatodoin{I'm concerned that stressing that over-apx reduces the state space is the wrong emphasis: we don't use abstraction to reduce the tate space because our models are very small. We use to cover new behaviors.}
 %\hatodoin{Also, be vareful: your state spaces are infinite, so what does it mean that one is smaller than the other? I suggest not making incomplete arguments here, just define things.}
 
-Over-approximation can also be used to cover the behaviors of multiple models. 
-A model $M'$ is an over-approximation of model $M_1$ and $M_2$ if 
-$$\forall \delta\in \mathbb{B}(M_1)\cup\mathbb{B}(M_2),\exists \delta'\in\mathbb{B}(M')\text{ s.t. } \absfun(\delta)=\delta'$$
-which is denoted as $\{M_1,M_2\}\triangleleft_h M'$, such that $\absfun(\mathbb{B}(M_1)\cup\mathbb{B}(M_2))\subseteq\mathbb{B}(M')$.
 
 
+
+
+For a timed automata model $M$ with state space $\Omega$, a \emph{trace} is a sequence $\delta\in \Omega^\omega$ and the reachable behavior space of the model $M$ is denoted as $\beh(M)\subset \Omega^\omega$. 
+Let $Var(M)$ be the set of variables of model $M$.
+Then $AP$ is a set of \emph{atomic propositions} $p$, which are expressions on $Var(M)$, for instance, $p \defeq V_1 + V_2 > 4$ where $V_i \in Var(M)$.
+Let $Var(p)$ be the set of variables that appear in the atomic proposition $p$.
+Given a formula $\varphi$ on $AP$ in some logic, $Var(\varphi) = \cup_{p \textrm{ in }\varphi} Var(p)$.
 %\input{appropriateness}
 
 %\todo[inline]{The following example seems important but has a lot of overlap with the text above}
@@ -60,15 +84,15 @@ which is denoted as $\{M_1,M_2\}\triangleleft_h M'$, such that $\absfun(\mathbb{
 		\centering
 		\includegraphics[width=0.7\textwidth]{figs/SysVSEnv.pdf}
 		%\vspace{-5pt}
-		\caption{\small Two models $Sys1,Sys2$ are over-approximated by model $M$ such that $\{Sys1,Sys2\}\triangleleft_h M$. An over-approximation function $h_a$ is applied to $M$ to obtain $M'$. By model checking the abstract model $M'$ against property $\varphi$ we have $M'\not\models\varphi$ and $\delta'$ is returned as counter-example. However, $\delta'$ corresponds to 3 different behaviors in the original behavior space: $\delta_1$ satisfies $\formula$ and is produced by $Sys1$, $\delta_2$ falsifies $\formula$ and is produced by $Sys2$, and $\delta_3$ falsifies $\varphi$ and belongs to neither behavior space.}
-		  %\vspace{-15pt}
+		\caption{\small Two models $Sys1,Sys2$ are over-approximated by model $M$ such that $\{Sys1,Sys2\}\preceq_t M$. An over-approximation function $h_a$ is applied to $M$ to obtain $M'$. By model checking the abstract model $M'$ against property $\varphi$ we have $M'\not\models\varphi$ and $\delta'$ is returned as counter-example. However, $\delta'$ corresponds to 3 different behaviors in the original behavior space: $\delta_1$ satisfies $\formula$ and is produced by $Sys1$, $\delta_2$ falsifies $\formula$ and is produced by $Sys2$, and $\delta_3$ falsifies $\varphi$ and belongs to neither behavior space.}
+		  \vspace{-15pt}
 		\label{fig:ambiguity}
 \end{figure}
 
 \textbf{Validity of a counter-example: }
+Certain properties are preserved for timed simulation relation. For $\varphi\in ATCTL$, if $M\preceq_t M'$, we have $M'\models \varphi\Rightarrow M\models\varphi$~\cite{CEGAR}. However, $M'\not\models \varphi\Rightarrow M\not\models\varphi$ does not hold. Violations of $ATCTL$ yield \textsf{counter-examples} and the validity of which need to be checked.
 Behaviors introduced into the over-approximation of a device model are all \emph{spurious}.
-For two models such that $M\triangleleft_h M'$, $\delta'$ is spurious if the following condition holds: 
-$$\not\exists \delta\in\mathbb{B}(M) \text{ s.t. }\absfun(\delta)=\delta'$$
+For two models such that $M\preceq_t M'$, $\delta'$ is spurious if $\not\exists \delta\in\mathbb{B}(M) \text{ s.t. }\absfun(\delta)=\delta'$.
 However, for environment models such that $\{M_1,M_2,...M_n\}\triangleleft_h M'$, and an execution $\delta'\in\mathbb{B}(M')$, the following condition is not enough to prove $\delta'$ is spurious.
 $$\forall i\not\exists \delta\in\mathbb{B}(M_i)\text{ s.t. }\absfun(\delta)=\delta'$$
 Since there may be a valid environment model $M_c\not\in\{M_1,M_2,...M_n\}$ and $\mathbb{B}(M_c)\subset\mathbb{B}(M')$ and $\delta'\in\mathbb{B}(M_c)$. 

@@ -475,7 +475,7 @@ to0pt{\kern0.55\wd0\vrule height0.45\ht0\hss}\box0}}}}
 
 \let\ts\,
 
-\setlength\leftmargini  {17\p@}
+\setlength\leftmargini  {16\p@}
 \setlength\leftmargin    {\leftmargini}
 \setlength\leftmarginii  {\leftmargini}
 \setlength\leftmarginiii {\leftmargini}
