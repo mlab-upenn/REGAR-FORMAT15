@@ -95,21 +95,21 @@ Consider \figref{rule5} showing an application of R7, $H_{vt}'''=N^1_AP^1N^1_V$ 
 %$$(Rest,Rest)\xrightarrow[]{N^2_A.t<N^2_A.Trest\_min \wedge N^2_V.t<N^2_V.Trest\_min}(Rest,Rest)$$
 %
 Self-activations of the atrial node:
-$$(Rest,Idle,Rest)\xrightarrow[N^1_A.Act\_path!]{N^1_A.t\in [N^1_A.Trest\_min, N^1_A.Trest\_max] }(Rest,Ante,Rest)$$
+$$(Rest,Idle,Rest,t_1,t_2,t_3)\xrightarrow[N^1_A.Act\_path!]{N^1_A.t\in [N^1_A.Trest\_min, N^1_A.Trest\_max] }(Rest,Ante,0,0,t_3)$$
 are mapped to the following transition in $H_{all}$:
-$$(Rest,Rest)\xrightarrow[N^2_A.Act\_path!]{N^2_A.t\in [0, N^1_A.Trest\_max]}(Rest,Rest)$$
+$$(Rest,Rest,t_1,t_3)\xrightarrow[N^2_A.Act\_path!]{N^2_A.t\in [0, N^1_A.Trest\_max]}(Rest,Rest,0,t_3)$$
 Self-activations of the ventricular node:
-$$(Rest,Idle,Rest)\xrightarrow[N^1_V.Act\_path!]{N^1_V.t\in [N^1_V.Trest\_min, N^1_V.Trest\_max] }(Rest,Retro,Rest)$$
+$$(Rest,Idle,Rest,t_1,t_2,t_3)\xrightarrow[N^1_V.Act\_path!]{N^1_V.t\in [N^1_V.Trest\_min, N^1_V.Trest\_max] }(Rest,Retro,Rest,t_1,0,0)$$
 are mapped to the following transition in $H_{all}$:
-$$(Rest,Rest)\xrightarrow[N^2_V.Act\_path!]{N^2_V.t\in [0, N^1_V.Trest\_max]}(Rest,Rest)$$
+$$(Rest,Rest,t_1,t_3)\xrightarrow[N^2_V.Act\_path!]{N^2_V.t\in [0, N^1_V.Trest\_max]}(Rest,Rest,t_1,0)$$
 Ventricular node activations from antegrade conduction:
-$$(Rest,Ante,Rest)\xrightarrow[P^1_1.Act\_node\_2!\rightarrow N^1_V.Act\_path!]{P^1_1.t\in [P^1_1.Tcond\_min, P^1_1.Tcond\_max] }(Rest,Idle,Rest)$$
+$$(Rest,Ante,Rest,t_1,t_2,t_3)\xrightarrow[P^1_1.Act\_node\_2!\rightarrow N^1_V.Act\_path!]{P^1_1.t\in [P^1_1.Tcond\_min, P^1_1.Tcond\_max] }(Rest,Idle,Rest,t_1,t_2,0)$$
 are mapped to the following transition in $H_{all}$:
-$$(Rest,Rest)\xrightarrow[N^2_V.Act\_path!]{N^2_V.t\in [0, N^2_V.Trest\_max]}(Rest,Rest)$$
+$$(Rest,Rest,t_1,t_3)\xrightarrow[N^2_V.Act\_path!]{N^2_V.t\in [0, N^2_V.Trest\_max]}(Rest,Rest,t_1,0)$$
 Atrial node activations from retrograde conduction:
-$$(Rest,Retro,Rest)\xrightarrow[P^1_1.Act\_node\_1!\rightarrow N^1_A.Act\_path!]{P^1_1.t\in [P^1_1.Tcond\_min, P^1_1.Tcond\_max] }(Rest,Idle,Rest)$$
+$$(Rest,Retro,Rest,t_1,t_2,t_3)\xrightarrow[P^1_1.Act\_node\_1!\rightarrow N^1_A.Act\_path!]{P^1_1.t\in [P^1_1.Tcond\_min, P^1_1.Tcond\_max] }(Rest,Idle,Rest,0,t_2,t_3)$$
 are mapped to the following transition in $H_{all}$:
-$$(Rest,Rest)\xrightarrow[N^2_A.Act\_path!]{N^2_A.t\in [0, N^2_A.Trest\_max]}(Rest,Rest)$$
+$$(Rest,Rest,t_1,t_3)\xrightarrow[N^2_A.Act\_path!]{N^2_A.t\in [0, N^2_A.Trest\_max]}(Rest,Rest,0,t_3)$$
 
 %\begin{figure}[!h]
 %	\centering

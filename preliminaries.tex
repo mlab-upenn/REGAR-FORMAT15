@@ -8,7 +8,7 @@ Then $AP$ is a set of \emph{atomic propositions} $p$, which are expressions on $
 Let $Var(p)$ be the set of variables that appear in the atomic proposition $p$.
 Given a formula $\varphi$ on $AP$ in some logic, $Var(\varphi) = \cup_{p \textrm{ in }\varphi} Var(p)$.
 
-A formula $\varphi$ defines a region in $\beh(M)$ within which the formula is satisfied, which can be denoted as $\beh(\varphi)$.
+A formula $\varphi$ defines a region in $S^\omega$ within which the formula is satisfied, which can be denoted as $\beh(\varphi)$.
 A \emph{model checker} takes a system model $M$ and a formal requirement $\varphi$, and returns whether $\beh(M) \subset \beh(\varphi)$, which is denoted by $M\models\varphi$. 
 If the inclusion doesn't hold, the model checker returns a \emph{counter-example} $\delta_v\in\beh(M) \setminus \beh(\varphi)$.
 This counter-example is used by the designer to debug the problem. 
