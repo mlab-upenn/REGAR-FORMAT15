@@ -20,6 +20,7 @@ A pacemaker diagnoses heart conditions and delivers electrical pacing to the hea
 %and for ventricular lead we have
 %\textsf{$N_V.Act\_path!\rightarrow$VS!}.\\
 %The pacemaker accordingly generates atrial or ventricular pacing actions \textsf{AP!$\rightarrow N_A.Act\_node!$} and \textsf{VP!$\rightarrow N_V.Act\_node!$}.
+	\vspace{-10pt}
 \subsection{Step 2: Requirement Encoding}
 The requirement below is designed to prevent the pacemaker from pacing too fast.\\
 \textsf{If the intervals between self-activations of the atria are between 300ms to 1000ms (60bpm-200bpm), the intervals between ventricular paces should be no shorter than 500ms.}\\
@@ -51,6 +52,7 @@ thus these 3 heart models are outputted as the most abstract models that are app
 	\vspace{-10pt}
 	\label{fig:CE}
 \end{figure}
+	\vspace{-10pt}
 \subsection{Step 4: Return The Most Concrete Counter-Examples}
 After the appropriate models for $Req1$ are selected, we have the initial set
 $HM=\{H_n'',H_{at}'''',H_{vt}'''\}$.
@@ -76,7 +78,7 @@ The abstraction tree is then further explored. The heart models with counter-exa
 		  %\vspace{-10pt}
 		%\label{fig:CE}
 %\end{figure}
-
+	\vspace{-10pt}
 \subsection{Step 5: Analysis of the Counter-examples}
 The counter-examples are then shared with physicians for analysis. In \figref{CE} we demonstrate 3 counter-examples from the case study. In the counter-examples, the first signal shows the intrinsic heart signals over time with up arrows as atrial activations and down arrows as ventricular activations. The second signal shows the pacemaker outputs with up arrows as atrial pacing and down arrows as ventricular pacing.%We only show the activations of the atrial node and ventricle pacing. 
 
