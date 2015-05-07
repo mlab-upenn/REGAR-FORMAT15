@@ -87,7 +87,8 @@ All edges are deleted: $G' = (V(G), \emptyset)$. The node automata are replaced 
 \textbf{Effect on parameters}
 For every node automaton $N$ in $G'$, the node automata are $N.Trest_{min}=0$.\\
 
-Consider \figref{rule5} showing an application of R7, $H_{vt}'''=N^1_AP^1N^1_V$ is abstracted to $H_{all}=N^2_AN^2_V$. Here we prove that for all observable transitions in $H_{vt}'''$, there exists a corresponding transition in $H_{all}$ so that $H_{all}$ is an over-approximation of $H_{vt}'''$. 
+Consider \figref{rule5} showing an application of R7, $H_{vt}'''=N^1_AP^1N^1_V$ is abstracted to $H_{all}=N^2_AN^2_V$. Here we prove that for all observable transitions in $H_{vt}'''$, there exists a corresponding transition in $H_{all}$ so that $H_{all}$ is an over-approximation of $H_{vt}'''$. The state of $H_{vt}'''$ is represented by $(N^1_A.loc,P^1_1.loc,N^1_V.loc,N^1_A.t,P^1_1.t,N^1_V.t)$ and the state of $H_{all}$ is represented by $(N^2_A.loc,N^2_V.loc,N^2_A.t,N^2_V.t)$. $\forall t_1,t_2,t_3\in\mathbb{N}$, we have:
+
 %The state of $H_{vt}'''$ is given by the locations of the three automata.
 %$$(Rest,Idle,Rest,[Trest\_min, Trest\_max]$$
 %$$(Rest,Idle,Rest)\xrightarrow[]{N^1_A.t<N^1_A.Trest\_min \wedge N^1_V.t<N^1_V.Trest\_min}(Rest,Idle,Rest)$$
@@ -95,21 +96,21 @@ Consider \figref{rule5} showing an application of R7, $H_{vt}'''=N^1_AP^1N^1_V$ 
 %$$(Rest,Rest)\xrightarrow[]{N^2_A.t<N^2_A.Trest\_min \wedge N^2_V.t<N^2_V.Trest\_min}(Rest,Rest)$$
 %
 Self-activations of the atrial node:
-$$(Rest,Idle,Rest,t_1,t_2,t_3)\xrightarrow[N^1_A.Act\_path!]{N^1_A.t\in [N^1_A.Trest\_min, N^1_A.Trest\_max] }(Rest,Ante,0,0,t_3)$$
+$$(Rest,Idle,Rest,t_1,t_2,t_3)\xrightarrow[\textcolor{red}{N^1_A.Act\_path!}]{t_1\in [N^1_A.Trest\_min, N^1_A.Trest\_max] }(Rest,Ante,0,0,t_3)$$
 are mapped to the following transition in $H_{all}$:
-$$(Rest,Rest,t_1,t_3)\xrightarrow[N^2_A.Act\_path!]{N^2_A.t\in [0, N^1_A.Trest\_max]}(Rest,Rest,0,t_3)$$
+$$(Rest,Rest,t_1,t_3)\xrightarrow[\textcolor{red}{N^2_A.Act\_path!}]{t_1\in [0, N^2_A.Trest\_max]}(Rest,Rest,0,t_3)$$
 Self-activations of the ventricular node:
-$$(Rest,Idle,Rest,t_1,t_2,t_3)\xrightarrow[N^1_V.Act\_path!]{N^1_V.t\in [N^1_V.Trest\_min, N^1_V.Trest\_max] }(Rest,Retro,Rest,t_1,0,0)$$
+$$(Rest,Idle,Rest,t_1,t_2,t_3)\xrightarrow[\textcolor{red}{N^1_V.Act\_path!}]{t_3\in [N^1_V.Trest\_min, N^1_V.Trest\_max] }(Rest,Retro,Rest,t_1,0,0)$$
 are mapped to the following transition in $H_{all}$:
-$$(Rest,Rest,t_1,t_3)\xrightarrow[N^2_V.Act\_path!]{N^2_V.t\in [0, N^1_V.Trest\_max]}(Rest,Rest,t_1,0)$$
+$$(Rest,Rest,t_1,t_3)\xrightarrow[\textcolor{red}{N^2_V.Act\_path!}]{t_3\in [0, N^2_V.Trest\_max]}(Rest,Rest,t_1,0)$$
 Ventricular node activations from antegrade conduction:
-$$(Rest,Ante,Rest,t_1,t_2,t_3)\xrightarrow[P^1_1.Act\_node\_2!\rightarrow N^1_V.Act\_path!]{P^1_1.t\in [P^1_1.Tcond\_min, P^1_1.Tcond\_max] }(Rest,Idle,Rest,t_1,t_2,0)$$
+$$(Rest,Ante,Rest,t_1,t_2,t_3)\xrightarrow[P^1_1.Act\_node\_2!\rightarrow \textcolor{red}{N^1_V.Act\_path!}]{t_2\in [P^1_1.Tcond\_min, P^1_1.Tcond\_max] }(Rest,Idle,Rest,t_1,t_2,0)$$
 are mapped to the following transition in $H_{all}$:
-$$(Rest,Rest,t_1,t_3)\xrightarrow[N^2_V.Act\_path!]{N^2_V.t\in [0, N^2_V.Trest\_max]}(Rest,Rest,t_1,0)$$
+$$(Rest,Rest,t_1,t_3)\xrightarrow[\textcolor{red}{N^2_V.Act\_path!}]{t_2\in [0, N^2_V.Trest\_max]}(Rest,Rest,t_1,0)$$
 Atrial node activations from retrograde conduction:
-$$(Rest,Retro,Rest,t_1,t_2,t_3)\xrightarrow[P^1_1.Act\_node\_1!\rightarrow N^1_A.Act\_path!]{P^1_1.t\in [P^1_1.Tcond\_min, P^1_1.Tcond\_max] }(Rest,Idle,Rest,0,t_2,t_3)$$
+$$(Rest,Retro,Rest,t_1,t_2,t_3)\xrightarrow[P^1_1.Act\_node\_1!\rightarrow \textcolor{red}{N^1_A.Act\_path!}]{t_2\in [P^1_1.Tcond\_min, P^1_1.Tcond\_max] }(Rest,Idle,Rest,0,t_2,t_3)$$
 are mapped to the following transition in $H_{all}$:
-$$(Rest,Rest,t_1,t_3)\xrightarrow[N^2_A.Act\_path!]{N^2_A.t\in [0, N^2_A.Trest\_max]}(Rest,Rest,0,t_3)$$
+$$(Rest,Rest,t_1,t_3)\xrightarrow[\textcolor{red}{N^2_A.Act\_path!}]{t_1\in [0, N^2_A.Trest\_max]}(Rest,Rest,0,t_3)$$
 
 %\begin{figure}[!h]
 %	\centering
