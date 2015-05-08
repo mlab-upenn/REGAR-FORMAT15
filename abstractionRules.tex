@@ -92,7 +92,7 @@ $$\left\langle (Rest,Idle,Rest,0,0,0),(Rest,Rest,0,0)\right\rangle\in sim_o$$
 $$(Rest,Idle,Rest,t_1,t_2,t_3)\xrightarrow[]{\tau}(Rest,Idle,Rest,t_1+\tau,t_2+\tau,t_3+\tau)$$
 in which $(\tau\in\mathbb{R})\wedge (t_1+\tau\leq N^1_A.Trest\_max)\wedge( t_3+\tau\leq N^1_V.Trest\_max)$. For a state in $H_{all}$ such that $\left\langle (Rest,Idle,Rest,t_1,t_2,t_3),(Rest,Rest,t_1,t_3)\right\rangle\in sim_o$,  there is a timed transition:
 $$(Rest,Rest,t_1,t_3)\xrightarrow[]{\tau}(Rest,Rest,t_1+\tau,t_3+\tau)$$
-and $\left\langle (Rest,Idle,Rest,t_1+\tau,t_2+\tau,t_3+\tau),(Rest,Rest,t_1+\tau,t_3+\tau)\right\rangle\in sim_o$.
+and $\left\langle (Rest,Idle,Rest,t_1+\tau,t_2+\tau,t_3+\tau),(Rest,Rest,t_1+\tau,t_3+\tau)\right\rangle\in sim_o$.\\
 %The state of $H_{vt}'''$ is given by the locations of the three automata.
 %$$(Rest,Idle,Rest,[Trest\_min, Trest\_max]$$
 %$$(Rest,Idle,Rest)\xrightarrow[]{N^1_A.t<N^1_A.Trest\_min \wedge N^1_V.t<N^1_V.Trest\_min}(Rest,Idle,Rest)$$
@@ -107,15 +107,13 @@ and $\left\langle (Rest,Idle,Rest,t_1+\tau,t_2+\tau,t_3+\tau),(Rest,Rest,t_1+\ta
 %$$(Rest,Idle,Rest,t_1,t_2,t_3)\xrightarrow[\textcolor{red}{N^1_V.Act\_path!}]{t_3\in [N^1_V.Trest\_min, N^1_V.Trest\_max] }(Rest,Retro,Rest,t_1,0,0)$$
 %are mapped to the following transition in $H_{all}$:
 %$$(Rest,Rest,t_1,t_3)\xrightarrow[\textcolor{red}{N^2_V.Act\_path!}]{t_3\in [0, N^2_V.Trest\_max]}(Rest,Rest,t_1,0)$$
-
 \textbf{Discrete transitions: }Consider a discrete transition in $H_{vt}'''$
 $$(Rest,Ante,Rest,t_1,t_2,t_3)\xrightarrow[t_2\in [P^1_1.Tcond\_min, P^1_1.Tcond\_max) ]{\textcolor{red}{N^1_V.Act\_path!}}(Rest,Idle,Rest,t_1,t_2,0)$$
 in which $N^1_V.Act\_path!\in\Sigma_o$. \\
 For a state in $H_{all}$ such that $\left\langle (Rest,Idle,Rest,t_1,t_2,t_3) ,(Rest,Rest,t_1,t_3)\right\rangle\in sim_o$,  there is a discrete transition:
 $$(Rest,Rest,t_1,t_3)\xrightarrow[t_3\in [0, N^2_V.Trest\_max)]{\textcolor{red}{N^2_V.Act\_path!}}(Rest,Rest,t_1,0)$$
-and $\left\langle ((Rest,Idle,Rest,t_1,t_2,0)),(Rest,Rest,t_1,0)\right\rangle\in sim_o$. Basically activation due to conduction is replaced by self-activation of the corresponding node automata.
-
-\textbf{Additional behaviors: }The timed-simulation also introduces additional behaviors into the more abstract model. A discrete transition in $H_{all}$
+and $\left\langle ((Rest,Idle,Rest,t_1,t_2,0)),(Rest,Rest,t_1,0)\right\rangle\in sim_o$. Basically activation due to conduction is replaced by self-activation of the corresponding node automata.\\
+\textbf{Additional behaviors: }The timed-simulation also allows additional behaviors into $H_{all}$. Consider a discrete transition in $H_{all}$
 $$(Rest,Rest,t_1,t_3)\xrightarrow[t_3\in [0, N^2_V.Trest\_min)]{\textcolor{red}{N^2_V.Act\_path!}}(Rest,Rest,t_1,0)$$
 However, for a state in $H_{vt}'''$ such that $\left\langle (Rest,Idle,Rest,t_1,t_2,t_3),(Rest,Rest,t_1,t_3)\right\rangle\in sim_o$, when $t_3\in [0, N^1_V.Trest\_min]$ there is no available discrete transitions. Physiologically, these implicitly included behaviors correspond to fast heart rate, premature heart events and even noise.
 %Atrial node activations from retrograde conduction:
