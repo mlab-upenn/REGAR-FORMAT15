@@ -10,9 +10,14 @@
 \end{figure}
 
 \subsection{Step 1: The Pacemaker Model}
-A pacemaker diagnoses heart conditions and delivers electrical pacing to the heart according to the timing intervals among timing events from the heart and the pacemaker itself. In this section we use a simple dual chamber pacemaker as example for closed-loop model checking. The detailed UPPAAL timed automata implementation of the model can be found in \cite{sttt13}. A dual chamber pacemaker has several basic timers, which are shown in \figref{PM_timers}:\\
-\textbf{Atrial Escape Interval (AEI)} defines the maximum interval between the last ventricular event (VS,VP) to an atrial event (AS,AP). If no AS happened before the AEI timer expires, atrial pacing (AP) is delivered to the heart (Marker 1 in \figref{PM_timers}). \\
-\textbf{Atrio-Ventricular Interval (AVI)} defines the maximum interval between the most recent atrial event (AS,AP) to an ventricular event (VS,VP). If no VS happened before AVI timer expires, and the time since the most recent ventricular event (VS,VP) is no less than URI, ventricular pacing (VP) is delivered to the heart (Marker 3 in \figref{PM_timers}).\\
+A pacemaker diagnoses heart conditions and delivers electrical pacing to the heart according to the timing intervals between events from the heart and the pacemaker itself. 
+In this section we use a simple dual chamber pacemaker as example for closed-loop model checking. 
+The detailed UPPAAL timed automata implementation of the model can be found in \cite{sttt13}. 
+A dual chamber pacemaker has several basic timers, which are shown in \figref{PM_timers}:\\
+\textbf{Atrial Escape Interval (AEI)} defines the maximum interval between the last ventricular event (VS,VP) to an atrial event (AS,AP). 
+If no AS happened before the AEI timer expires, atrial pacing (AP) is delivered to the heart (Marker 1 in \figref{PM_timers}). \\
+\textbf{Atrio-Ventricular Interval (AVI)} defines the maximum interval between the most recent atrial event (AS,AP) to a ventricular event (VS,VP). 
+If no VS happened before AVI timer expires, and the time since the most recent ventricular event (VS,VP) is no less than URI, ventricular pacing (VP) is delivered to the heart (Marker 3 in \figref{PM_timers}).\\
 \textbf{Post-Ventricular Atrial Refractory Period (PVARP) and Ventricular Refractory Period (VRP)} define the minimum period that a AS or VS can happen since the most recent ventricular event (VS,VP). 
 
 %The interactions between the heart and the pacemaker are modeled by using binary event channels. For the atrial lead, we have:
@@ -22,12 +27,13 @@ A pacemaker diagnoses heart conditions and delivers electrical pacing to the hea
 %The pacemaker accordingly generates atrial or ventricular pacing actions \textsf{AP!$\rightarrow N_A.Act\_node!$} and \textsf{VP!$\rightarrow N_V.Act\_node!$}.
 	\vspace{-10pt}
 \subsection{Step 2: Requirement Encoding}
-The requirement below is designed to prevent the pacemaker from pacing too fast.\\
-\textsf{If the intervals between self-activations of the atria are between 300ms to 1000ms (60bpm-200bpm), the intervals between ventricular paces should be no shorter than 500ms.}\\
-Self-activations of the atria is mapped to the location of node automaton $N_A$ and clock variable $N_A.t$.
+The following requirement is designed to prevent the pacemaker from pacing too fast: 
+``If the intervals between self-activations of the atria are between 300ms to 1000ms (60bpm-200bpm), the intervals between ventricular paces should be no shorter than 500ms.''
+Self-activation of the atria can be expressed using the location and clock of of node automaton $N_A$.
 The requirement can be formalized using the monitor  $M_{sing}(VP,500,\infty)$:
 %\hatodo{mention $N_A$ is the atrium node automaton}
-\[Req1: N_A.loc=Rest \&\& N_A.t\in [300,1000] \Rightarrow \neg M_{sing}.loc==Err\]
+\[Req1: N_A.loc=Rest \land N_A.t\in [300,1000] \Rightarrow \neg M_{sing}.loc==Err\]
+\todo[inline]{some figure captions are all caps, others are not. please use same thing throughout}
 %\begin{figure}[!b]
 	%\centering
 	%\vspace{-10pt}
@@ -38,12 +44,16 @@ The requirement can be formalized using the monitor  $M_{sing}(VP,500,\infty)$:
 	%\label{fig:abs_exam}
 %\end{figure}
  \subsection{Step 3: Choosing Appropriate Heart Models For the Requirement}
-To verify the closed-loop system with pacemaker model $PM$ and heart model abstraction tree $T_{HM}$ (\figref{HM_abs}) against requirement $Req1$, the most abstract appropriate models are selected from the abstraction tree. The single event monitor $M_{sing}$ from \figref{monitor}.a with variables $Var(M_{sing})=\{M_{sing}.t,M_{sing}.loc\}$ is used for this requirement. The variables in the requirement are:
+To verify the closed-loop system with pacemaker model $PM$ and abstraction tree $T_{HM}$ (\figref{HM_abs}) against requirement $Req1$, the most abstract appropriate models are selected from the tree. 
+The single event monitor $M_{sing}$ from \figref{monitor}.a with variables $Var(M_{sing})=\{M_{sing}.t,M_{sing}.loc\}$ is used for this requirement. 
+The variables in the requirement are:
 $Var(Req1)=\{N_A.t,N_A.loc,M_{sing}.loc\}$.
 
-At the root level heart model $H_{all}$, we have $\{N_A.t,N_A.loc\} \not \subset Var(H_{all})\cup Var(M_{sing})$. As the result, $H_{all}$ is not appropriate for $Req1$. All the children of $H_{all}$: $H_n'',H_{at}'''',H_{vt}'''$ are appropriate for $Req1$,
+At the root of the tree $H_{all}$, we have $\{N_A.t,N_A.loc\} \not \subset Var(H_{all})\cup Var(M_{sing})$. 
+So $H_{all}$ is not appropriate for $Req1$. 
+All the children of $H_{all}$: $H_n'',H_{at}'''',H_{vt}'''$ are appropriate for $Req1$,
 %we have $Var(Req1)\cup Var(M_{sing})\subset Var(H_n'')=Var(H_{at}'''')=Var(H_{vt}''')$, 
-thus these 3 heart models are outputted as the most abstract models that are appropriate for $Req1$.
+thus these 3 heart models are output as the most abstract models that are appropriate for $Req1$.
 \begin{figure}[!t]
 	\centering
 	\includegraphics[width=0.8\textwidth]{figs/abs_rev.pdf}
@@ -57,7 +67,7 @@ thus these 3 heart models are outputted as the most abstract models that are app
 After the appropriate models for $Req1$ are selected, we have the initial set
 $HM=\{H_n'',H_{at}'''',H_{vt}'''\}$.
 Then we run Algorithm 2. By model checking on all 3 initial models in UPPAAL we have: 
-$$H_n''||PM\not\models Req1;H_{at}''''||PM\not\models Req1;H_{vt}'''||PM\not\models Req1$$
+$$H_n''||PM\not\models Req1;\; H_{at}''''||PM\not\models Req1;\; H_{vt}'''||PM\not\models Req1$$
 %$$[1,[]]=ModelChecking(H_n'',PM,Req1)$$
  %$$[0,CE_1]=ModelChecking(H_{at}'''',PM,Req1)$$
 %$$[0,CE_2]=ModelChecking(H_{vt}''',PM,Req1)$$
