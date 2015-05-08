@@ -46,7 +46,7 @@ At the root level heart model $H_{all}$, we have $\{N_A.t,N_A.loc\} \not \subset
 thus these 3 heart models are outputted as the most abstract models that are appropriate for $Req1$.
 \begin{figure}[!t]
 	\centering
-	\includegraphics[width=0.9\textwidth]{figs/abs_rev.pdf}
+	\includegraphics[width=0.8\textwidth]{figs/abs_rev.pdf}
 	%\vspace{-5pt}
 	\caption{\small Finding the most concrete counter-examples using the abstraction tree}
 	\vspace{-10pt}
@@ -80,7 +80,7 @@ The abstraction tree is then further explored. The heart models with counter-exa
 %\end{figure}
 	\vspace{-10pt}
 \subsection{Step 5: Analysis of the Counter-examples}
-The counter-examples are then shared with physicians for analysis. In \figref{CE} we demonstrate 3 counter-examples from the case study. In the counter-examples, the first signal shows the intrinsic heart signals over time with up arrows as atrial activations and down arrows as ventricular activations. The second signal shows the pacemaker outputs with up arrows as atrial pacing and down arrows as ventricular pacing.%We only show the activations of the atrial node and ventricle pacing. 
+The counter-examples are then shared with physicians for analysis. In \figref{CE} we demonstrate 3 counter-examples. In the counter-examples, the first signal shows the intrinsic heart signals over time with up arrows as atrial activations and down arrows as ventricular activations. The second signal shows the pacemaker outputs with up arrows as atrial pacing and down arrows as ventricular pacing.%We only show the activations of the atrial node and ventricle pacing. 
 
 $CE_{n}$ is returned by $H_n$ and none of its children models violate the requirement. By careful analysis we found that $CE_{n}$ features the combination of fast intrinsic atrial rate and prolonged A-V conduction delay, which is the combination of heart conditions $H_{st}$ and $H_{av}$. This scenario shows that the abstraction rules can introduce physiological heart conditions that were not explicitly modeled in the initial model set. The pacemaker improved the open-loop heart condition by pacing the ventricles $AVI$ after each atrial event, which is a correct operation of the pacemaker despite the requirement violation. %\hatodo{is it TAVI or AVI like in the previous seciton?}
 

@@ -10,28 +10,32 @@ $inv$ is the set of invariants for clock constraints at each location.
  $E$ is the set of edges. Each edge is a tuple $\left\langle s,\sigma,\Psi,\lambda,s'\right\rangle$ which consists of a source location $s$, an event $\sigma\in\Sigma$, clock constraints $\Psi$, $\lambda$ as a set of clocks to be reset and the target location $s'$. For the clock variables $X$, the clock constraints $\Psi\in\Psi^X$ can be inductively defined by $\Psi:=x\bot c\|\Psi_1\wedge\Psi_2$, where $\bot\in\{\leq,=,\geq\}$, and $c\in\mathbb{N}$.
 \vspace{-10pt}
 \subsubsection{Semantics of Timed Automata}
-A state of a timed automaton is a pair $\left\langle s,v\right\rangle$ which contains the location $s\in S$ and the valuation $v$ for all clocks. The set of all states is $\Omega$. A \emph{trace} is a sequence $\delta\in \Omega^\omega$ and the reachable behavior space of the model $M$ is denoted as $\beh(M)\subset \Omega^\omega$. For all $\lambda\in X$, $v[\lambda :=0]$ denotes the valuation which sets all clocks $x\in\lambda$ as zero and the rest of the clocks unchanged. For all $t\in \textbf{R}$, $v+t$ denotes the valuation which increase all the clock value by $t$. There are two kinds of transitions between states. The \textsf{discrete transition} happens when the condition of an edge has been met. So we have:
+A state of a timed automaton is a pair $\left\langle s,v\right\rangle$ which contains the location $s\in S$ and the valuation $v$ for all clocks. The set of all states is $\Omega$. 
+%A \emph{trace} is a sequence $\delta\in \Omega^\omega$ and the reachable behavior space of the model $M$ is denoted as $\beh(M)\subset \Omega^\omega$. 
+For all $\lambda\in X$, $v[\lambda :=0]$ denotes the valuation which sets all clocks $x\in\lambda$ as zero and the rest of the clocks unchanged. For all $t\in \textbf{R}$, $v+t$ denotes the valuation which increase all the clock value by $t$. There are two kinds of transitions between states. The \textsf{discrete transition} happens when the condition of an edge has been met. So we have:
 $$\left\langle s,\sigma,\Psi,\lambda,s'\right\rangle\in E,v\models \Psi,v[\lambda :=0]\models inv(s')\Rightarrow (s,v)\xrightarrow{\sigma}(s',v[\lambda :=0])$$
 The \textsf{timed transition} happens when the timed automaton can stay in the same location for certain amount of time. We have:
 $$\tau\in \mathbb{R},\forall \tau'\leq\tau, v+\tau'\models inv(s)\Rightarrow (s,v)\xrightarrow{\tau}(s,v+\tau)$$
 \vspace{-15pt}
-\subsubsection{Timed Simulation}
-For two timed automata $T^1=\left\langle S^1,S_0^1,\Sigma^1,X^1,inv^1,E^1\right\rangle$ and $T^2=\left\langle S^2,S_0^2,\Sigma^2,X^2,inv^2,E^2\right\rangle$, a timed simulation relation is a binary relation $\textsf{sim}\subseteq \Omega^1\times \Omega^2$ where $\Omega^1$ and $\Omega^2$ are sets of states of $T^1$ and $T^2$. We say $T^2$ \textsf{time simulates} $T^1$ ($T^1 \preceq_t T^2$) if the following conditions holds:
+\subsubsection{Observable Timed Simulation}
+For two timed automata $T^1=\left\langle S^1,S_0^1,\Sigma^1,X^1,inv^1,E^1\right\rangle$ and $T^2=\left\langle S^2,S_0^2,\Sigma^2,X^2,inv^2,E^2\right\rangle$, $\Sigma_o\subseteq\Sigma^1\cap\Sigma^2$ is a set of observable labels, an observable timed simulation relation is a binary relation $sim_o\subseteq \Omega^1\times \Omega^2$ where $\Omega^1$ and $\Omega^2$ are sets of states of $T^1$ and $T^2$. We say $T^2$ simulates $T^1$ ($T^1 \preceq_t T^2$) if the following conditions holds:
 \begin{itemize}
-	\item Initial states correspondence: $(\left\langle s_0^1,\textbf{0}\right\rangle,\left\langle s_0^2,\textbf{0}\right\rangle)\in \textsf{sim}$
-	\item Timed transition: For every $(\left\langle s_1,v_1\right\rangle,\left\langle s_2,v_2\right\rangle)\in\textsf{sim}$, if $\left\langle s_1,v_1\right\rangle\xrightarrow{\tau}\left\langle s_1,v_1+\tau\right\rangle$, there exists $\left\langle s_2,v_2+\tau\right\rangle$ such that $\left\langle s_2,v_2\right\rangle\xrightarrow{\tau}\left\langle s_2,v_2+\tau\right\rangle$ and \\$(\left\langle s_1,v_1+\tau\right\rangle,\left\langle s_2,v_2+\tau\right\rangle)\in\textsf{sim}$.
-	\item Discrete transition: For every $(\left\langle s_1,v_1\right\rangle,\left\langle s_2,v_2\right\rangle)\in\textsf{sim}$, if $\left\langle s_1,v_1\right\rangle\xrightarrow{\sigma}\left\langle s_1',v_1'\right\rangle$, there exists $\left\langle s_2',v_2'\right\rangle$ such that $\left\langle s_2,v_2\right\rangle\xrightarrow{\sigma}\left\langle s_2',v_2'\right\rangle$ and $(\left\langle s_1',v_1'\right\rangle,\left\langle s_2',v_2'\right\rangle)\in\textsf{sim}$.
+	\item Initial states correspondence: $(\left\langle s_0^1,\textbf{0}\right\rangle,\left\langle s_0^2,\textbf{0}\right\rangle)\in sim_o$
+	\item Timed transition: For every $(\left\langle s_1,v_1\right\rangle,\left\langle s_2,v_2\right\rangle)\in sim_o$, if $\left\langle s_1,v_1\right\rangle\xrightarrow{\tau}\left\langle s_1,v_1+\tau\right\rangle$, there exists $\left\langle s_2,v_2+\tau\right\rangle$ such that $\left\langle s_2,v_2\right\rangle\xrightarrow{\tau}\left\langle s_2,v_2+\tau\right\rangle$ and \\$(\left\langle s_1,v_1+\tau\right\rangle,\left\langle s_2,v_2+\tau\right\rangle)\in sim_o$.
+	\item Observable discrete transition: For every $(\left\langle s_1,v_1\right\rangle,\left\langle s_2,v_2\right\rangle)\in sim_o$, if $\left\langle s_1,v_1\right\rangle\xrightarrow{\sigma_o}\left\langle s_1',v_1'\right\rangle$, in which $\omega_o\in\Omega_o$, there exists $\left\langle s_2',v_2'\right\rangle$ such that $\left\langle s_2,v_2\right\rangle\xrightarrow{\sigma_o}\left\langle s_2',v_2'\right\rangle$ and $(\left\langle s_1',v_1'\right\rangle,\left\langle s_2',v_2'\right\rangle)\in sim_o$.
 \end{itemize}
-The conditions also hold for traces such that if $T^1 \preceq_t T^2$, 
-$$\forall \delta\in\beh{(T^1)},\exists \delta'\in\beh{(T^2)}\text{ s.t. }\left\langle\delta,\delta'\right\rangle\in \textsf{sim}\Rightarrow \beh{(T^1)}\subseteq\beh{(T^2)}$$
-\vspace{-15pt}
 
-Timed-simulation can also be used to cover the behaviors of multiple models. 
-A model $M'$ time-simulates models $M_1$ and $M_2$ if $M_1\preceq_t M'$ and $M_2\preceq_t M'$,
+%The conditions also hold for traces such that if $T^1 \preceq_t T^2$, 
+%$$\forall \delta\in\beh{(T^1)},\exists \delta'\in\beh{(T^2)}\text{ s.t. }\left\langle\delta,\delta'\right\rangle\in sim_o\Rightarrow \beh{(T^1)}\subseteq\beh{(T^2)}$$
+%\vspace{-15pt}
+
+Observable timed-simulation can also be used to cover the behaviors of multiple models. 
+A model $M'$simulates models $M_1$ and $M_2$ if $M_1\preceq_t M'$ and $M_2\preceq_t M'$,
 %$$\forall \delta\in \mathbb{B}(M_1)\cup\mathbb{B}(M_2),\exists \delta'\in\mathbb{B}(M')\text{ s.t. } \absfun(\delta)=\delta'$$
 which is denoted as $\{M_1,M_2\}\preceq_t M'$.
 
-
+A \emph{trace} of a timed automata $M$ is a sequence $\delta$ with $\left\langle s_1,v_1\right\rangle\cdots\left\langle s_n,v_n\right\rangle$ such that $\forall i\in[1,n-1], \left\langle s_i,v_i\right\rangle\rightarrow\left\langle s_{i+1},v_{i+1}\right\rangle\in E $. The reachable behavior space of $M$ is denoted as $\beh(M)\subset \Omega^\omega$. 
+For a timed-automata $M'$ such that $M\preceq_t M'$, there exists a trace $\delta'\in\beh{(M')}$ with $\left\langle s_1',v_1'\right\rangle\cdots\left\langle s_n',v_n'\right\rangle$ such that $\forall i\in[1,n-1], \left\langle s_i',v_i'\right\rangle\rightarrow\left\langle s_{i+1}',v_{i+1}'\right\rangle\in E'$, and also $(\left\langle s_i,v_i\right\rangle,\left\langle s_i',v_i'\right\rangle)\in sim_o$. We abuse the notation of  $sim_o$ and denote $(\delta,\delta')\in sim_o$, even $(\beh{(M)},h(\beh{(M)}))\in sim_o$. The abstract model $M'$ has more behaviors such that $h(\beh{(M)})\subseteq \beh{(M')}$.
 
 %A formula $\varphi$ defines a region in $S^\omega$ within which the formula is satisfied, which can be denoted as $\beh(\varphi)$.
 %A \emph{model checker} takes a system model $M$ and a formal requirement $\varphi$, and returns whether $\beh(M) \subset \beh(\varphi)$, which is denoted by $M\models\varphi$. 
@@ -96,9 +100,9 @@ which is denoted as $\{M_1,M_2\}\preceq_t M'$.
 \textbf{Validity of a counter-example: }
 Certain properties are preserved for timed simulation relation. For $\varphi\in ATCTL$, if $M\preceq_t M'$, we have $M'\models \varphi\Rightarrow M\models\varphi$~\cite{CEGAR}. However, $M'\not\models \varphi\Rightarrow M\not\models\varphi$ does not hold. Violations of $ATCTL$ yield \textsf{counter-examples} and the validity of which need to be checked.
 %Behaviors introduced into the over-approximation of a device model are all \emph{spurious}.
-For two models such that $M\preceq_t M'$, $\delta'$ is \emph{spurious} if $\not\exists \delta\in\mathbb{B}(M) \text{ s.t. }\left\langle\delta,\delta'\right\rangle\in\textsf{sim}$.
+For two models such that $M\preceq_t M'$, $\delta'$ is \emph{spurious} if $\not\exists \delta\in\mathbb{B}(M) \text{ s.t. }\left\langle\delta,\delta'\right\rangle\in sim_o$.
 However, for environment models such that $\{M_1,M_2,...M_n\}\preceq_t M'$, and an execution $\delta'\in\mathbb{B}(M')$, the following condition is not enough to prove $\delta'$ is spurious.
-$$\forall i\not\exists \delta\in\mathbb{B}(M_i)\text{ s.t. }\left\langle\delta,\delta'\right\rangle\in\textsf{sim}$$
+$$\forall i\not\exists \delta\in\mathbb{B}(M_i)\text{ s.t. }\left\langle\delta,\delta'\right\rangle\in sim_o$$
 \vspace{-15pt}
 
 Since there may be a valid environment model $M_c\not\in\{M_1,M_2,...M_n\}$ and $\mathbb{B}(M_c)\subset\mathbb{B}(M')$ and $\delta'\in\mathbb{B}(M_c)$. 
