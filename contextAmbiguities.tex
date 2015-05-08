@@ -4,13 +4,13 @@ A set of heart models corresponding to different heart conditions are first deve
 The list can be expanded as new heart conditions are discovered.
 Because we start from a set of initial models, and each one may be abstracted using a number of abstraction rules, we have a choice of which rules to apply to which models, and the order in which to apply them.
 Depending on which rule is applied when, we end up with different abstract models.
-Thus an abstraction tree $T_{HM}$ for the heart is created, as shown in \figref{HM_abs}. 
+Thus an \emph{abstraction tree} $T_{HM}$ for the heart is created, as shown in \figref{HM_abs}. 
 %Note that applying rules in different order results different abstraction tree. 
 %The order used to obtain $HM\_tree$ is based on the domain knowledge that certain heart conditions may have similar behaviors and similar inputs to the pacemaker. 
 %This systematic grouping maintains the physiological-relevance of the heart model even at higher abstraction levels, and reduce the necessity to resolve ambiguities at lower abstraction levels when model checking certain requirements.
 \begin{figure}[!t]
 	\centering
-	\includegraphics[width=0.9\textwidth]{figs/abs.pdf}
+	\includegraphics[width=0.85\textwidth]{figs/abs.pdf}
 	%\vspace{-5pt}
 	\caption{\small Heart Model Abstraction Tree}
 	\vspace{-15pt}
