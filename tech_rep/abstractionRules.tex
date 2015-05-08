@@ -1,0 +1,137 @@
+\section{Physiological Abstraction rules}
+\label{abstractionRules} 
+In this section, domain-specific abstraction rules are developed that can introduce new behaviors to a given heart model or a set of models. 
+These new behaviors are physiologically meaningful and might be manifested by a heart condition not explicitly modeled in the initial set of models.
+The physician (or domain expert) remains the ultimate arbiter of what is physiologically meaningful.
+This is a peculiarity of environment modeling, borne out of the fact that the initial set of models is necessarily incomplete, and does not represent all valid behaviors.
+%We then show how the application of these domain-specific rules can be automated, thus obviating the need for domain expertise.
+
+Recall that heart conditions are modeled as finite directed labeled graphs as introduced in Def.~\ref{def:labeledGraph}.
+%Let $\Gc$ be the set of labeled graphs, and $2^\Gc$ be the power set of $\Gc$.
+%An abstraction rule is a function $2^\Gc \rightarrow \Gc$.
+Rules operate on a graph only if it has the appropriate structure for that rule, and if its parameters meet certain rule-specific conditions (if any).
+Due to space limits only one abstraction rule is discussed in detail. The full set of rules and the proofs that these rules indeed produce over-approximations of the behavior space are relegated to the technical report \cite{regar_tech}.
+\input{rule1}
+\input{rule2}
+
+\subsubsection{Rule R4: Merge Parameter Ranges}
+Timing periods of heart tissue, like Rest and ERP, are modeled as locations in the node and path automata. 
+The minimum and maximum time an automaton can stay in a location is governed by the parameters in the guards and invariants. 
+By expanding these periods, we introduce new behavior where a heart may stay in Rest for longer, or (self-)activate a node faster, etc.
+\\
+\textbf{(Sub)graph(s) to which it applies}.
+This rule applies to a set of graphs $G_i$ with the same structure (i.e., they are pairwise isomorphic) but possibly with different parameters: $R(G_1,\ldots,G_n) = G'$.
+See Fig.~\ref{fig:HM_abs}.\\
+\textbf{Applicability conditions}.
+None.\\
+\textbf{Output (sub)graph}.
+$G'$ has the same structure as the $G_i$.
+Thus there's an isomorphism $f$ between every $G_i$ and $G'$.
+Given an element $x$ of $G'$, $f^{-1}(x') = \{x_1,\dots,x_n\}$ are used to represent the set of elements that map to it via $f$, where $x_i \in \Ec(G_i)$.\\
+\textbf{Effect on parameters}
+%Recall Def.~\ref{def:labeledGraph}
+For every automaton $A(x'), x' \in \Ec(G')$, and every parameter $\theta^{x'}$ of $A(x')$, 
+$\theta_{min}^{x'} = \min(\theta^x_{min})_{x \in f^{-1}(x') }$ and 
+$\theta_{max}^{x'} = \max(\theta^x_{max})_{x \in f^{-1}(x') }$
+
+\input{rule5}
+
+\subsubsection{Rule R6: Replace Blocking With Non-deterministic Conduction}
+%\todo[inline]{in modeling section mention self-activating and passive nodes}
+%If a node automaton is in its \textsf{ERP} state, a \textsf{Act\_node} event is "blocked" and will not trigger corresponding path conduction. If we add non-deterministic transitions to the path automata such that a \textsf{Act\_path} event do not trigger state transitions to \textsf{ante} or \textsf{retro} (\figref{rule5}), the blocking behavior of the node is covered. We can then merge the \textsf{ERP} state with the \text{Rest} state in the node automata, and all passive nodes can be removed. An application of Rule 6 is shown in \figref{abs_exam}.\\
+Consider the structure $N_1 P_1 N_2 P_2 N_3$ with three nodes and two paths, where $N_2$ is a passive node (i.e. not self-activating).
+If $N_2$ blocks an activation signal from $N_1$ to $N_3$, this is equivalent to the paths $P_1$ or $P_2$ not conducting.
+In this rule, the structure $P_1 N_2 P_2$ is replaced by a path $P$ whose automaton can take a self loop when it receives an activation signal, thus effectively stopping the conduction. 
+This is shown in Fig.~\ref{fig:rule5}: the extra transitions are marked Act\_path\_1? and Act\_path\_2?.
+Because the blocking effect of nodes is now incorporated into the paths, the node automata of self-activating nodes can be modified to the one shown in Fig.~\ref{fig:rule5}, which doesn't have the (now useless) ERP period.
+\\
+\textbf{Subgraph to which it applies}.
+Line graphs with 3 vertices $N_1 P_1 N_2 P_2 N_3$, and self-activating nodes.\\
+\textbf{Applicability conditions}.
+$N_2$ is a passive node.\\
+\textbf{Output subgraph}.
+$N'_1 P' N'_3$
+A path $P'$ whose path automaton is as shown in Fig.~\ref{fig:rule5}.b.
+The self-activating nodes $N$ are replaced by nodes $N'$ with automata shown in Fig.~\ref{fig:rule5}.a.\\
+\textbf{Effect on parameters}
+For the new path, $P.cond_{min}=P_1.cond_{min}+P_2.cond_{min}$ and 
+$P.cond_{max}=P_1.cond_{max}+P_2.cond_{max}$
+For the new nodes, $N'.Trest_{min}=N.Terp_{min}+N.Trest_{min}$ and 
+$N'.Trest_{max}=N.Terp_{max}+N.Trest_{max}$.\\
+\subsubsection{Interaction With the Pacemaker}
+The interactions between the heart and the pacemaker are modeled by using binary event channels. For the atrial lead, we have:
+\textsf{$N_A.Act\_path!\rightarrow$AS!},
+and for ventricular lead we have
+\textsf{$N_V.Act\_path!\rightarrow$VS!}.\\
+The pacemaker accordingly generates atrial or ventricular pacing actions \textsf{AP!$\rightarrow N_A.Act\_node!$} and \textsf{VP!$\rightarrow N_V.Act\_node!$}.
+
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=1.05\textwidth]{figs/rule5.pdf}
+	%\vspace{-5pt}
+	\caption{\small (a) Rule 7 application example; (b)(c) Node and path automata used in $H_{vt}'''$; (d) Node automata used in $H_{all}$ }
+	\vspace{-15pt}
+	\label{fig:rule5}
+\end{figure}
+
+\subsubsection{Rule R7: Replace Conduction With Self-activation}
+We describe Rule R7 as it illustrates both effects of an abstraction rule: structure change and modifications to the automata.
+The effect of a conduction path is to conduct electrical activity from a node. Since the pacemaker cannot distinguish self-activation of the node and activation triggered by path conduction, we can use self-activation to replace path conduction.
+If all self-activation nodes are allowed at any time by setting their minimum Rest period to 0, all the conduction paths can be removed, while preserving the original behaviors (where the Rest period was constrained to a finite interval).\\
+\textbf{Applicability conditions}.
+This rule can only be applied after Rule 5 and Rule 6 have been applied.\\
+\textbf{Output graph}.
+All edges are deleted: $G' = (V(G), \emptyset)$. The node automata are replaced with the one shown in \figref{rule5}.d.\\
+\textbf{Effect on parameters}
+For every node automaton $N$ in $G'$, $N.Trest_{min}=0$.\\
+
+Consider \figref{rule5}.(a) showing an application of R7, $H_{vt}'''=N^1_AP^1N^1_V$ is abstracted to $H_{all}=N^2_AN^2_V$. Here we prove that $H_{vt}'''\preceq_t H_{all}$ with observable events $\Sigma_o=\{N_A.Act\_path,N_V.act\_path\}$. The state of $H_{vt}'''$ is represented by $(N^1_A.loc,P^1_1.loc,N^1_V.loc,N^1_A.t,P^1_1.t,N^1_V.t)$ and the state of $H_{all}$ is represented by $(N^2_A.loc,N^2_V.loc,N^2_A.t,N^2_V.t)$. Due to space limit, only one transition from each category is presented:\\
+\textbf{Initial state: }First for the initial state we have:
+$$\left\langle (Rest,Idle,Rest,0,0,0),(Rest,Rest,0,0)\right\rangle\in sim_o$$ 
+\textbf{Timed transitions: }Consider a timed transition in $H_{vt}'''$
+$$(Rest,Idle,Rest,t_1,t_2,t_3)\xrightarrow[]{\tau}(Rest,Idle,Rest,t_1+\tau,t_2+\tau,t_3+\tau)$$
+in which $(\tau\in\mathbb{R})\wedge (t_1+\tau\leq N^1_A.Trest\_max)\wedge( t_3+\tau\leq N^1_V.Trest\_max)$. For a state in $H_{all}$ such that $\left\langle (Rest,Idle,Rest,t_1,t_2,t_3),(Rest,Rest,t_1,t_3)\right\rangle\in sim_o$,  there is a timed transition:
+$$(Rest,Rest,t_1,t_3)\xrightarrow[]{\tau}(Rest,Rest,t_1+\tau,t_3+\tau)$$
+and $\left\langle (Rest,Idle,Rest,t_1+\tau,t_2+\tau,t_3+\tau),(Rest,Rest,t_1+\tau,t_3+\tau)\right\rangle\in sim_o$.\\
+%The state of $H_{vt}'''$ is given by the locations of the three automata.
+%$$(Rest,Idle,Rest,[Trest\_min, Trest\_max]$$
+%$$(Rest,Idle,Rest)\xrightarrow[]{N^1_A.t<N^1_A.Trest\_min \wedge N^1_V.t<N^1_V.Trest\_min}(Rest,Idle,Rest)$$
+%are mapped to the following transition in $H_{all}$:
+%$$(Rest,Rest)\xrightarrow[]{N^2_A.t<N^2_A.Trest\_min \wedge N^2_V.t<N^2_V.Trest\_min}(Rest,Rest)$$
+%
+%Self-activations of the atrial node:
+%$$(Rest,Idle,Rest,t_1,t_2,t_3)\xrightarrow[\textcolor{red}{N^1_A.Act\_path!}]{t_1\in [N^1_A.Trest\_min, N^1_A.Trest\_max] }(Rest,Ante,0,0,t_3)$$
+%are mapped to the following transition in $H_{all}$:
+%$$(Rest,Rest,t_1,t_3)\xrightarrow[\textcolor{red}{N^2_A.Act\_path!}]{t_1\in [0, N^2_A.Trest\_max]}(Rest,Rest,0,t_3)$$
+%Self-activations of the ventricular node:
+%$$(Rest,Idle,Rest,t_1,t_2,t_3)\xrightarrow[\textcolor{red}{N^1_V.Act\_path!}]{t_3\in [N^1_V.Trest\_min, N^1_V.Trest\_max] }(Rest,Retro,Rest,t_1,0,0)$$
+%are mapped to the following transition in $H_{all}$:
+%$$(Rest,Rest,t_1,t_3)\xrightarrow[\textcolor{red}{N^2_V.Act\_path!}]{t_3\in [0, N^2_V.Trest\_max]}(Rest,Rest,t_1,0)$$
+\textbf{Discrete transitions: }Consider a discrete transition in $H_{vt}'''$
+$$(Rest,Ante,Rest,t_1,t_2,t_3)\xrightarrow[t_2\in [P^1_1.Tcond\_min, P^1_1.Tcond\_max) ]{\textcolor{red}{N^1_V.Act\_path!}}(Rest,Idle,Rest,t_1,t_2,0)$$
+in which $N^1_V.Act\_path!\in\Sigma_o$. \\
+For a state in $H_{all}$ such that $\left\langle (Rest,Idle,Rest,t_1,t_2,t_3) ,(Rest,Rest,t_1,t_3)\right\rangle\in sim_o$,  there is a discrete transition:
+$$(Rest,Rest,t_1,t_3)\xrightarrow[t_3\in [0, N^2_V.Trest\_max)]{\textcolor{red}{N^2_V.Act\_path!}}(Rest,Rest,t_1,0)$$
+and $\left\langle ((Rest,Idle,Rest,t_1,t_2,0)),(Rest,Rest,t_1,0)\right\rangle\in sim_o$. Basically activation due to conduction is replaced by self-activation of the corresponding node automata.\\
+\textbf{Additional behaviors: }The timed-simulation also allows additional behaviors into $H_{all}$. Consider a discrete transition in $H_{all}$
+$$(Rest,Rest,t_1,t_3)\xrightarrow[t_3\in [0, N^2_V.Trest\_min)]{\textcolor{red}{N^2_V.Act\_path!}}(Rest,Rest,t_1,0)$$
+However, for a state in $H_{vt}'''$ such that $\left\langle (Rest,Idle,Rest,t_1,t_2,t_3),(Rest,Rest,t_1,t_3)\right\rangle\in sim_o$, when $t_3\in [0, N^1_V.Trest\_min]$ there is no available discrete transitions. Physiologically, these implicitly included behaviors correspond to fast heart rate, premature heart events and even noise.
+%Atrial node activations from retrograde conduction:
+%$$(Rest,Retro,Rest,t_1,t_2,t_3)\xrightarrow[P^1_1.Act\_node\_1!\rightarrow \textcolor{red}{N^1_A.Act\_path!}]{t_2\in [P^1_1.Tcond\_min, P^1_1.Tcond\_max] }(Rest,Idle,Rest,0,t_2,t_3)$$
+%are mapped to the following transition in $H_{all}$:
+%$$(Rest,Rest,t_1,t_3)\xrightarrow[\textcolor{red}{N^2_A.Act\_path!}]{t_1\in [0, N^2_A.Trest\_max]}(Rest,Rest,0,t_3)$$
+
+%\begin{figure}[!h]
+%	\centering
+%	\includegraphics[width=0.3\textwidth]{figs/rule6.pdf}
+%	%\vspace{-5pt}
+%	\caption{\small Node automata after application of Rule 7}
+%	%\vspace{-15pt}
+%	\label{fig:rule6}
+%\end{figure}
+
+%\input{automatedApplication}
+
+
+
+

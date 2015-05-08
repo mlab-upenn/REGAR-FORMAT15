@@ -1,0 +1,14 @@
+\subsubsection{Rule 2: Remove Irrelevant Structures}
+The network of node and path automata can be viewed as a graph,with nodes as vertices, paths as edges with conduction delay as weight. After the loops within the topology are removed, the topology of the heart model is in form of tree. Within the network there are certain nodes that are more important in terms of model behaviors, we denote them as \emph{Nodes of Interests}, which include:
+\begin{itemize}
+\item Nodes with self-activations
+\item Nodes which interact with the pacemaker
+\end{itemize}
+Graph algorithm can be performed on the heart model to identify the core structure. Shortest paths can be calculated among nodes of interests. All the nodes and paths along the shortest paths are regarded as core structure. All the other nodes and paths can be then removed without affecting the behaviors of the model. 
+%\todo[inline]{Not true. Teh behavior is affected. Because this is a formal methods conference, so behavior and so on mean very specific things.}
+\subsubsection{Rule 3: Removing Unnecessary Non-self-activation Nodes}
+The effect of non-self-activation nodes is blocking electrical events with interval shorter than its ERP period. If the self-activation nodes at both ends of a core path have self-activation interval longer than the maximum ERP period of nodes along the core path, the nodes can be removed.
+
+For a core path from a self-activation node $N_1$ to another core node $N_2$, for any structure $P_1-N_n-P_2$ which $N_n$ is a non-self-activation node, if $N_n.ERP_{max}<min(N_1.Rest_{min},N_2.Rest_{min})$, replace $P_1-N_n-P_2$ with $P_3$ so that:
+$$P_3.cond_{min}=P_1.cond_{min}+P_2.cond_{min}$$
+$$P_3.cond_{max}=P_1.cond_{max}+P_2.cond_{max}$$
