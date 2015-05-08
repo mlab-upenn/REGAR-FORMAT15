@@ -1,8 +1,8 @@
 	\vspace{-10pt}
 \section{Formal Models of the Environment}
 \label{formalModelsofEnv}
-To perform closed-loop model checking of medical devices, formal models of their physiological environment are needed to represent different physiological conditions the devices may encounter. In this section, implantable pacemakers are used as example. Timed-automata \cite{timed_automata} models of the human heart are developed as the environment model \cite{sttt13,VHM_proc}. Physiological requirements are formalized with monitors and $ATCTL^*$ formula \cite{TCTL}. 
-Model checking can then be performed on the closed-loop system with UPPAAL \cite{uppaal}. %The physiological knowledge required during closed-loop model checking of medical devices are associated with the \emph{physiological models} and the \emph{physiological requirements}. It is thus important to maintain the physiological context of the models and link model behaviors to physiological requirements. In this section we use heart modeling as example to demonstrate physiological knowledge encoding. %First, we introduce the physiological basis for our heart modeling. Then we demonstrate our heart model structure which can be used to model different heart conditions. We link transitions in the models to physiological behaviors
+To perform closed-loop model checking of medical devices, formal models of their physiological environment are needed to represent different physiological conditions the devices may encounter. In this section, timed-automata \cite{timed_automata} models of the human heart are developed as the environment model for implantable pacemaker~\cite{sttt13,VHM_proc}. Physiological requirements are formalized with monitors and $ATCTL^*$ formula \cite{TCTL}. 
+Model checking can then be performed on the closed-loop system in model checker UPPAAL \cite{uppaal}. %The physiological knowledge required during closed-loop model checking of medical devices are associated with the \emph{physiological models} and the \emph{physiological requirements}. It is thus important to maintain the physiological context of the models and link model behaviors to physiological requirements. In this section we use heart modeling as example to demonstrate physiological knowledge encoding. %First, we introduce the physiological basis for our heart modeling. Then we demonstrate our heart model structure which can be used to model different heart conditions. We link transitions in the models to physiological behaviors
 \begin{figure}[!t]
 	\centering
 	\includegraphics[width=0.9\textwidth]{figs/init_abs.pdf}
@@ -12,7 +12,7 @@ Model checking can then be performed on the closed-loop system with UPPAAL \cite
 	\label{fig:nodepathTA}
 \end{figure}
 
-\subsection{Timed-automata Models of the Heart}
+\subsection{Timed Automata Models of the Heart}
 At cellular level, a heart tissue can be activated by external voltage. Certain tissue also has capability to self-activate, which contribute to natural heart beats. Once activated (Marker 1 in \figref{nodepathTA}), the voltage outside the tissue changes over time, which is referred to as \emph{Action Potential} (\figref{nodepathTA}.(a)). 
 The action potential can be divided into two functional timing periods: The \emph{Effective Refractory Period (ERP)}, during which the tissue cannot be triggered by another activation; and the \emph{Rest} period, during which the tissue can be activated and at the end of which the tissue will self-activate. 
 The timing behaviors of the action potential are modeled as \emph{node automaton} $A_v$ (\figref{nodepathTA}.(b)). 
