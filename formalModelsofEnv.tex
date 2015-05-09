@@ -58,6 +58,22 @@ Tachycardia features undesirable fast heart rate which results in inefficient bl
 %For a heart model $G$ with $n$ nodes and $m$ paths (thus, $n$ vertices and $m$ edges), the node automata are denoted as $N_i, i\in[n]$ and path automata are denoted as $P_j,j\in[m]$. 
 %\todo[inline]{change to $V_i$ and $E_i$ to stay consistent with definition of graph?}
 %The parameters for the nodes are $Trest$ (with range $[Trest_{min}$),TERP,TRRP and the parameters for the paths are $\{Tante,Tretro\}$. 
+<<<<<<< Updated upstream
+=======
+The spatial and temporal properties of a given human heart condition can be modeled by a network of node and path automata with different parameters (i.e., \figref{nodepathTA}.(d)). Physiological structures of the heart are represented as node automata and the path automata specify the connectivities of the nodes and the conduction delays among them. 
+The network can be viewed as a labeled directed graph: %the vertices of the graph represent nodes, or locations, in the heart, while edges represent conduction paths between the nodes. 
+\begin{defn}
+	\label{def:labeledGraph}
+	[Labeled graph]
+	A \textbf{labeled graph} is a directed graph $G = (V,E,A)$ where 
+	$V$ is a finite set of vertices, $E \subset V\times V$ is a finite set of directed edges,
+	and $A$ is a total labeling function $A: V \cup E \rightarrow TA$
+	where $TA$ is the set of timed automata.
+	The function $A$ labels each vertex with a \emph{node automaton}, and each edge with an \emph{path automaton}.
+	For a graph $G$, we write $\Ec(G) \defeq V(G) \cup E(G)$.
+\end{defn}
+The heart model structure has been used to model various heart conditions and all of them have been validated by electrophysiologists \cite{vhm_ecrts10}.
+>>>>>>> Stashed changes
 
 Implantable cardiac pacemakers are rhythm management devices designed to treat bradycardia. 
 A typical dual chamber pacemaker has two leads inserted into the heart through the veins which can measure the local electrical activities of the right atrium and right ventricle, respectively. According to the timing between sensed impulses the pacemaker can deliver electrical pacing to the corresponding chamber to maintain proper heart rhythm (\figref{probes}).  
