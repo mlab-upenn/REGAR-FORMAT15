@@ -33,7 +33,7 @@ Self-activation of the atria can be expressed using the location and clock of of
 The requirement can be formalized using the monitor  $M_{sing}(VP,500,\infty)$:
 %\hatodo{mention $N_A$ is the atrium node automaton}
 \[Req1: N_A.loc=Rest \land N_A.t\in [300,1000] \Rightarrow \neg M_{sing}.loc==Err\]
-\todo[inline]{some figure captions are all caps, others are not. please use same thing throughout}
+%\todo[inline]{some figure captions are all caps, others are not. please use same thing throughout}
 %\begin{figure}[!b]
 	%\centering
 	%\vspace{-10pt}
@@ -97,10 +97,10 @@ $CE_{n}$ is returned by $H_n$ and none of its children models violate the requir
 %\hatodoin{Do you mean that $CE_{at}$ is not a bug? Does this mean that the requirement may be violated in ways that are not dangerous?}
 $CE_{pvc}$ has a very similar execution to $CE_{n}$. However, the activations of the atrial node are triggered by retrograde conduction from ventricular paces (marker \textsf{cond}). The atrial activations trigger another ventricular pace after $AVI$, which will trigger another retrograde conduction. In this case the heart rate is inappropriately high, which corresponds to a dangerous closed-loop behavior referred to as \emph{Endless Loop Tachycardia}.
 
-In $CE_{af}$ the atrial rate is very high, which is also a sub-optimal but not dangerous heart condition. \hatodo{use a word other than sub-optimal. E.g., dangerous, harmful..}
+In $CE_{af}$ the atrial rate is very high, which is also a sub-optimal but not dangerous heart condition. 
 However, the ventricular rate can stay normal due to the blocking property of the AV node. 
 Despite the filters in the pacemaker, the pacemaker still paces the ventricle for every 3 atrial activations, which extends fast atrial rate to more dangerous fast ventricular rate. 
-\hatodoin{Not very clear..do you mean that the intrinsoc centricular rate is fine because of AV filtering, but the PM is accelarating it?}
+%\hatodoin{Not very clear..do you mean that the intrinsoc centricular rate is fine because of AV filtering, but the PM is accelarating it?}
 This scenario is referred to as Atrial Tachycardia Response of a pacemaker. 
 
 From the analysis, pacemaker operations in $CE_{pvc}$ and $CE_{af}$ must be revised. However, the revision should not affect the behavior in $CE_{n}$. This example demonstrates that counter-examples from more refined models provide more detailed mechanism of the requirement violations, and distinguish the physiological conditions that can trigger the violations. The information is helpful for debugging and improving the algorithm. The physicians can also improve the physiological requirement so that these heart conditions can be then considered case by case. %Both $CE_b$ and $CE_c$ are inappropriate executions of the pacemaker .$CE_a$ and $CE_b$ can have the same input-output executions on the pacemaker side and can only be differentiated on the heart model side. After the physician examines the counter-example the programmer can work on debugging. 
