@@ -9,7 +9,7 @@
 	\label{fig:PM_timers}
 \end{figure}
 
-\subsection{Step 1: The Pacemaker Model}
+\subsection*{Step 1: The Pacemaker Model}
 A pacemaker diagnoses heart conditions and delivers electrical pacing to the heart according to the timing intervals between events from the heart and the pacemaker itself. 
 In this section we use a simple dual chamber pacemaker as example for closed-loop model checking. 
 The detailed UPPAAL timed automata implementation of the model can be found in \cite{sttt13}. 
@@ -26,7 +26,7 @@ If no VS happened before AVI timer expires, and the time since the most recent v
 %\textsf{$N_V.Act\_path!\rightarrow$VS!}.\\
 %The pacemaker accordingly generates atrial or ventricular pacing actions \textsf{AP!$\rightarrow N_A.Act\_node!$} and \textsf{VP!$\rightarrow N_V.Act\_node!$}.
 	\vspace{-10pt}
-\subsection{Step 2: Requirement Encoding}
+\subsection*{Step 2: Requirement Encoding}
 The following requirement is designed to prevent the pacemaker from pacing too fast: 
 ``If the intervals between self-activations of the atria are between 300ms to 1000ms (60bpm-200bpm), the intervals between ventricular paces should be no shorter than 500ms.''
 Self-activation of the atria can be expressed using the location and clock of of node automaton $N_A$.
@@ -43,7 +43,7 @@ The requirement can be formalized using the monitor  $M_{sing}(VP,500,\infty)$:
 %\vspace{-10pt}
 	%\label{fig:abs_exam}
 %\end{figure}
- \subsection{Step 3: Choosing Appropriate Heart Models For the Requirement}
+ \subsection*{Step 3: Choosing Appropriate Heart Models For the Requirement}
 To verify the closed-loop system with pacemaker model $PM$ and abstraction tree $T_{HM}$ (\figref{HM_abs}) against requirement $Req1$, the most abstract appropriate models are selected from the tree. 
 The single event monitor $M_{sing}$ from \figref{monitor}.a with variables $Var(M_{sing})=\{M_{sing}.t,M_{sing}.loc\}$ is used for this requirement. 
 The variables in the requirement are:
@@ -63,7 +63,7 @@ thus these 3 heart models are output as the most abstract models that are approp
 	\label{fig:CE}
 \end{figure}
 	\vspace{-10pt}
-\subsection{Step 4: Return The Most Concrete Counter-Examples}
+\subsection*{Step 4: Return the most Concrete Counter-Examples}
 After the appropriate models for $Req1$ are selected, we have the initial set
 $HM=\{H_n'',H_{at}'''',H_{vt}'''\}$.
 Then we run Algorithm 2. By model checking on all 3 initial models in UPPAAL we have: 
@@ -89,7 +89,7 @@ The abstraction tree is then further explored. The heart models with counter-exa
 		%\label{fig:CE}
 %\end{figure}
 	\vspace{-10pt}
-\subsection{Step 5: Analysis of the Counter-examples}
+\subsection*{Step 5: Analysis of the Counter-examples}
 The counter-examples are then shared with physicians for analysis. In \figref{CE} we demonstrate 3 counter-examples. In the counter-examples, the first signal shows the intrinsic heart signals over time with up arrows as atrial activations and down arrows as ventricular activations. The second signal shows the pacemaker outputs with up arrows as atrial pacing and down arrows as ventricular pacing.%We only show the activations of the atrial node and ventricle pacing. 
 
 $CE_{n}$ is returned by $H_n$ and none of its children models violate the requirement. By careful analysis we found that $CE_{n}$ features the combination of fast intrinsic atrial rate and prolonged A-V conduction delay, which is the combination of heart conditions $H_{st}$ and $H_{av}$. This scenario shows that the abstraction rules can introduce physiological heart conditions that were not explicitly modeled in the initial model set. The pacemaker improved the open-loop heart condition by pacing the ventricles $AVI$ after each atrial event, which is a correct operation of the pacemaker despite the requirement violation. %\hatodo{is it TAVI or AVI like in the previous seciton?}
@@ -103,7 +103,7 @@ Despite the filters in the pacemaker, the pacemaker still paces the ventricle fo
 %\hatodoin{Not very clear..do you mean that the intrinsoc centricular rate is fine because of AV filtering, but the PM is accelarating it?}
 This scenario is referred to as Atrial Tachycardia Response of a pacemaker. 
 
-From the analysis, pacemaker operations in $CE_{pvc}$ and $CE_{af}$ must be revised. However, the revision should not affect the behavior in $CE_{n}$. This example demonstrates that counter-examples from more refined models provide more detailed mechanism of the requirement violations, and distinguish the physiological conditions that can trigger the violations. The information is helpful for debugging and improving the algorithm. The physicians can also improve the physiological requirement so that these heart conditions can be then considered case by case. %Both $CE_b$ and $CE_c$ are inappropriate executions of the pacemaker .$CE_a$ and $CE_b$ can have the same input-output executions on the pacemaker side and can only be differentiated on the heart model side. After the physician examines the counter-example the programmer can work on debugging. 
+From the analysis, pacemaker operations in $CE_{pvc}$ and $CE_{af}$ must be revised. However, the revision should not affect the behavior in $CE_{n}$. This example demonstrates that counter-examples from refined models provide more physiological context of the requirement violations, and distinguish the physiological conditions that can trigger the violations. The information is helpful for debugging and improving the algorithm. The physicians can also improve the physiological requirement so that these heart conditions can be then considered case by case. %Both $CE_b$ and $CE_c$ are inappropriate executions of the pacemaker .$CE_a$ and $CE_b$ can have the same input-output executions on the pacemaker side and can only be differentiated on the heart model side. After the physician examines the counter-example the programmer can work on debugging. 
 %$NA\_self$ is in $H_3$, we go one level up, in $H_4$ the behavior is not merged with any other parameters. In $H_5$ $NA\_self$ is merged with  $NA'-NV'.cond$ so $H_4$ is returned as the appropriate heart model for R1. In \cite{STTT13} we used $H_4$ to verify the correctness of the ELT termination algorithm. With a basic DDD pacemaker we have $H_4 || P_{DDD}\models R1$. The counter-example returned is exactly the ELT behavior. Then we implement the ELT termination algorithm and we have  $H_4 || P_{ELT}\not\models R1$, meaning ELT has been successfully terminated, and only the ELT is terminated. 
 %
 %\subsection{Inappropriate Model Refinements}

@@ -14,7 +14,7 @@ A state of a timed automaton is a pair $\left\langle s,v\right\rangle$ which con
 %A \emph{trace} is a sequence $\delta\in \Omega^\omega$ and the reachable behavior space of the model $M$ is denoted as $\beh(M)\subset \Omega^\omega$. 
 For all $\lambda\subseteq X$, $v[\lambda :=0]$ denotes the valuation which sets all clocks $x\in\lambda$ as zero and the rest of the clocks unchanged. For all $t\in \textbf{R}$, $v+t$ denotes the valuation which increases all the clock value by $t$. There are two kinds of transitions between states. The \emph{discrete transition} happens when the condition of an edge has been met. So we have:
 $$\left\langle s,\sigma,\psi,\lambda,s'\right\rangle\in E,v\models \psi,v[\lambda :=0]\models inv(s')\Rightarrow (s,v)\xrightarrow{\sigma}(s',v[\lambda :=0])$$
-The \textsf{timed transition} happens when the timed automaton can stay in the same location for certain amount of time. We have:
+The \emph{timed transition} happens when the timed automaton can stay in the same location for certain amount of time. We have:
 $$\tau\in \mathbb{R},\forall \tau'\leq\tau, v+\tau'\models inv(s)\Rightarrow (s,v)\xrightarrow{\tau}(s,v+\tau)$$
 \vspace{-15pt}
 \subsubsection{Observable Timed Simulation}
