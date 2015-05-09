@@ -12,28 +12,7 @@ Model checking can then be performed on the closed-loop system in model checker 
 	\label{fig:nodepathTA}
 \end{figure}
 
-\subsection{Timed Automata Models of the Heart}
-At cellular level, a heart tissue can be activated by external voltage. Certain tissue also has capability to self-activate, which contribute to natural heart beats. Once activated (Marker 1 in \figref{nodepathTA}), the voltage outside the tissue changes over time, which is referred to as \emph{Action Potential} (\figref{nodepathTA}.(a)). 
-The action potential can be divided into two functional timing periods: The \emph{Effective Refractory Period (ERP)}, during which the tissue cannot be triggered by another activation; and the \emph{Rest} period, during which the tissue can be activated and at the end of which the tissue will self-activate. 
-The timing behaviors of the action potential are modeled as \emph{node automaton} $A_v$ (\figref{nodepathTA}.(b)). 
-A node automaton initializes with \textsf{Rest} state.
-From \textsf{Rest} state, the node can either self-activate or be activated by external activations (indicated by Act\_node). 
-Upon activation the node transition to the \textsf{ERP} state and activate all the paths connecting to the node (indicated by Act\_path). 
-In the \textsf{ERP} state the node does not respond to external activations. 
-At the end of \textsf{ERP} state the node transition to the \textsf{Rest} state. 
-The duration a node automaton can stay in \textsf{Rest} is in the range $[Trest\_min,Trest\_max]$, and the duration it can stay in \textsf{ERP} is in the range $[Terp\_min, Terp\_max]$.
-For heart tissue without the capability to self-activate, the parameters $Trest\_min$ and $Trest\_max$ are set to $\infty$.
-$Trest$ and $Terp$ are referred to as \emph{parameters} of the automaton $A_v$.
-
-The voltage change of the heart tissue will activate the tissue nearby with certain delay (Marker 2 in \figref{nodepathTA}). 
-This timing delay between heart tissue is modeled using \emph{path automata} $A_e$ (\figref{nodepathTA}.(c)). 
-The initial state of a path automaton is \textsf{Idle}, which corresponds to no conduction. 
-A path has two conduction directions, forward and backward.
-These are represented by the states \textsf{Ante} and \textsf{Retro}, named after their standard physiological terms Antegrade and Retrograde.
-If \textsf{Act\_path} event is received from one of the nodes (1 or 2) connected to the path, the transition to \textsf{Ante} or \textsf{Retro} state will occur in the path automaton. 
-At the end of \textsf{Ante} and \textsf{Retro} state the path will transition to \textsf{Idle} state and send Act\_node signal to the node automaton connected to the other end of the path (2 or 1).
-The parameters of the path automaton $A_e$ are $Tcond$.
-
+\subsection{Electrophysiological Heart Modeling Basics}
 A healthy heart generates periodic electrical impulses to control heart rates according to physiological needs. 
 These impulses propagate through the heart, triggering coordinated muscle contractions and pump blood to the rest of the body. 
 The underlying pattern and timing of these impulses determine the heart's rhythm and are the key to proper heart functions. 
@@ -95,6 +74,30 @@ The heart model structure has been used to model various heart conditions and al
 Implantable cardiac pacemakers are rhythm management devices designed to treat bradycardia. 
 A typical dual chamber pacemaker has two leads inserted into the heart through the veins which can measure the local electrical activities of the right atrium and right ventricle, respectively. According to the timing between sensed impulses the pacemaker can deliver electrical pacing to the corresponding chamber to maintain proper heart rhythm (\figref{probes}).  
 
+\subsection{Timed Automata Models of the Heart}
+At cellular level, a heart tissue can be activated by an external voltage. Certain tissues also have the capability to self-activate, which contributes to natural heart beats. Once activated (Marker 1 in \figref{nodepathTA}), the voltage outside the tissue changes over time, which is referred to as \emph{Action Potential} (\figref{nodepathTA}.(a)). 
+The action potential can be divided into two functional timing periods: The \emph{Effective Refractory Period (ERP)}, during which the tissue cannot be triggered by another activation; and the \emph{Rest} period, during which the tissue can be activated and at the end of which the tissue will self-activate. 
+The timing behaviors of the action potential are modeled as \emph{node automaton} $A_v$ (\figref{nodepathTA}.(b)). 
+
+A \textbf{node automaton} initializes with the \textsf{Rest} state.
+From the \textsf{Rest} state, the node can either self-activate or be activated by external activations (indicated by Act\_node). 
+Upon activation the node transition to the \textsf{ERP} state and activate all the paths connecting to the node (indicated by Act\_path). 
+In the \textsf{ERP} state the node does not respond to external activations. 
+At the end of \textsf{ERP} state the node transition to the \textsf{Rest} state. 
+The duration a node automaton can stay in the \textsf{Rest} is in the range $[Trest\_min,Trest\_max]$, and the duration it can stay in \textsf{ERP} is in the range $[Terp\_min, Terp\_max]$.
+For heart tissue without the capability to self-activate, the parameters $Trest\_min$ and $Trest\_max$ are set to $\infty$.
+$Trest$ and $Terp$ are referred to as \emph{parameters} of the automaton $A_v$.
+
+The voltage change of the heart tissue will activate the tissue nearby with certain delay (Marker 2 in \figref{nodepathTA}). 
+This timing delay between heart tissue is modeled using \emph{path automata} $A_e$ (\figref{nodepathTA}.(c)). 
+The initial state of a \textbf{path automaton} is \textsf{Idle}, which corresponds to no conduction. 
+A path has two conduction directions, forward and backward.
+These are represented by the states \textsf{Ante} and \textsf{Retro}, named after their standard physiological terms Antegrade and Retrograde (i.e. conduction in the reverse direction along a path).
+If \textsf{Act\_path} event is received from one of the nodes (1 or 2) connected to the path, the transition to \textsf{Ante} or \textsf{Retro} state will occur in the path automaton. 
+At the end of \textsf{Ante} and \textsf{Retro} state the path will transition to \textsf{Idle} state and send Act\_node signal to the node automaton connected to the other end of the path (2 or 1).
+The parameters of the path automaton $A_e$ are $Tcond$.
+
+The heart models used here are networks of node and path automata. The arrangement and density of nodes and paths differ for different conditions and levels of abstraction. 
 
 
 %\subsection{Describe Model Behaviors with Physiological Context}
