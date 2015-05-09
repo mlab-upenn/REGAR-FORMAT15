@@ -3,14 +3,15 @@
 \label{formalModelsofEnv}
 To perform closed-loop model checking of medical devices, formal models of their physiological environment are needed to represent different physiological conditions the devices may encounter. In this section, timed-automata \cite{timed_automata} models of the human heart are developed as the environment model for implantable pacemaker~\cite{sttt13,VHM_proc}. Physiological requirements are formalized with monitors and $ATCTL^*$ formula \cite{TCTL}. 
 Model checking can then be performed on the closed-loop system in model checker UPPAAL \cite{uppaal}. %The physiological knowledge required during closed-loop model checking of medical devices are associated with the \emph{physiological models} and the \emph{physiological requirements}. It is thus important to maintain the physiological context of the models and link model behaviors to physiological requirements. In this section we use heart modeling as example to demonstrate physiological knowledge encoding. %First, we introduce the physiological basis for our heart modeling. Then we demonstrate our heart model structure which can be used to model different heart conditions. We link transitions in the models to physiological behaviors
-\begin{figure}[!t]
+ \begin{figure}[!t]
 	\centering
-	\includegraphics[width=0.9\textwidth]{figs/init_abs.pdf}
+	\includegraphics[width=0.7\textwidth]{figs/egm.pdf}
+	
+	%\vspace{-10pt}
+	\caption{\small (a) Lead placement for a dual chamber pacemaker (b) Electrogram (EGM) signals from pacemaker leads and corresponding internal event markers}
+	\label{fig:probes}
 	\vspace{-10pt}
-	\caption{\small (a) Action potential for a heart tissue and its tissue nearby (dashed). (b) Node automaton. (c) Path automaton. (d) An example model of the heart consist of a network of node and path automata. The nodes are labeled with the name of the corresponding physiological structures.}
-	\vspace{-15pt}
-	\label{fig:nodepathTA}
-\end{figure}
+\end{figure} 
 
 \subsection{Electrophysiological Heart Modeling Basics}
 A healthy heart generates periodic electrical impulses to control heart rates according to physiological needs. 
@@ -39,15 +40,15 @@ Tachycardia features undesirable fast heart rate which results in inefficient bl
 %
 %The electrical conduction through the tissue \emph{between} nodes is abstracted using \emph{path automata}. 
 %The path automata are used to represent structural or functional electrical connections between nodes. 
- \begin{figure}[!t]
+\begin{figure}[!t]
 	\centering
-	\includegraphics[width=0.7\textwidth]{figs/egm.pdf}
-	
-	%\vspace{-10pt}
-	\caption{\small (a) Lead placement for a dual chamber pacemaker (b) Electrogram (EGM) signals from pacemaker leads and corresponding internal event markers}
-	\label{fig:probes}
+	\includegraphics[width=0.9\textwidth]{figs/init_abs.pdf}
 	\vspace{-10pt}
-\end{figure} 
+	\caption{\small (a) Action potential for a heart tissue and its tissue nearby (dashed). (b) Node automaton. (c) Path automaton. (d) An example model of the heart consist of a network of node and path automata. The nodes are labeled with the name of the corresponding physiological structures.}
+	\vspace{-15pt}
+	\label{fig:nodepathTA}
+\end{figure}
+
 %%At the same time the clock invariant of the state is modified according to the shared variable $C(a/b)$. 
 %%This corresponds to the change of the conduction delay that is caused by early activation. 
 %Similarly to a node automaton, the changing trend is extracted from clinical data. 
@@ -57,19 +58,6 @@ Tachycardia features undesirable fast heart rate which results in inefficient bl
 %For a heart model $G$ with $n$ nodes and $m$ paths (thus, $n$ vertices and $m$ edges), the node automata are denoted as $N_i, i\in[n]$ and path automata are denoted as $P_j,j\in[m]$. 
 %\todo[inline]{change to $V_i$ and $E_i$ to stay consistent with definition of graph?}
 %The parameters for the nodes are $Trest$ (with range $[Trest_{min}$),TERP,TRRP and the parameters for the paths are $\{Tante,Tretro\}$. 
-The spatial and temporal properties of a given human heart condition can be modeled by a network of node and path automata with different parameters (i.e., \figref{nodepathTA}.(d)). Physiological structures of the heart are represented as node automata and the path automata specify the connectivities of the nodes and the conduction delays among them. 
-The network can be viewed as a labeled directed graph: %the vertices of the graph represent nodes, or locations, in the heart, while edges represent conduction paths between the nodes. 
-\begin{defn}
-	\label{def:labeledGraph}
-	[Labeled graph]
-	A \textbf{labeled graph} is a directed graph $G = (V,E,A)$ where 
-	$V$ is a finite set of vertices, $E \subset V\times V$ is a finite set of directed edges,
-	and $A$ is a total labeling function $A: V \cup E \rightarrow TA$
-	where $TA$ is the set of timed automata.
-	The function $A$ labels each vertex with a \emph{node automaton}, and each edge with an \emph{path automaton}.
-	For a graph $G$, we write $\Ec(G) \defeq V(G) \cup E(G)$.
-\end{defn}
-The heart model structure has been used to model various heart conditions and all of them have been validated by electrophysiologists \cite{vhm_ecrts10,vhm_embc10}.
 
 Implantable cardiac pacemakers are rhythm management devices designed to treat bradycardia. 
 A typical dual chamber pacemaker has two leads inserted into the heart through the veins which can measure the local electrical activities of the right atrium and right ventricle, respectively. According to the timing between sensed impulses the pacemaker can deliver electrical pacing to the corresponding chamber to maintain proper heart rhythm (\figref{probes}).  
@@ -92,12 +80,24 @@ The voltage change of the heart tissue will activate the tissue nearby with cert
 This timing delay between heart tissue is modeled using \emph{path automata} $A_e$ (\figref{nodepathTA}.(c)). 
 The initial state of a \textbf{path automaton} is \textsf{Idle}, which corresponds to no conduction. 
 A path has two conduction directions, forward and backward.
-These are represented by the states \textsf{Ante} and \textsf{Retro}, named after their standard physiological terms Antegrade and Retrograde (i.e. conduction in the reverse direction along a path).
+These are represented by the states \textsf{Ante} and \textsf{Retro}, named after their standard physiological terms Antegrade and Retrograde.
 If \textsf{Act\_path} event is received from one of the nodes (1 or 2) connected to the path, the transition to \textsf{Ante} or \textsf{Retro} state will occur in the path automaton. 
 At the end of \textsf{Ante} and \textsf{Retro} state the path will transition to \textsf{Idle} state and send Act\_node signal to the node automaton connected to the other end of the path (2 or 1).
-The parameters of the path automaton $A_e$ are $Tcond$.
-
-The heart models used here are networks of node and path automata. The arrangement and density of nodes and paths differ for different conditions and levels of abstraction. 
+%The parameters of the path automaton $A_e$ are $Tcond$.
+The spatial and temporal properties of a given human heart condition can be modeled by a network of node and path automata with different parameters (i.e., \figref{nodepathTA}.(d)). Physiological structures of the heart are represented as node automata and the path automata specify the connectivities of the nodes and the conduction delays among them. 
+The network can be viewed as a labeled directed graph: %the vertices of the graph represent nodes, or locations, in the heart, while edges represent conduction paths between the nodes. 
+\begin{defn}
+	\label{def:labeledGraph}
+	[Labeled graph]
+	A \textbf{labeled graph} is a directed graph $G = (V,E,A)$ where 
+	$V$ is a finite set of vertices, $E \subset V\times V$ is a finite set of directed edges,
+	and $A$ is a total labeling function $A: V \cup E \rightarrow TA$
+	where $TA$ is the set of timed automata.
+	The function $A$ labels each vertex with a \emph{node automaton}, and each edge with an \emph{path automaton}.
+	For a graph $G$, we write $\Ec(G) \defeq V(G) \cup E(G)$.
+\end{defn}
+The heart model structure has been used to model various heart conditions and all of them have been validated by electrophysiologists \cite{vhm_ecrts10,vhm_embc10}.
+%The heart models used here are networks of node and path automata. The arrangement and density of nodes and paths differ for different conditions and levels of abstraction. 
 
 
 %\subsection{Describe Model Behaviors with Physiological Context}
