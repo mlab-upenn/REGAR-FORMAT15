@@ -11,59 +11,22 @@ Recall that heart conditions are modeled as finite directed labeled graphs as in
 %An abstraction rule is a function $2^\Gc \rightarrow \Gc$.
 Rules operate on a graph only if it has the appropriate structure for that rule, and if its parameters meet certain rule-specific conditions (if any).
 Due to space limits only one abstraction rule is discussed in detail. The full set of rules and the proofs that these rules indeed produce over-approximations of the behavior space are relegated to the technical report \cite{regar_tech}.
+\ifthenelse{\boolean{TECH_REPORT}}
+{\input{rule1}}
+{}
+\ifthenelse{\boolean{TECH_REPORT}}
+{\input{rule2}}
+{}
 %\input{rule1}
 %\input{rule2}
+\ifthenelse{\boolean{TECH_REPORT}}
+{\input{rule5}}
+{}
 
-%\subsubsection{Rule R4: Merge Parameter Ranges}
-%Timing periods of heart tissue, like Rest and ERP, are modeled as locations in the node and path automata. 
-%The minimum and maximum time an automaton can stay in a location is governed by the parameters in the guards and invariants. 
-%By expanding these periods, we introduce new behavior where a heart may stay in Rest for longer, or (self-)activate a node faster, etc.
-%\\
-%\textbf{(Sub)graph(s) to which it applies}.
-%This rule applies to a set of graphs $G_i$ with the same structure (i.e., they are pairwise isomorphic) but possibly with different parameters: $R(G_1,\ldots,G_n) = G'$.
-%See Fig.~\ref{fig:HM_abs}.\\
-%\textbf{Applicability conditions}.
-%None.\\
-%\textbf{Output (sub)graph}.
-%$G'$ has the same structure as the $G_i$.
-%Thus there's an isomorphism $f$ between every $G_i$ and $G'$.
-%Given an element $x$ of $G'$, $f^{-1}(x') = \{x_1,\dots,x_n\}$ are used to represent the set of elements that map to it via $f$, where $x_i \in \Ec(G_i)$.\\
-%\textbf{Effect on parameters}
-%%Recall Def.~\ref{def:labeledGraph}
-%For every automaton $A(x'), x' \in \Ec(G')$, and every parameter $\theta^{x'}$ of $A(x')$, 
-%$\theta_{min}^{x'} = \min(\theta^x_{min})_{x \in f^{-1}(x') }$ and 
-%$\theta_{max}^{x'} = \max(\theta^x_{max})_{x \in f^{-1}(x') }$
 
 %\input{rule5}
 
-%\subsubsection{Rule R6: Replace Blocking With Non-deterministic Conduction}
-%%\todo[inline]{in modeling section mention self-activating and passive nodes}
-%%If a node automaton is in its \textsf{ERP} state, a \textsf{Act\_node} event is "blocked" and will not trigger corresponding path conduction. If we add non-deterministic transitions to the path automata such that a \textsf{Act\_path} event do not trigger state transitions to \textsf{ante} or \textsf{retro} (\figref{rule5}), the blocking behavior of the node is covered. We can then merge the \textsf{ERP} state with the \text{Rest} state in the node automata, and all passive nodes can be removed. An application of Rule 6 is shown in \figref{abs_exam}.\\
-%Consider the structure $N_1 P_1 N_2 P_2 N_3$ with three nodes and two paths, where $N_2$ is a passive node (i.e. not self-activating).
-%If $N_2$ blocks an activation signal from $N_1$ to $N_3$, this is equivalent to the paths $P_1$ or $P_2$ not conducting.
-%In this rule, the structure $P_1 N_2 P_2$ is replaced by a path $P$ whose automaton can take a self loop when it receives an activation signal, thus effectively stopping the conduction. 
-%This is shown in Fig.~\ref{fig:rule5}: the extra transitions are marked Act\_path\_1? and Act\_path\_2?.
-%Because the blocking effect of nodes is now incorporated into the paths, the node automata of self-activating nodes can be modified to the one shown in Fig.~\ref{fig:rule5}, which doesn't have the (now useless) ERP period.
-%\\
-%\textbf{Subgraph to which it applies}.
-%Line graphs with 3 vertices $N_1 P_1 N_2 P_2 N_3$, and self-activating nodes.\\
-%\textbf{Applicability conditions}.
-%$N_2$ is a passive node.\\
-%\textbf{Output subgraph}.
-%$N'_1 P' N'_3$
-%A path $P'$ whose path automaton is as shown in Fig.~\ref{fig:rule5}.b.
-%The self-activating nodes $N$ are replaced by nodes $N'$ with automata shown in Fig.~\ref{fig:rule5}.a.\\
-%\textbf{Effect on parameters}
-%For the new path, $P.cond_{min}=P_1.cond_{min}+P_2.cond_{min}$ and 
-%$P.cond_{max}=P_1.cond_{max}+P_2.cond_{max}$
-%For the new nodes, $N'.Trest_{min}=N.Terp_{min}+N.Trest_{min}$ and 
-%$N'.Trest_{max}=N.Terp_{max}+N.Trest_{max}$.\\
-%\subsubsection{Interaction With the Pacemaker}
-%The interactions between the heart and the pacemaker are modeled by using binary event channels. For the atrial lead, we have:
-%\textsf{$N_A.Act\_path!\rightarrow$AS!},
-%and for ventricular lead we have
-%\textsf{$N_V.Act\_path!\rightarrow$VS!}.\\
-%The pacemaker accordingly generates atrial or ventricular pacing actions \textsf{AP!$\rightarrow N_A.Act\_node!$} and \textsf{VP!$\rightarrow N_V.Act\_node!$}.
+
 
 \begin{figure}[!b]
 	\centering
