@@ -1,18 +1,19 @@
-\subsection{Rule 2: Remove Irrelevant Structures}
+\subsubsection{Rule R2: Remove Irrelevant Structures}
 After the loops within the topology are removed, the topology of the heart model is in form of tree. Since the "non-essential" structure do not affect the activation signals from and/or to the sensing nodes, all the "non-essential" structure can be then removed.\\
 \textbf{Applicable Conditions: }The rule can be applied after Rule 1 has been applied.\\
 \textbf{Output Graph: } Trimmed graph with only essential structure remaining.\\
 \textbf{Effects on parameters: } There is no effects on parameters of the node and path automata.
  
 %\todo[inline]{Not true. Teh behavior is affected. Because this is a formal methods conference, so behavior and so on mean very specific things.}
-\subsection{Rule 3: Removing Unnecessary Non-self-activation Nodes}
-The effect of non-self-activation nodes is blocking electrical events with interval shorter than its ERP period. If the self-activation nodes at both ends of a core path have self-activation interval longer than the maximum ERP period of nodes along the core path, the nodes can be removed.
-\textbf{Applicable Conditions: }
-For a core path from a self-activation node $N_1$ to another core node $N_2$, for any structure $P_1-N_n-P_2$ which $N_n$ is a non-self-activation node, if $N_n.ERP_{max}<min(N_1.Rest_{min},N_2.Rest_{min})$, replace $P_1-N_n-P_2$ with $P_3$ so that:
+\subsubsection{Rule R3: Removing Unnecessary Non-self-activation Nodes}
+The effect of non-self-activation nodes is blocking electrical events with interval shorter than its ERP period. If the self-activation nodes at both ends of a core path have self-activation interval longer than the maximum ERP period of nodes along the core path, the nodes can be removed.\\
+\textbf{Applicable Conditions: } This rule can be applied when there is no circles  in the heart model (Rule 1 has been applied).\\
+\textbf{Output Graph: } For any structure $P_1-N_n-P_2$ which $N_n$ is a non-self-activation node, if $N_n.ERP_{max}<min(N_1.Rest_{min},N_2.Rest_{min})$, replace $P_1-N_n-P_2$ with $P_3$\\
+\textbf{Effects on parameters: }
 $$P_3.cond_{min}=P_1.cond_{min}+P_2.cond_{min}$$
 $$P_3.cond_{max}=P_1.cond_{max}+P_2.cond_{max}$$
 
-\subsection{Rule R4: Merge Parameter Ranges}
+\subsubsection{Rule R4: Merge Parameter Ranges}
 Timing periods of heart tissue, like Rest and ERP, are modeled as locations in the node and path automata. 
 The minimum and maximum time an automaton can stay in a location is governed by the parameters in the guards and invariants. 
 By expanding these periods, we introduce new behavior where a heart may stay in Rest for longer, or (self-)activate a node faster, etc.

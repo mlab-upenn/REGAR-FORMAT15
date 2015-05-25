@@ -10,10 +10,10 @@ Recall that heart conditions are modeled as finite directed labeled graphs as in
 %Let $\Gc$ be the set of labeled graphs, and $2^\Gc$ be the power set of $\Gc$.
 %An abstraction rule is a function $2^\Gc \rightarrow \Gc$.
 Rules operate on a graph only if it has the appropriate structure for that rule, and if its parameters meet certain rule-specific conditions (if any).
-Due to space limits only one abstraction rule is discussed in detail. The full set of rules and the proofs that these rules indeed produce over-approximations of the behavior space are relegated to the technical report \cite{regar_tech}.
+
 \ifthenelse{\boolean{TECH_REPORT}}
 {\input{rule1}}
-{}
+{Due to space limits only one abstraction rule is discussed in detail. The full set of rules and the proofs that these rules indeed produce over-approximations of the behavior space are relegated to the technical report \cite{regar_tech}.}
 \ifthenelse{\boolean{TECH_REPORT}}
 {\input{rule2}}
 {}

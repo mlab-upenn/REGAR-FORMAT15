@@ -23,25 +23,28 @@ These counter-examples are provided to the physicians, along with the heart mode
 
 We now summarize the model checking procedure, and give a detailed example in the next section.
 Recall the definition of appropriateness from Section \ref{preliminaries}.
-In the technical report \cite{regar_tech}, we show that a sufficient condition for a model $M$ to be appropriate for a requirement $\varphi$ with monitor $Mon$ is
-$Var(\varphi) \subset Var(M) \cup Var(Mon)$.
-\ifthenelse{\boolean{TECH_REPORT}}{\include{proofAppropriateness}}{}
+
+\ifthenelse{\boolean{TECH_REPORT}}{\include{proofAppropriateness}}{In the technical report \cite{regar_tech}, we show that a sufficient condition for a model $M$ to be appropriate for a requirement $\varphi$ with monitor $Mon$ is
+$Var(\varphi) \subset Var(M) \cup Var(Mon)$.}
 
 A search algorithm is developed to select the most abstract models from the abstraction tree $T_{HM}$ that are appropriate for a requirement $Req$. 
-The detailed implementation of the algorithm can be found in \cite{regar_tech}.
-%\begin{figure}[!t]
-		%\centering
-		%\includegraphics[width=0.9\textwidth]{figs/algorithm.pdf}
-		%%\vspace{-5pt}
-		%\caption{\small Algorithms for closed-loop model checking with abstraction tree}
-		  %\vspace{-10pt}
-		%\label{fig:algorithm}
-%\end{figure}
+\ifthenelse{\boolean{TECH_REPORT}}
+{
+\begin{figure}[!t]
+		\centering
+		\includegraphics[width=0.9\textwidth]{figs/algorithm.pdf}
+		%\vspace{-5pt}
+		\caption{\small Algorithms for closed-loop model checking with abstraction tree}
+		  \vspace{-10pt}
+		\label{fig:algorithm}
+\end{figure}}
+{The detailed implementation of the algorithm can be found in \cite{regar_tech}.
+}
 Model checking is run on these models. 
 When a run returns a violation, it returns an abstract counter-example $\delta_{cex}$, along with the heart model $M_{cex}$ that generated it.
 For each such violation, we search the tree for the most concrete descendant of $M_{cex}$ that still displays a counter-example to $Req$.
 This is then provided to the physician along with the counter-example.
-The detailed implementation of the algorithm can be found in \cite{regar_tech}.
+%The detailed implementation of the algorithm can be found in \cite{regar_tech}.
 %Algorithm 2 (\figref{algorithm}) describes the process for closed-loop model checking with an abstraction tree.
 
 

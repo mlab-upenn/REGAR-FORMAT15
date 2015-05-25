@@ -1,7 +1,13 @@
-\subsection{Rule 5: Merge Self-activation Nodes with Interaction Nodes}
+\subsubsection{Rule R5: Merge Self-activation Nodes with Interaction Nodes}
 %\todo[inline]{not clear}
-The effect of self-activation nodes on the interaction of the pacemaker is triggering sensing events within certain delay. In this rule we merge all the self-activation nodes to their neariest interaction nodes. If there exists multiple self-activation nodes merging to the same interaction node, the parameters of the new model are determined following Rule 3.
-\subsection{Rule R6: Replace Blocking With Non-deterministic Conduction}
+The effect of self-activation nodes on the interaction of the pacemaker is triggering sensing events within certain delay. In this rule we merge all the self-activation nodes to their nearest interaction nodes. \\
+\textbf{Applicability conditions: }The rule can be applied after all the non-activating nodes are removed.\\
+\textbf{Output graph: }Assume the set of sensing nodes are $N_s^i$ and the set of self-activating nodes are $N_a^j$. The minimum timing delay between two nodes are the sum of conduction delay of the path automata along the path, which we denote as $dist(N_1,N_2)$. Each self-activating nodes $N_a$ is merged with the nearest sensing node $i=arcmin_i(dist(N_s^i,N_a))$.\\
+\textbf{Effects on parameters: }Assume $N_a^i$ is the set of self-activating nodes that are merged with sensing node $N_s^i$. The parameters of $N_s^i$ are decided by:
+$$N_s^i.TERP\_min=min(N_a^i.TERP\_min), N_s^i.TERP\_max=max(N_a^i.TERP\_max)$$
+$$N_s^i.Trest\_min=min(N_a^i.Trest\_min), N_s^i.Trest\_max=max(N_a^i.Trest\_max)$$
+
+\subsubsection{Rule R6: Replace Blocking With Non-deterministic Conduction}
 %\todo[inline]{in modeling section mention self-activating and passive nodes}
 %If a node automaton is in its \textsf{ERP} state, a \textsf{Act\_node} event is "blocked" and will not trigger corresponding path conduction. If we add non-deterministic transitions to the path automata such that a \textsf{Act\_path} event do not trigger state transitions to \textsf{ante} or \textsf{retro} (\figref{rule5}), the blocking behavior of the node is covered. We can then merge the \textsf{ERP} state with the \text{Rest} state in the node automata, and all passive nodes can be removed. An application of Rule 6 is shown in \figref{abs_exam}.\\
 Consider the structure $N_1 P_1 N_2 P_2 N_3$ with three nodes and two paths, where $N_2$ is a passive node (i.e. not self-activating).
@@ -12,7 +18,7 @@ Because the blocking effect of nodes is now incorporated into the paths, the nod
 \\
 \textbf{Subgraph to which it applies}.
 Line graphs with 3 vertices $N_1 P_1 N_2 P_2 N_3$, and self-activating nodes.\\
-\textbf{Applicability conditions}.
+\textbf{Applicability conditions}
 $N_2$ is a passive node.\\
 \textbf{Output subgraph}.
 $N'_1 P' N'_3$
