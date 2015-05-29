@@ -1,0 +1,80 @@
+%{
+
+ #include <stdio.h>
+
+int arithlex ();
+
+void* arith_scan_string (const char*);
+
+void aritherror (const char* s) {
+     printf ("Arith: ");
+     printf ("%s\n",s);
+     }	   
+
+ #include "xmlloader/arithHead.hpp"
+
+%}
+
+%code requires {
+      #include <iostream>
+      #include <sstream>
+      #include <string>
+      #include "xmlloader/Visitable.hpp"
+      #include "xmlloader/Visitor.hpp"
+      #include "symbTrace/DCConstraint.hpp"
+       #include	<map>
+	 #include <string>
+	 #include <vector>
+	 using namespace std;
+
+      }
+
+%union {
+       Visitable* visiting;
+       int value;
+       string* text;
+       }
+
+%token<text> IDENTIFIER
+%token<value> NUMBER
+%token LESS LEQ GEQ GREATER EQUAL LPARAN RPARAN
+
+%token NUM
+%left PLUS MINUS
+%left DIVIDE TIMES
+%left MOD
+%left NEG     /* negation--unary minus */
+
+%type <visiting> start expr
+
+%%
+start: expr {$$=new StartExpr ((Expr*)$1);expr = (Expr*)$$}
+;
+expr:  expr PLUS expr {$$=new PlusExpr ((Expr*)$1,(Expr*)$3);}
+     | expr MINUS expr  {$$=new SubExpr ((Expr*)$1,(Expr*)$3); }
+     | expr TIMES expr  {$$=new MultExpr ((Expr*)$1,(Expr*)$3);}
+     | expr DIVIDE expr  {$$=new DivExpr ((Expr*)$1,(Expr*)$3);}
+     | expr MOD expr {$$=new ModExpr ((Expr*)$1,(Expr*)$3);}
+     | LPARAN expr RPARAN  {$$=new ParanExpr ((Expr*)$2);}
+     | MINUS expr  %prec NEG {$$=new NegExpr ((Expr*)$2);}
+     | NUMBER  {$$ = new ValExpr ($1);}
+     | IDENTIFIER  {$$=new IdentExpr ($1);}
+;
+%%
+
+int evaluate (map<string, string>& localVariables, map<string, string>& systemVariables, map<string,int>& varState, string &s)
+{  
+    
+    arith_scan_string (s.c_str ());
+    arithparse ();
+    
+    ArithmeticEvaluator* mod = new ArithmeticEvaluator ();
+    mod->setValues (&systemVariables, &localVariables, &varState);
+   
+    int val = mod->evalExpr (expr);
+    
+    
+    delete mod;
+    return val;
+}
+

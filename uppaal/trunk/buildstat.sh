@@ -1,0 +1,19 @@
+cd symbTrace
+make symbTrace.lib
+cd ..
+cd xmlloader 
+make xmlloader.lib
+cd ..
+cd pointInDBM 
+make point.static
+cd ..
+cd rationalDBM 
+make dbm.lib
+cd ..
+cd smallzone
+make small.static
+cd ..
+cd liveness
+make live.static
+cd ..
+g++ -g -o ctu -DSTAT `xml2-config --cflags` -L/usr/local/uppaal/lib -I/usr/local/uppaal/include -I./include main.cpp main/options.cpp lib/liblive.a lib/libsmall.a lib/libxmlloader.a lib/libsymbTrace.a lib/libpoint.a  lib/libdbm.a  `xml2-config --libs --static` -Bstatic -lboost_regex-mt -ludbm -lgmpxx

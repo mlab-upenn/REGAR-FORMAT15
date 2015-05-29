@@ -1,0 +1,1145 @@
+layout
+#index:const:value
+#index:clock:nr:name
+#index:var:min:max:init:nr:name
+#index:meta:min:max:init:nr:name
+#index:cost
+#index:location:flags:name
+#index:static:min:max:name
+0:clock:0:t(0)
+1:var:-32767:32767:150:0:TAVI
+2:var:-32767:32767:1000:1:TLRI
+3:var:-32767:32767:100:2:TPVARP
+4:var:-32767:32767:50:3:TPVAB
+5:var:-32767:32767:150:4:TVRP
+6:var:-32767:32767:400:5:TURI
+7:var:-32767:32767:400:6:thresh
+8:clock:1:clk
+9:var:-32767:32767:450:7:ERP_min_AV
+10:var:-32767:32767:500:8:ERP_max_AV
+11:var:-32767:32767:100:9:Tantemin
+12:var:-32767:32767:250:10:Tantemax
+13:var:-32767:32767:100:11:Tretromin
+14:var:-32767:32767:250:12:Tretromax
+15:var:-32767:32767:200:13:ERP_fast
+16:var:-32767:32767:150:14:ERP_slow
+17:var:-32767:32767:150:15:Treentry_min
+18:var:-32767:32767:200:16:Treentry_max
+19:var:-32767:32767:100:17:Vminwait
+20:var:-32767:32767:1200:18:Vmaxwait
+21:var:-32767:32767:100:19:Aminwait
+22:var:-32767:32767:1200:20:Amaxwait
+23:const:1
+24:const:2
+25:const:3
+26:const:4
+27:const:5
+28:const:6
+29:const:7
+30:const:8
+31:const:9
+32:const:10
+33:const:11
+34:const:12
+35:const:13
+36:const:14
+37:const:15
+38:const:16
+39:const:17
+40:const:18
+41:const:19
+42:const:20
+43:const:21
+44:const:22
+45:const:23
+46:const:24
+47:const:25
+48:const:26
+49:const:25
+50:const:24
+51:const:23
+52:const:26
+53:clock:2:PAVI.t
+54:location::WaitURI
+55:location::AVI
+56:location::Idle
+57:const:25
+58:const:23
+59:const:26
+60:const:24
+61:clock:3:PLRI.t
+62:location::ASed
+63:location::LRI
+64:const:25
+65:const:24
+66:const:28
+67:const:26
+68:const:29
+69:const:32
+70:clock:4:PPVARP.t
+71:location:committed:ABl
+72:location:committed:inter1
+73:location::PVARP
+74:location:committed:inter
+75:location::PVAB
+76:location::Idle
+77:const:25
+78:const:27
+79:const:26
+80:const:33
+81:clock:5:PVRP.t
+82:location:committed:VB
+83:location:committed:inter
+84:location::VRP
+85:location::Idle
+86:const:26
+87:const:25
+88:location::URI
+89:const:28
+90:const:23
+91:const:30
+92:clock:6:PA.x
+93:location::AReady
+94:const:27
+95:const:25
+96:const:31
+97:clock:7:PV.x
+98:location::VReady
+99:const:26
+100:const:25
+101:clock:8:Pvv.t
+102:location::err
+103:location:committed:two_v
+104:location::wait_2nd
+105:location::wait_1st
+
+instructions
+#address: opcode
+0: 0 1 			push 1
+2: 33 			halt
+3: 0 0 			push 0
+5: 33 			halt
+6: 3 6 			lid 6
+8: 33 			halt
+9: 0 0 			push 0
+11: 33 			halt
+12: 0 1 		push 1
+14: 0 0 		push 0
+16: 3 6 		lid 6
+18: 29 0 		cexpr 0
+20: 33 			halt
+21: 0 2 		push 2
+23: 33 			halt
+24: 0 0 		push 0
+26: 33 			halt
+27: 3 1 		lid 1
+29: 33 			halt
+30: 0 0 		push 0
+32: 33 			halt
+33: 0 2 		push 2
+35: 0 0 		push 0
+37: 3 1 		lid 1
+39: 29 0 		cexpr 0
+41: 33 			halt
+42: 0 1 		push 1
+44: 33 			halt
+45: 0 0 		push 0
+47: 33 			halt
+48: 0 1 		push 1
+50: 33 			halt
+51: 0 1 		push 1
+53: 33 			halt
+54: 0 1 		push 1
+56: 33 			halt
+57: 0 1 		push 1
+59: 33 			halt
+60: 0 -4 		push -4
+62: 33 			halt
+63: 0 0 		push 0
+65: 0 1 		push 1
+67: 3 6 		lid 6
+69: 24 			uminus
+70: 29 0 		cexpr 0
+72: 33 			halt
+73: 0 1 		push 1
+75: 33 			halt
+76: 0 0 		push 0
+78: 33 			halt
+79: 3 6 		lid 6
+81: 33 			halt
+82: 0 1 		push 1
+84: 33 			halt
+85: 0 3 		push 3
+87: 33 			halt
+88: 0 0 		push 0
+90: 0 2 		push 2
+92: 3 1 		lid 1
+94: 24 			uminus
+95: 29 0 		cexpr 0
+97: 26 			copy
+98: 32 109 		jmpz 109
+100: 0 1 		push 1
+102: 0 0 		push 0
+104: 3 6 		lid 6
+106: 29 1 		cexpr 1
+108: 13 		and
+109: 33 		halt
+110: 0 1 		push 1
+112: 33 		halt
+113: 0 0 		push 0
+115: 33 		halt
+116: 3 6 		lid 6
+118: 33 		halt
+119: 0 2 		push 2
+121: 33 		halt
+122: 0 0 		push 0
+124: 33 		halt
+125: 3 1 		lid 1
+127: 33 		halt
+128: 0 1 		push 1
+130: 33 		halt
+131: 0 0 		push 0
+133: 33 		halt
+134: 0 0 		push 0
+136: 0 2 		push 2
+138: 3 1 		lid 1
+140: 24 		uminus
+141: 29 0 		cexpr 0
+143: 26 		copy
+144: 32 156 		jmpz 156
+146: 0 0 		push 0
+148: 0 1 		push 1
+150: 3 6 		lid 6
+152: 24 		uminus
+153: 29 0 		cexpr 0
+155: 13 		and
+156: 33 		halt
+157: 0 1 		push 1
+159: 33 		halt
+160: 0 0 		push 0
+162: 33 		halt
+163: 3 6 		lid 6
+165: 33 		halt
+166: 0 2 		push 2
+168: 33 		halt
+169: 0 0 		push 0
+171: 33 		halt
+172: 3 1 		lid 1
+174: 33 		halt
+175: 0 1 		push 1
+177: 33 		halt
+178: 0 3 		push 3
+180: 33 		halt
+181: 0 1 		push 1
+183: 33 		halt
+184: 0 1 		push 1
+186: 33 		halt
+187: 0 1 		push 1
+189: 33 		halt
+190: 0 -4 		push -4
+192: 33 		halt
+193: 0 1 		push 1
+195: 33 		halt
+196: 0 1 		push 1
+198: 33 		halt
+199: 0 53 		push 53
+201: 0 0 		push 0
+203: 19 		store
+204: 33 		halt
+205: 0 -1 		push -1
+207: 33 		halt
+208: 0 1 		push 1
+210: 33 		halt
+211: 0 1 		push 1
+213: 33 		halt
+214: 0 53 		push 53
+216: 0 0 		push 0
+218: 19 		store
+219: 33 		halt
+220: 0 -2 		push -2
+222: 33 		halt
+223: 0 1 		push 1
+225: 33 		halt
+226: 0 0 		push 0
+228: 33 		halt
+229: 0 1 		push 1
+231: 33 		halt
+232: 0 3 		push 3
+234: 33 		halt
+235: 0 0 		push 0
+237: 33 		halt
+238: 3 2 		lid 2
+240: 3 1 		lid 1
+242: 24 		uminus
+243: 4 			plus
+244: 33 		halt
+245: 0 0 		push 0
+247: 33 		halt
+248: 0 3 		push 3
+250: 0 0 		push 0
+252: 3 2 		lid 2
+254: 3 1 		lid 1
+256: 24 		uminus
+257: 4 			plus
+258: 29 0 		cexpr 0
+260: 33 		halt
+261: 0 1 		push 1
+263: 33 		halt
+264: 0 1 		push 1
+266: 33 		halt
+267: 0 61 		push 61
+269: 0 0 		push 0
+271: 19 		store
+272: 33 		halt
+273: 0 -4 		push -4
+275: 33 		halt
+276: 0 1 		push 1
+278: 33 		halt
+279: 0 1 		push 1
+281: 33 		halt
+282: 0 61 		push 61
+284: 0 0 		push 0
+286: 19 		store
+287: 33 		halt
+288: 0 -3 		push -3
+290: 33 		halt
+291: 0 1 		push 1
+293: 33 		halt
+294: 0 1 		push 1
+296: 33 		halt
+297: 0 1 		push 1
+299: 33 		halt
+300: 0 -2 		push -2
+302: 33 		halt
+303: 0 0 		push 0
+305: 0 3 		push 3
+307: 3 2 		lid 2
+309: 3 1 		lid 1
+311: 24 		uminus
+312: 4 			plus
+313: 24 		uminus
+314: 29 0 		cexpr 0
+316: 33 		halt
+317: 0 3 		push 3
+319: 33 		halt
+320: 0 0 		push 0
+322: 33 		halt
+323: 3 2 		lid 2
+325: 3 1 		lid 1
+327: 24 		uminus
+328: 4 			plus
+329: 33 		halt
+330: 0 61 		push 61
+332: 0 0 		push 0
+334: 19 		store
+335: 33 		halt
+336: 0 1 		push 1
+338: 33 		halt
+339: 0 1 		push 1
+341: 33 		halt
+342: 0 1 		push 1
+344: 33 		halt
+345: 0 61 		push 61
+347: 0 0 		push 0
+349: 19 		store
+350: 33 		halt
+351: 0 -4 		push -4
+353: 33 		halt
+354: 0 1 		push 1
+356: 33 		halt
+357: 0 1 		push 1
+359: 33 		halt
+360: 0 61 		push 61
+362: 0 0 		push 0
+364: 19 		store
+365: 33 		halt
+366: 0 -3 		push -3
+368: 33 		halt
+369: 0 1 		push 1
+371: 33 		halt
+372: 0 0 		push 0
+374: 33 		halt
+375: 0 1 		push 1
+377: 33 		halt
+378: 0 1 		push 1
+380: 33 		halt
+381: 0 0 		push 0
+383: 33 		halt
+384: 0 1 		push 1
+386: 33 		halt
+387: 0 4 		push 4
+389: 33 		halt
+390: 0 0 		push 0
+392: 33 		halt
+393: 3 3 		lid 3
+395: 33 		halt
+396: 0 0 		push 0
+398: 33 		halt
+399: 0 4 		push 4
+401: 0 0 		push 0
+403: 3 3 		lid 3
+405: 29 0 		cexpr 0
+407: 33 		halt
+408: 0 1 		push 1
+410: 33 		halt
+411: 0 0 		push 0
+413: 33 		halt
+414: 0 1 		push 1
+416: 33 		halt
+417: 0 4 		push 4
+419: 33 		halt
+420: 0 0 		push 0
+422: 33 		halt
+423: 3 4 		lid 4
+425: 33 		halt
+426: 0 0 		push 0
+428: 33 		halt
+429: 0 4 		push 4
+431: 0 0 		push 0
+433: 3 4 		lid 4
+435: 29 0 		cexpr 0
+437: 33 		halt
+438: 0 1 		push 1
+440: 33 		halt
+441: 0 0 		push 0
+443: 33 		halt
+444: 0 1 		push 1
+446: 33 		halt
+447: 0 1 		push 1
+449: 33 		halt
+450: 0 1 		push 1
+452: 33 		halt
+453: 0 1 		push 1
+455: 33 		halt
+456: 0 10 		push 10
+458: 33 		halt
+459: 0 1 		push 1
+461: 33 		halt
+462: 0 1 		push 1
+464: 33 		halt
+465: 0 1 		push 1
+467: 33 		halt
+468: 0 -6 		push -6
+470: 33 		halt
+471: 0 1 		push 1
+473: 33 		halt
+474: 0 1 		push 1
+476: 33 		halt
+477: 0 1 		push 1
+479: 33 		halt
+480: 0 7 		push 7
+482: 33 		halt
+483: 0 1 		push 1
+485: 33 		halt
+486: 0 1 		push 1
+488: 33 		halt
+489: 0 1 		push 1
+491: 33 		halt
+492: 0 -6 		push -6
+494: 33 		halt
+495: 0 0 		push 0
+497: 0 4 		push 4
+499: 3 3 		lid 3
+501: 24 		uminus
+502: 29 0 		cexpr 0
+504: 33 		halt
+505: 0 4 		push 4
+507: 33 		halt
+508: 0 0 		push 0
+510: 33 		halt
+511: 3 3 		lid 3
+513: 33 		halt
+514: 0 3 		push 3
+516: 0 100 		push 100
+518: 19 		store
+519: 33 		halt
+520: 0 0 		push 0
+522: 33 		halt
+523: 0 0 		push 0
+525: 0 4 		push 4
+527: 3 4 		lid 4
+529: 24 		uminus
+530: 29 0 		cexpr 0
+532: 33 		halt
+533: 0 4 		push 4
+535: 33 		halt
+536: 0 0 		push 0
+538: 33 		halt
+539: 3 4 		lid 4
+541: 33 		halt
+542: 0 1 		push 1
+544: 33 		halt
+545: 0 0 		push 0
+547: 33 		halt
+548: 0 1 		push 1
+550: 33 		halt
+551: 0 1 		push 1
+553: 33 		halt
+554: 0 1 		push 1
+556: 33 		halt
+557: 0 2 		push 2
+559: 33 		halt
+560: 0 1 		push 1
+562: 33 		halt
+563: 0 1 		push 1
+565: 33 		halt
+566: 0 1 		push 1
+568: 33 		halt
+569: 0 -6 		push -6
+571: 33 		halt
+572: 0 1 		push 1
+574: 33 		halt
+575: 0 1 		push 1
+577: 33 		halt
+578: 0 70 		push 70
+580: 0 0 		push 0
+582: 19 		store
+583: 33 		halt
+584: 0 -3 		push -3
+586: 33 		halt
+587: 0 1 		push 1
+589: 33 		halt
+590: 0 1 		push 1
+592: 33 		halt
+593: 0 70 		push 70
+595: 0 0 		push 0
+597: 19 		store
+598: 33 		halt
+599: 0 -4 		push -4
+601: 33 		halt
+602: 0 1 		push 1
+604: 33 		halt
+605: 0 0 		push 0
+607: 33 		halt
+608: 0 1 		push 1
+610: 33 		halt
+611: 0 1 		push 1
+613: 33 		halt
+614: 0 0 		push 0
+616: 33 		halt
+617: 0 1 		push 1
+619: 33 		halt
+620: 0 5 		push 5
+622: 33 		halt
+623: 0 0 		push 0
+625: 33 		halt
+626: 3 5 		lid 5
+628: 33 		halt
+629: 0 0 		push 0
+631: 33 		halt
+632: 0 5 		push 5
+634: 0 0 		push 0
+636: 3 5 		lid 5
+638: 29 0 		cexpr 0
+640: 33 		halt
+641: 0 1 		push 1
+643: 33 		halt
+644: 0 0 		push 0
+646: 33 		halt
+647: 0 1 		push 1
+649: 33 		halt
+650: 0 1 		push 1
+652: 33 		halt
+653: 0 1 		push 1
+655: 33 		halt
+656: 0 1 		push 1
+658: 33 		halt
+659: 0 11 		push 11
+661: 33 		halt
+662: 0 1 		push 1
+664: 33 		halt
+665: 0 1 		push 1
+667: 33 		halt
+668: 0 1 		push 1
+670: 33 		halt
+671: 0 -5 		push -5
+673: 33 		halt
+674: 0 1 		push 1
+676: 33 		halt
+677: 0 1 		push 1
+679: 33 		halt
+680: 0 81 		push 81
+682: 0 0 		push 0
+684: 19 		store
+685: 33 		halt
+686: 0 4 		push 4
+688: 33 		halt
+689: 0 1 		push 1
+691: 33 		halt
+692: 0 1 		push 1
+694: 33 		halt
+695: 0 1 		push 1
+697: 33 		halt
+698: 0 -5 		push -5
+700: 33 		halt
+701: 0 0 		push 0
+703: 0 5 		push 5
+705: 3 5 		lid 5
+707: 24 		uminus
+708: 29 0 		cexpr 0
+710: 33 		halt
+711: 0 5 		push 5
+713: 33 		halt
+714: 0 0 		push 0
+716: 33 		halt
+717: 3 5 		lid 5
+719: 33 		halt
+720: 0 1 		push 1
+722: 33 		halt
+723: 0 0 		push 0
+725: 33 		halt
+726: 0 1 		push 1
+728: 33 		halt
+729: 0 1 		push 1
+731: 33 		halt
+732: 0 81 		push 81
+734: 0 0 		push 0
+736: 19 		store
+737: 33 		halt
+738: 0 -3 		push -3
+740: 33 		halt
+741: 0 1 		push 1
+743: 33 		halt
+744: 0 0 		push 0
+746: 33 		halt
+747: 0 1 		push 1
+749: 33 		halt
+750: 0 1 		push 1
+752: 33 		halt
+753: 0 1 		push 1
+755: 33 		halt
+756: 0 8 		push 8
+758: 0 0 		push 0
+760: 19 		store
+761: 33 		halt
+762: 0 -4 		push -4
+764: 33 		halt
+765: 0 1 		push 1
+767: 33 		halt
+768: 0 1 		push 1
+770: 33 		halt
+771: 0 8 		push 8
+773: 0 0 		push 0
+775: 19 		store
+776: 33 		halt
+777: 0 -3 		push -3
+779: 33 		halt
+780: 0 6 		push 6
+782: 33 		halt
+783: 0 0 		push 0
+785: 33 		halt
+786: 3 22 		lid 22
+788: 33 		halt
+789: 0 0 		push 0
+791: 33 		halt
+792: 0 6 		push 6
+794: 0 0 		push 0
+796: 3 22 		lid 22
+798: 29 1 		cexpr 1
+800: 33 		halt
+801: 0 1 		push 1
+803: 33 		halt
+804: 0 1 		push 1
+806: 33 		halt
+807: 0 92 		push 92
+809: 0 0 		push 0
+811: 19 		store
+812: 33 		halt
+813: 0 -8 		push -8
+815: 33 		halt
+816: 0 1 		push 1
+818: 33 		halt
+819: 0 1 		push 1
+821: 33 		halt
+822: 0 92 		push 92
+824: 0 0 		push 0
+826: 19 		store
+827: 33 		halt
+828: 0 -1 		push -1
+830: 33 		halt
+831: 0 0 		push 0
+833: 0 6 		push 6
+835: 3 21 		lid 21
+837: 24 		uminus
+838: 29 1 		cexpr 1
+840: 33 		halt
+841: 0 6 		push 6
+843: 33 		halt
+844: 0 0 		push 0
+846: 33 		halt
+847: 3 21 		lid 21
+849: 33 		halt
+850: 0 92 		push 92
+852: 0 0 		push 0
+854: 19 		store
+855: 33 		halt
+856: 0 6 		push 6
+858: 33 		halt
+859: 0 7 		push 7
+861: 33 		halt
+862: 0 0 		push 0
+864: 33 		halt
+865: 3 20 		lid 20
+867: 33 		halt
+868: 0 0 		push 0
+870: 33 		halt
+871: 0 7 		push 7
+873: 0 0 		push 0
+875: 3 20 		lid 20
+877: 29 1 		cexpr 1
+879: 33 		halt
+880: 0 1 		push 1
+882: 33 		halt
+883: 0 1 		push 1
+885: 33 		halt
+886: 0 97 		push 97
+888: 0 0 		push 0
+890: 19 		store
+891: 33 		halt
+892: 0 -9 		push -9
+894: 33 		halt
+895: 0 1 		push 1
+897: 33 		halt
+898: 0 1 		push 1
+900: 33 		halt
+901: 0 97 		push 97
+903: 0 0 		push 0
+905: 19 		store
+906: 33 		halt
+907: 0 -3 		push -3
+909: 33 		halt
+910: 0 0 		push 0
+912: 0 7 		push 7
+914: 3 19 		lid 19
+916: 24 		uminus
+917: 29 1 		cexpr 1
+919: 33 		halt
+920: 0 7 		push 7
+922: 33 		halt
+923: 0 0 		push 0
+925: 33 		halt
+926: 3 19 		lid 19
+928: 33 		halt
+929: 0 97 		push 97
+931: 0 0 		push 0
+933: 19 		store
+934: 33 		halt
+935: 0 5 		push 5
+937: 33 		halt
+938: 0 1 		push 1
+940: 33 		halt
+941: 0 0 		push 0
+943: 33 		halt
+944: 0 1 		push 1
+946: 33 		halt
+947: 0 1 		push 1
+949: 33 		halt
+950: 0 0 		push 0
+952: 33 		halt
+953: 0 1 		push 1
+955: 33 		halt
+956: 0 1 		push 1
+958: 33 		halt
+959: 0 0 		push 0
+961: 33 		halt
+962: 0 1 		push 1
+964: 33 		halt
+965: 0 1 		push 1
+967: 33 		halt
+968: 0 0 		push 0
+970: 33 		halt
+971: 0 1 		push 1
+973: 33 		halt
+974: 0 0 		push 0
+976: 0 8 		push 8
+978: 3 6 		lid 6
+980: 24 		uminus
+981: 29 1 		cexpr 1
+983: 33 		halt
+984: 0 8 		push 8
+986: 33 		halt
+987: 0 0 		push 0
+989: 33 		halt
+990: 3 6 		lid 6
+992: 33 		halt
+993: 0 1 		push 1
+995: 33 		halt
+996: 0 0 		push 0
+998: 33 		halt
+999: 0 8 		push 8
+1001: 0 0 		push 0
+1003: 3 6 		lid 6
+1005: 29 0 		cexpr 0
+1007: 33 		halt
+1008: 0 8 		push 8
+1010: 33 		halt
+1011: 0 0 		push 0
+1013: 33 		halt
+1014: 3 6 		lid 6
+1016: 33 		halt
+1017: 0 101 		push 101
+1019: 0 0 		push 0
+1021: 19 		store
+1022: 33 		halt
+1023: 0 0 		push 0
+1025: 33 		halt
+1026: 0 1 		push 1
+1028: 33 		halt
+1029: 0 1 		push 1
+1031: 33 		halt
+1032: 0 1 		push 1
+1034: 33 		halt
+1035: 0 -3 		push -3
+1037: 33 		halt
+1038: 0 1 		push 1
+1040: 33 		halt
+1041: 0 1 		push 1
+1043: 33 		halt
+1044: 0 1 		push 1
+1046: 33 		halt
+1047: 0 -4 		push -4
+1049: 33 		halt
+1050: 0 1 		push 1
+1052: 33 		halt
+1053: 0 1 		push 1
+1055: 33 		halt
+1056: 0 101 		push 101
+1058: 0 0 		push 0
+1060: 19 		store
+1061: 33 		halt
+1062: 0 -3 		push -3
+1064: 33 		halt
+1065: 0 1 		push 1
+1067: 33 		halt
+1068: 0 1 		push 1
+1070: 33 		halt
+1071: 0 101 		push 101
+1073: 0 0 		push 0
+1075: 19 		store
+1076: 33 		halt
+1077: 0 -4 		push -4
+1079: 33 		halt
+
+processes
+#index:initial:name
+0:56:PAVI
+1:63:PLRI
+2:76:PPVARP
+3:85:PVRP
+4:88:PURI
+5:93:PA
+6:98:PV
+7:105:Pvv
+
+locations
+#index:process:invariant
+54:0:12
+55:0:33
+56:0:48
+62:1:229
+63:1:248
+71:2:375
+72:2:384
+73:2:399
+74:2:414
+75:2:429
+76:2:444
+82:3:608
+83:3:617
+84:3:632
+85:3:647
+88:4:747
+93:5:792
+98:6:871
+102:7:944
+103:7:953
+104:7:962
+105:7:971
+
+edges
+#process:source:target:guard:sync:update
+0:54:56:51:60:57
+0:54:56:63:85:82
+0:55:54:88:131:128
+0:55:56:134:178:175
+0:55:56:181:190:187
+0:56:55:193:205:199
+0:56:55:208:220:214
+1:62:63:261:273:267
+1:62:63:276:288:282
+1:63:62:291:300:297
+1:63:63:303:336:330
+1:63:63:339:351:345
+1:63:63:354:366:360
+2:71:75:447:456:453
+2:75:71:459:468:465
+2:72:73:471:480:477
+2:73:72:483:492:489
+2:73:76:495:520:514
+2:75:73:523:545:542
+2:74:76:548:557:554
+2:76:74:560:569:566
+2:76:75:572:584:578
+2:76:75:587:599:593
+3:82:84:650:659:656
+3:84:82:662:671:668
+3:83:84:674:686:680
+3:85:83:689:698:695
+3:84:85:701:723:720
+3:85:84:726:738:732
+4:88:88:750:762:756
+4:88:88:765:777:771
+5:93:93:801:813:807
+5:93:93:816:828:822
+5:93:93:831:856:850
+6:98:98:880:892:886
+6:98:98:895:907:901
+6:98:98:910:935:929
+7:103:102:974:996:993
+7:103:104:999:1023:1017
+7:104:103:1026:1035:1032
+7:104:103:1038:1047:1044
+7:105:104:1050:1062:1056
+7:105:104:1065:1077:1071
+
+expressions
+#address:reads:writes:text
+0:8::clk
+6:6::TURI
+12:6,8::clk <= TURI
+21:53::t
+27:1::TAVI
+33:1,53::t <= TAVI
+42:::1
+48:::1
+51:::1
+54:::1
+57:::1
+60:::VS?
+63:6,8::clk >= TURI
+73:8::clk
+79:6::TURI
+82:::1
+85:::VP!
+88:1,6,8,53::t >= TAVI && clk < TURI
+110:8::clk
+116:6::TURI
+119:53::t
+125:1::TAVI
+128:::1
+131:::0
+134:1,6,8,53::t >= TAVI && clk >= TURI
+157:8::clk
+163:6::TURI
+166:53::t
+172:1::TAVI
+175:::1
+178:::VP!
+181:::1
+184:::1
+187:::1
+190:::VS?
+193:::1
+196:::1
+199::53:t = 0
+205:::AP?
+208:::1
+211:::1
+214::53:t = 0
+220:::AS?
+223:::1
+229:::1
+232:61::t
+238:1,2::TLRI - TAVI
+248:1,2,61::t <= TLRI - TAVI
+261:::1
+264:::1
+267::61:t = 0
+273:::VS?
+276:::1
+279:::1
+282::61:t = 0
+288:::VP?
+291:::1
+294:::1
+297:::1
+300:::AS?
+303:1,2,61::t >= TLRI - TAVI
+317:61::t
+323:1,2::TLRI - TAVI
+330::61:t = 0
+336:::AP!
+339:::1
+342:::1
+345::61:t = 0
+351:::VS?
+354:::1
+357:::1
+360::61:t = 0
+366:::VP?
+369:::1
+375:::1
+378:::1
+384:::1
+387:70::t
+393:3::TPVARP
+399:3,70::t <= TPVARP
+408:::1
+414:::1
+417:70::t
+423:4::TPVAB
+429:4,70::t <= TPVAB
+438:::1
+444:::1
+447:::1
+450:::1
+453:::1
+456:::ABlock!
+459:::1
+462:::1
+465:::1
+468:::Aget?
+471:::1
+474:::1
+477:::1
+480:::AR!
+483:::1
+486:::1
+489:::1
+492:::Aget?
+495:3,70::t >= TPVARP
+505:70::t
+511:3::TPVARP
+514::3:TPVARP = 100
+520:::0
+523:4,70::t >= TPVAB
+533:70::t
+539:4::TPVAB
+542:::1
+545:::0
+548:::1
+551:::1
+554:::1
+557:::AS!
+560:::1
+563:::1
+566:::1
+569:::Aget?
+572:::1
+575:::1
+578::70:t = 0
+584:::VP?
+587:::1
+590:::1
+593::70:t = 0
+599:::VS?
+602:::1
+608:::1
+611:::1
+617:::1
+620:81::t
+626:5::TVRP
+632:5,81::t <= TVRP
+641:::1
+647:::1
+650:::1
+653:::1
+656:::1
+659:::VBlock!
+662:::1
+665:::1
+668:::1
+671:::Vget?
+674:::1
+677:::1
+680::81:t = 0
+686:::VS!
+689:::1
+692:::1
+695:::1
+698:::Vget?
+701:5,81::t >= TVRP
+711:81::t
+717:5::TVRP
+720:::1
+723:::0
+726:::1
+729:::1
+732::81:t = 0
+738:::VP?
+741:::1
+747:::1
+750:::1
+753:::1
+756::8:clk = 0
+762:::VS?
+765:::1
+768:::1
+771::8:clk = 0
+777:::VP?
+780:92::x
+786:22::Amaxwait
+792:22,92::x < Amaxwait
+801:::1
+804:::1
+807::92:x = 0
+813:::A_act?
+816:::1
+819:::1
+822::92:x = 0
+828:::AP?
+831:21,92::x > Aminwait
+841:92::x
+847:21::Aminwait
+850::92:x = 0
+856:::Aget!
+859:97::x
+865:20::Vmaxwait
+871:20,97::x < Vmaxwait
+880:::1
+883:::1
+886::97:x = 0
+892:::V_act?
+895:::1
+898:::1
+901::97:x = 0
+907:::VP?
+910:19,97::x > Vminwait
+920:97::x
+926:19::Vminwait
+929::97:x = 0
+935:::Vget!
+938:::1
+944:::1
+947:::1
+953:::1
+956:::1
+962:::1
+965:::1
+971:::1
+974:6,101::t > TURI
+984:101::t
+990:6::TURI
+993:::1
+996:::0
+999:6,101::t <= TURI
+1008:101::t
+1014:6::TURI
+1017::101:t = 0
+1023:::0
+1026:::1
+1029:::1
+1032:::1
+1035:::VP?
+1038:::1
+1041:::1
+1044:::1
+1047:::VS?
+1050:::1
+1053:::1
+1056::101:t = 0
+1062:::VP?
+1065:::1
+1068:::1
+1071::101:t = 0
+1077:::VS?

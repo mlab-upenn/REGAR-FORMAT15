@@ -1,0 +1,81 @@
+State: PAVI.Idle PLRI.LRI PPVARP.Idle PVRP.Idle PURI.URI PA.AReady PV.VReady Pvv.wait_1st TAVI = 150 TLRI = 1000 TPVARP = 100 TPVAB = 50 TVRP = 150 TURI = 400 thresh = 400 ERP_min_AV = 450 ERP_max_AV = 500 Tantemin = 100 Tantemax = 250 Tretromin = 100 Tretromax = 250 ERP_fast = 200 ERP_slow = 150 Treentry_min = 150 Treentry_max = 200 Vminwait = 100 Vmaxwait = 1200 Aminwait = 100 Amaxwait = 1200 t(0)-clk<=0 t(0)-PAVI.t<=0 t(0)-PLRI.t<=0 t(0)-PPVARP.t<=0 t(0)-PVRP.t<=0 t(0)-PA.x<=0 t(0)-PV.x<=0 t(0)-Pvv.t<=0 clk-t(0)<=850 clk-PAVI.t<=0 PAVI.t-PLRI.t<=0 PLRI.t-PPVARP.t<=0 PPVARP.t-PVRP.t<=0 PVRP.t-PA.x<=0 PA.x-PV.x<=0 PV.x-Pvv.t<=0 Pvv.t-clk<=0 
+
+Transition: PPVARP.Idle -> PPVARP.inter {1; Aget?; 1;} PA.AReady -> PA.AReady {x > Aminwait; Aget!; x = 0;} 
+
+State: PAVI.Idle PLRI.LRI PPVARP.inter PVRP.Idle PURI.URI PA.AReady PV.VReady Pvv.wait_1st TAVI = 150 TLRI = 1000 TPVARP = 100 TPVAB = 50 TVRP = 150 TURI = 400 thresh = 400 ERP_min_AV = 450 ERP_max_AV = 500 Tantemin = 100 Tantemax = 250 Tretromin = 100 Tretromax = 250 ERP_fast = 200 ERP_slow = 150 Treentry_min = 150 Treentry_max = 200 Vminwait = 100 Vmaxwait = 1200 Aminwait = 100 Amaxwait = 1200 t(0)-clk<-100 t(0)-PAVI.t<=0 t(0)-PLRI.t<=0 t(0)-PPVARP.t<=0 t(0)-PVRP.t<=0 t(0)-PA.x<=0 t(0)-PV.x<=0 t(0)-Pvv.t<=0 clk-t(0)<=850 clk-PAVI.t<=0 PAVI.t-PLRI.t<=0 PLRI.t-PPVARP.t<=0 PPVARP.t-PVRP.t<=0 PVRP.t-PV.x<=0 PA.x-t(0)<=0 PV.x-Pvv.t<=0 Pvv.t-clk<=0 
+
+Transition: PAVI.Idle -> PAVI.AVI {1; AS?; t = 0;} PLRI.LRI -> PLRI.ASed {1; AS?; 1;} PPVARP.inter -> PPVARP.Idle {1; AS!; 1;} 
+
+State: PAVI.AVI PLRI.ASed PPVARP.Idle PVRP.Idle PURI.URI PA.AReady PV.VReady Pvv.wait_1st TAVI = 150 TLRI = 1000 TPVARP = 100 TPVAB = 50 TVRP = 150 TURI = 400 thresh = 400 ERP_min_AV = 450 ERP_max_AV = 500 Tantemin = 100 Tantemax = 250 Tretromin = 100 Tretromax = 250 ERP_fast = 200 ERP_slow = 150 Treentry_min = 150 Treentry_max = 200 Vminwait = 100 Vmaxwait = 1200 Aminwait = 100 Amaxwait = 1200 t(0)-clk<=0 t(0)-PAVI.t<=0 t(0)-PLRI.t<=0 t(0)-PPVARP.t<=0 t(0)-PVRP.t<=0 t(0)-PA.x<=0 t(0)-PV.x<=0 t(0)-Pvv.t<=0 clk-PAVI.t<=850 clk-PLRI.t<=0 PAVI.t-t(0)<=150 PAVI.t-clk<-100 PAVI.t-PA.x<=0 PLRI.t-PPVARP.t<=0 PPVARP.t-PVRP.t<=0 PVRP.t-PV.x<=0 PA.x-PAVI.t<=0 PV.x-Pvv.t<=0 Pvv.t-clk<=0 
+
+Transition: PPVARP.Idle -> PPVARP.inter {1; Aget?; 1;} PA.AReady -> PA.AReady {x > Aminwait; Aget!; x = 0;} 
+
+State: PAVI.AVI PLRI.ASed PPVARP.inter PVRP.Idle PURI.URI PA.AReady PV.VReady Pvv.wait_1st TAVI = 150 TLRI = 1000 TPVARP = 100 TPVAB = 50 TVRP = 150 TURI = 400 thresh = 400 ERP_min_AV = 450 ERP_max_AV = 500 Tantemin = 100 Tantemax = 250 Tretromin = 100 Tretromax = 250 ERP_fast = 200 ERP_slow = 150 Treentry_min = 150 Treentry_max = 200 Vminwait = 100 Vmaxwait = 1200 Aminwait = 100 Amaxwait = 1200 t(0)-clk<=0 t(0)-PAVI.t<-100 t(0)-PLRI.t<=0 t(0)-PPVARP.t<=0 t(0)-PVRP.t<=0 t(0)-PA.x<=0 t(0)-PV.x<=0 t(0)-Pvv.t<=0 clk-PAVI.t<=850 clk-PLRI.t<=0 PAVI.t-t(0)<=150 PAVI.t-clk<-100 PLRI.t-PPVARP.t<=0 PPVARP.t-PVRP.t<=0 PVRP.t-PV.x<=0 PA.x-t(0)<=0 PV.x-Pvv.t<=0 Pvv.t-clk<=0 
+
+Transition: PPVARP.inter -> PPVARP.Idle {1; AS!; 1;} 
+
+State: PAVI.AVI PLRI.ASed PPVARP.Idle PVRP.Idle PURI.URI PA.AReady PV.VReady Pvv.wait_1st TAVI = 150 TLRI = 1000 TPVARP = 100 TPVAB = 50 TVRP = 150 TURI = 400 thresh = 400 ERP_min_AV = 450 ERP_max_AV = 500 Tantemin = 100 Tantemax = 250 Tretromin = 100 Tretromax = 250 ERP_fast = 200 ERP_slow = 150 Treentry_min = 150 Treentry_max = 200 Vminwait = 100 Vmaxwait = 1200 Aminwait = 100 Amaxwait = 1200 t(0)-clk<=0 t(0)-PAVI.t<=0 t(0)-PLRI.t<=0 t(0)-PPVARP.t<=0 t(0)-PVRP.t<=0 t(0)-PA.x<=0 t(0)-PV.x<=0 t(0)-Pvv.t<=0 clk-PAVI.t<=850 clk-PLRI.t<=0 PAVI.t-t(0)<=150 PAVI.t-clk<-100 PLRI.t-PPVARP.t<=0 PPVARP.t-PVRP.t<=0 PVRP.t-PV.x<=0 PA.x-PAVI.t<-100 PV.x-Pvv.t<=0 Pvv.t-clk<=0 
+
+Transition: PVRP.Idle -> PVRP.inter {1; Vget?; 1;} PV.VReady -> PV.VReady {x > Vminwait; Vget!; x = 0;} 
+
+State: PAVI.AVI PLRI.ASed PPVARP.Idle PVRP.inter PURI.URI PA.AReady PV.VReady Pvv.wait_1st TAVI = 150 TLRI = 1000 TPVARP = 100 TPVAB = 50 TVRP = 150 TURI = 400 thresh = 400 ERP_min_AV = 450 ERP_max_AV = 500 Tantemin = 100 Tantemax = 250 Tretromin = 100 Tretromax = 250 ERP_fast = 200 ERP_slow = 150 Treentry_min = 150 Treentry_max = 200 Vminwait = 100 Vmaxwait = 1200 Aminwait = 100 Amaxwait = 1200 t(0)-clk<=0 t(0)-PAVI.t<=0 t(0)-PLRI.t<=0 t(0)-PPVARP.t<=0 t(0)-PVRP.t<=0 t(0)-PA.x<=0 t(0)-PV.x<=0 t(0)-Pvv.t<=0 clk-PAVI.t<=850 clk-PLRI.t<=0 PAVI.t-t(0)<=150 PAVI.t-clk<-100 PLRI.t-PPVARP.t<=0 PPVARP.t-PVRP.t<=0 PVRP.t-Pvv.t<=0 PA.x-PAVI.t<-100 PV.x-t(0)<=0 Pvv.t-clk<=0 
+
+Transition: PAVI.AVI -> PAVI.Idle {1; VS?; 1;} PLRI.ASed -> PLRI.LRI {1; VS?; t = 0;} PPVARP.Idle -> PPVARP.PVAB {1; VS?; t = 0;} PVRP.inter -> PVRP.VRP {1; VS!; t = 0;} PURI.URI -> PURI.URI {1; VS?; clk = 0;} Pvv.wait_1st -> Pvv.wait_2nd {1; VS?; t = 0;} 
+
+State: PAVI.Idle PLRI.LRI PPVARP.PVAB PVRP.VRP PURI.URI PA.AReady PV.VReady Pvv.wait_2nd TAVI = 150 TLRI = 1000 TPVARP = 100 TPVAB = 50 TVRP = 150 TURI = 400 thresh = 400 ERP_min_AV = 450 ERP_max_AV = 500 Tantemin = 100 Tantemax = 250 Tretromin = 100 Tretromax = 250 ERP_fast = 200 ERP_slow = 150 Treentry_min = 150 Treentry_max = 200 Vminwait = 100 Vmaxwait = 1200 Aminwait = 100 Amaxwait = 1200 t(0)-clk<=0 t(0)-PAVI.t<=0 t(0)-PLRI.t<=0 t(0)-PPVARP.t<=0 t(0)-PVRP.t<=0 t(0)-PA.x<=0 t(0)-PV.x<=0 t(0)-Pvv.t<=0 clk-t(0)<=50 clk-PLRI.t<=0 clk-PA.x<=0 PAVI.t-clk<=150 PLRI.t-PPVARP.t<=0 PPVARP.t-PVRP.t<=0 PVRP.t-PV.x<=0 PA.x-PAVI.t<-100 PV.x-Pvv.t<=0 Pvv.t-clk<=0 
+
+Transition: PPVARP.PVAB -> PPVARP.PVARP {t >= TPVAB; 0; 1;} 
+
+State: PAVI.Idle PLRI.LRI PPVARP.PVARP PVRP.VRP PURI.URI PA.AReady PV.VReady Pvv.wait_2nd TAVI = 150 TLRI = 1000 TPVARP = 100 TPVAB = 50 TVRP = 150 TURI = 400 thresh = 400 ERP_min_AV = 450 ERP_max_AV = 500 Tantemin = 100 Tantemax = 250 Tretromin = 100 Tretromax = 250 ERP_fast = 200 ERP_slow = 150 Treentry_min = 150 Treentry_max = 200 Vminwait = 100 Vmaxwait = 1200 Aminwait = 100 Amaxwait = 1200 t(0)-clk<=-50 t(0)-PAVI.t<=0 t(0)-PLRI.t<=0 t(0)-PPVARP.t<=0 t(0)-PVRP.t<=0 t(0)-PA.x<=0 t(0)-PV.x<=0 t(0)-Pvv.t<=0 clk-t(0)<=100 clk-PLRI.t<=0 clk-PA.x<=0 PAVI.t-clk<=150 PLRI.t-PPVARP.t<=0 PPVARP.t-PVRP.t<=0 PVRP.t-PV.x<=0 PA.x-PAVI.t<-100 PV.x-Pvv.t<=0 Pvv.t-clk<=0 
+
+Transition: PPVARP.PVARP -> PPVARP.inter1 {1; Aget?; 1;} PA.AReady -> PA.AReady {x > Aminwait; Aget!; x = 0;} 
+
+State: PAVI.Idle PLRI.LRI PPVARP.inter1 PVRP.VRP PURI.URI PA.AReady PV.VReady Pvv.wait_2nd TAVI = 150 TLRI = 1000 TPVARP = 100 TPVAB = 50 TVRP = 150 TURI = 400 thresh = 400 ERP_min_AV = 450 ERP_max_AV = 500 Tantemin = 100 Tantemax = 250 Tretromin = 100 Tretromax = 250 ERP_fast = 200 ERP_slow = 150 Treentry_min = 150 Treentry_max = 200 Vminwait = 100 Vmaxwait = 1200 Aminwait = 100 Amaxwait = 1200 t(0)-clk<=0 t(0)-PAVI.t<-200 t(0)-PLRI.t<=0 t(0)-PPVARP.t<=0 t(0)-PVRP.t<=0 t(0)-PA.x<=0 t(0)-PV.x<=0 t(0)-Pvv.t<=0 clk-t(0)<=100 clk-PLRI.t<=0 PAVI.t-clk<=150 PLRI.t-PPVARP.t<=0 PPVARP.t-PVRP.t<=0 PVRP.t-PV.x<=0 PA.x-t(0)<=0 PV.x-Pvv.t<=0 Pvv.t-clk<=0 
+
+Transition: PPVARP.inter1 -> PPVARP.PVARP {1; AR!; 1;} 
+
+State: PAVI.Idle PLRI.LRI PPVARP.PVARP PVRP.VRP PURI.URI PA.AReady PV.VReady Pvv.wait_2nd TAVI = 150 TLRI = 1000 TPVARP = 100 TPVAB = 50 TVRP = 150 TURI = 400 thresh = 400 ERP_min_AV = 450 ERP_max_AV = 500 Tantemin = 100 Tantemax = 250 Tretromin = 100 Tretromax = 250 ERP_fast = 200 ERP_slow = 150 Treentry_min = 150 Treentry_max = 200 Vminwait = 100 Vmaxwait = 1200 Aminwait = 100 Amaxwait = 1200 t(0)-clk<=0 t(0)-PAVI.t<=0 t(0)-PLRI.t<=0 t(0)-PPVARP.t<=0 t(0)-PVRP.t<=0 t(0)-PA.x<=0 t(0)-PV.x<=0 t(0)-Pvv.t<=0 clk-t(0)<=100 clk-PLRI.t<=0 PAVI.t-clk<=150 PLRI.t-PPVARP.t<=0 PPVARP.t-PVRP.t<=0 PVRP.t-PV.x<=0 PA.x-PAVI.t<-200 PV.x-Pvv.t<=0 Pvv.t-clk<=0 
+
+Transition: PPVARP.PVARP -> PPVARP.Idle {t >= TPVARP; 0; TPVARP = 100;} 
+
+State: PAVI.Idle PLRI.LRI PPVARP.Idle PVRP.VRP PURI.URI PA.AReady PV.VReady Pvv.wait_2nd TAVI = 150 TLRI = 1000 TPVARP = 100 TPVAB = 50 TVRP = 150 TURI = 400 thresh = 400 ERP_min_AV = 450 ERP_max_AV = 500 Tantemin = 100 Tantemax = 250 Tretromin = 100 Tretromax = 250 ERP_fast = 200 ERP_slow = 150 Treentry_min = 150 Treentry_max = 200 Vminwait = 100 Vmaxwait = 1200 Aminwait = 100 Amaxwait = 1200 t(0)-clk<=-100 t(0)-PAVI.t<=0 t(0)-PLRI.t<=0 t(0)-PPVARP.t<=0 t(0)-PVRP.t<=0 t(0)-PA.x<=0 t(0)-PV.x<=0 t(0)-Pvv.t<=0 clk-t(0)<=150 clk-PLRI.t<=0 clk-PA.x<=100 PAVI.t-clk<=150 PLRI.t-PPVARP.t<=0 PPVARP.t-PVRP.t<=0 PVRP.t-PV.x<=0 PA.x-PAVI.t<-200 PV.x-Pvv.t<=0 Pvv.t-clk<=0 
+
+Transition: PVRP.VRP -> PVRP.VB {1; Vget?; 1;} PV.VReady -> PV.VReady {x > Vminwait; Vget!; x = 0;} 
+
+State: PAVI.Idle PLRI.LRI PPVARP.Idle PVRP.VB PURI.URI PA.AReady PV.VReady Pvv.wait_2nd TAVI = 150 TLRI = 1000 TPVARP = 100 TPVAB = 50 TVRP = 150 TURI = 400 thresh = 400 ERP_min_AV = 450 ERP_max_AV = 500 Tantemin = 100 Tantemax = 250 Tretromin = 100 Tretromax = 250 ERP_fast = 200 ERP_slow = 150 Treentry_min = 150 Treentry_max = 200 Vminwait = 100 Vmaxwait = 1200 Aminwait = 100 Amaxwait = 1200 t(0)-clk<-100 t(0)-PAVI.t<=0 t(0)-PLRI.t<=0 t(0)-PPVARP.t<=0 t(0)-PVRP.t<=0 t(0)-PA.x<=0 t(0)-PV.x<=0 t(0)-Pvv.t<=0 clk-t(0)<=150 clk-PLRI.t<=0 clk-PA.x<=100 PAVI.t-clk<=150 PLRI.t-PPVARP.t<=0 PPVARP.t-PVRP.t<=0 PVRP.t-Pvv.t<=0 PA.x-PAVI.t<-200 PV.x-t(0)<=0 Pvv.t-clk<=0 
+
+Transition: PVRP.VB -> PVRP.VRP {1; VBlock!; 1;} 
+
+State: PAVI.Idle PLRI.LRI PPVARP.Idle PVRP.VRP PURI.URI PA.AReady PV.VReady Pvv.wait_2nd TAVI = 150 TLRI = 1000 TPVARP = 100 TPVAB = 50 TVRP = 150 TURI = 400 thresh = 400 ERP_min_AV = 450 ERP_max_AV = 500 Tantemin = 100 Tantemax = 250 Tretromin = 100 Tretromax = 250 ERP_fast = 200 ERP_slow = 150 Treentry_min = 150 Treentry_max = 200 Vminwait = 100 Vmaxwait = 1200 Aminwait = 100 Amaxwait = 1200 t(0)-clk<=0 t(0)-PAVI.t<=0 t(0)-PLRI.t<=0 t(0)-PPVARP.t<=0 t(0)-PVRP.t<=0 t(0)-PA.x<=0 t(0)-PV.x<=0 t(0)-Pvv.t<=0 clk-t(0)<=150 clk-PLRI.t<=0 clk-PA.x<=100 PAVI.t-clk<=150 PLRI.t-PPVARP.t<=0 PPVARP.t-PVRP.t<=0 PVRP.t-Pvv.t<=0 PA.x-PAVI.t<-200 PV.x-clk<-100 Pvv.t-clk<=0 
+
+Transition: PVRP.VRP -> PVRP.Idle {t >= TVRP; 0; 1;} 
+
+State: PAVI.Idle PLRI.LRI PPVARP.Idle PVRP.Idle PURI.URI PA.AReady PV.VReady Pvv.wait_2nd TAVI = 150 TLRI = 1000 TPVARP = 100 TPVAB = 50 TVRP = 150 TURI = 400 thresh = 400 ERP_min_AV = 450 ERP_max_AV = 500 Tantemin = 100 Tantemax = 250 Tretromin = 100 Tretromax = 250 ERP_fast = 200 ERP_slow = 150 Treentry_min = 150 Treentry_max = 200 Vminwait = 100 Vmaxwait = 1200 Aminwait = 100 Amaxwait = 1200 t(0)-clk<=-150 t(0)-PAVI.t<=0 t(0)-PLRI.t<=0 t(0)-PPVARP.t<=0 t(0)-PVRP.t<=0 t(0)-PA.x<=0 t(0)-PV.x<=0 t(0)-Pvv.t<=0 clk-t(0)<=850 clk-PLRI.t<=0 clk-PA.x<=100 clk-PV.x<=150 PAVI.t-clk<=150 PLRI.t-PPVARP.t<=0 PPVARP.t-PVRP.t<=0 PVRP.t-Pvv.t<=0 PA.x-PAVI.t<-200 PV.x-clk<-100 Pvv.t-clk<=0 
+
+Transition: PPVARP.Idle -> PPVARP.inter {1; Aget?; 1;} PA.AReady -> PA.AReady {x > Aminwait; Aget!; x = 0;} 
+
+State: PAVI.Idle PLRI.LRI PPVARP.inter PVRP.Idle PURI.URI PA.AReady PV.VReady Pvv.wait_2nd TAVI = 150 TLRI = 1000 TPVARP = 100 TPVAB = 50 TVRP = 150 TURI = 400 thresh = 400 ERP_min_AV = 450 ERP_max_AV = 500 Tantemin = 100 Tantemax = 250 Tretromin = 100 Tretromax = 250 ERP_fast = 200 ERP_slow = 150 Treentry_min = 150 Treentry_max = 200 Vminwait = 100 Vmaxwait = 1200 Aminwait = 100 Amaxwait = 1200 t(0)-clk<=0 t(0)-PAVI.t<-300 t(0)-PLRI.t<=0 t(0)-PPVARP.t<=0 t(0)-PVRP.t<=0 t(0)-PA.x<=0 t(0)-PV.x<=0 t(0)-Pvv.t<=0 clk-t(0)<=850 clk-PAVI.t<-100 clk-PLRI.t<=0 clk-PV.x<=150 PAVI.t-clk<=150 PLRI.t-PPVARP.t<=0 PPVARP.t-PVRP.t<=0 PVRP.t-Pvv.t<=0 PA.x-t(0)<=0 PV.x-clk<-100 Pvv.t-clk<=0 
+
+Transition: PAVI.Idle -> PAVI.AVI {1; AS?; t = 0;} PLRI.LRI -> PLRI.ASed {1; AS?; 1;} PPVARP.inter -> PPVARP.Idle {1; AS!; 1;} 
+
+State: PAVI.AVI PLRI.ASed PPVARP.Idle PVRP.Idle PURI.URI PA.AReady PV.VReady Pvv.wait_2nd TAVI = 150 TLRI = 1000 TPVARP = 100 TPVAB = 50 TVRP = 150 TURI = 400 thresh = 400 ERP_min_AV = 450 ERP_max_AV = 500 Tantemin = 100 Tantemax = 250 Tretromin = 100 Tretromax = 250 ERP_fast = 200 ERP_slow = 150 Treentry_min = 150 Treentry_max = 200 Vminwait = 100 Vmaxwait = 1200 Aminwait = 100 Amaxwait = 1200 t(0)-clk<=0 t(0)-PAVI.t<=0 t(0)-PLRI.t<=0 t(0)-PPVARP.t<=0 t(0)-PVRP.t<=0 t(0)-PA.x<=0 t(0)-PV.x<=0 t(0)-Pvv.t<=0 clk-PAVI.t<=850 clk-PLRI.t<=0 clk-PV.x<=150 PAVI.t-t(0)<=150 PAVI.t-clk<-150 PAVI.t-PA.x<=0 PLRI.t-PPVARP.t<=0 PPVARP.t-PVRP.t<=0 PVRP.t-Pvv.t<=0 PA.x-PAVI.t<=0 PV.x-clk<-100 Pvv.t-clk<=0 
+
+Transition: PPVARP.Idle -> PPVARP.inter {1; Aget?; 1;} PA.AReady -> PA.AReady {x > Aminwait; Aget!; x = 0;} 
+
+State: PAVI.AVI PLRI.ASed PPVARP.inter PVRP.Idle PURI.URI PA.AReady PV.VReady Pvv.wait_2nd TAVI = 150 TLRI = 1000 TPVARP = 100 TPVAB = 50 TVRP = 150 TURI = 400 thresh = 400 ERP_min_AV = 450 ERP_max_AV = 500 Tantemin = 100 Tantemax = 250 Tretromin = 100 Tretromax = 250 ERP_fast = 200 ERP_slow = 150 Treentry_min = 150 Treentry_max = 200 Vminwait = 100 Vmaxwait = 1200 Aminwait = 100 Amaxwait = 1200 t(0)-clk<=0 t(0)-PAVI.t<-100 t(0)-PLRI.t<=0 t(0)-PPVARP.t<=0 t(0)-PVRP.t<=0 t(0)-PA.x<=0 t(0)-PV.x<=0 t(0)-Pvv.t<=0 clk-PAVI.t<=850 clk-PLRI.t<=0 clk-PV.x<=150 PAVI.t-t(0)<=150 PAVI.t-clk<-150 PLRI.t-PPVARP.t<=0 PPVARP.t-PVRP.t<=0 PVRP.t-Pvv.t<=0 PA.x-t(0)<=0 PV.x-clk<-100 Pvv.t-clk<=0 
+
+Transition: PPVARP.inter -> PPVARP.Idle {1; AS!; 1;} 
+
+State: PAVI.AVI PLRI.ASed PPVARP.Idle PVRP.Idle PURI.URI PA.AReady PV.VReady Pvv.wait_2nd TAVI = 150 TLRI = 1000 TPVARP = 100 TPVAB = 50 TVRP = 150 TURI = 400 thresh = 400 ERP_min_AV = 450 ERP_max_AV = 500 Tantemin = 100 Tantemax = 250 Tretromin = 100 Tretromax = 250 ERP_fast = 200 ERP_slow = 150 Treentry_min = 150 Treentry_max = 200 Vminwait = 100 Vmaxwait = 1200 Aminwait = 100 Amaxwait = 1200 t(0)-clk<=0 t(0)-PAVI.t<=0 t(0)-PLRI.t<=0 t(0)-PPVARP.t<=0 t(0)-PVRP.t<=0 t(0)-PA.x<=0 t(0)-PV.x<=0 t(0)-Pvv.t<=0 clk-PAVI.t<=850 clk-PLRI.t<=0 clk-PV.x<=150 PAVI.t-t(0)<=150 PAVI.t-clk<-150 PLRI.t-PPVARP.t<=0 PPVARP.t-PVRP.t<=0 PVRP.t-Pvv.t<=0 PA.x-PAVI.t<-100 PV.x-clk<-100 Pvv.t-clk<=0 
+
+Transition: PVRP.Idle -> PVRP.inter {1; Vget?; 1;} PV.VReady -> PV.VReady {x > Vminwait; Vget!; x = 0;} 
+
+State: PAVI.AVI PLRI.ASed PPVARP.Idle PVRP.inter PURI.URI PA.AReady PV.VReady Pvv.wait_2nd TAVI = 150 TLRI = 1000 TPVARP = 100 TPVAB = 50 TVRP = 150 TURI = 400 thresh = 400 ERP_min_AV = 450 ERP_max_AV = 500 Tantemin = 100 Tantemax = 250 Tretromin = 100 Tretromax = 250 ERP_fast = 200 ERP_slow = 150 Treentry_min = 150 Treentry_max = 200 Vminwait = 100 Vmaxwait = 1200 Aminwait = 100 Amaxwait = 1200 t(0)-clk<=0 t(0)-PAVI.t<=0 t(0)-PLRI.t<=0 t(0)-PPVARP.t<=0 t(0)-PVRP.t<=0 t(0)-PA.x<=0 t(0)-PV.x<=0 t(0)-Pvv.t<=0 clk-PAVI.t<=850 clk-PLRI.t<=0 PAVI.t-t(0)<=150 PAVI.t-clk<-150 PLRI.t-PPVARP.t<=0 PPVARP.t-PVRP.t<=0 PVRP.t-Pvv.t<=0 PA.x-PAVI.t<-100 PV.x-t(0)<=0 Pvv.t-clk<=0 
+
+Transition: PAVI.AVI -> PAVI.Idle {1; VS?; 1;} PLRI.ASed -> PLRI.LRI {1; VS?; t = 0;} PPVARP.Idle -> PPVARP.PVAB {1; VS?; t = 0;} PVRP.inter -> PVRP.VRP {1; VS!; t = 0;} PURI.URI -> PURI.URI {1; VS?; clk = 0;} Pvv.wait_2nd -> Pvv.two_v {1; VS?; 1;} 
+
+State: PAVI.Idle PLRI.LRI PPVARP.PVAB PVRP.VRP PURI.URI PA.AReady PV.VReady Pvv.two_v TAVI = 150 TLRI = 1000 TPVARP = 100 TPVAB = 50 TVRP = 150 TURI = 400 thresh = 400 ERP_min_AV = 450 ERP_max_AV = 500 Tantemin = 100 Tantemax = 250 Tretromin = 100 Tretromax = 250 ERP_fast = 200 ERP_slow = 150 Treentry_min = 150 Treentry_max = 200 Vminwait = 100 Vmaxwait = 1200 Aminwait = 100 Amaxwait = 1200 t(0)-clk<=0 t(0)-PAVI.t<=0 t(0)-PLRI.t<=0 t(0)-PPVARP.t<=0 t(0)-PVRP.t<=0 t(0)-PA.x<=0 t(0)-PV.x<=0 t(0)-Pvv.t<=0 clk-PLRI.t<=0 PAVI.t-t(0)<=150 PAVI.t-Pvv.t<-150 PLRI.t-PPVARP.t<=0 PPVARP.t-PVRP.t<=0 PVRP.t-PV.x<=0 PA.x-PAVI.t<-100 PV.x-t(0)<=0 Pvv.t-PAVI.t<=850 
+
+Transition: Pvv.two_v -> Pvv.wait_2nd {t <= TURI; 0; t = 0;} 
+
+State: PAVI.Idle PLRI.LRI PPVARP.PVAB PVRP.VRP PURI.URI PA.AReady PV.VReady Pvv.wait_2nd TAVI = 150 TLRI = 1000 TPVARP = 100 TPVAB = 50 TVRP = 150 TURI = 400 thresh = 400 ERP_min_AV = 450 ERP_max_AV = 500 Tantemin = 100 Tantemax = 250 Tretromin = 100 Tretromax = 250 ERP_fast = 200 ERP_slow = 150 Treentry_min = 150 Treentry_max = 200 Vminwait = 100 Vmaxwait = 1200 Aminwait = 100 Amaxwait = 1200 t(0)-clk<=0 t(0)-PAVI.t<=0 t(0)-PLRI.t<=0 t(0)-PPVARP.t<=0 t(0)-PVRP.t<=0 t(0)-PA.x<=0 t(0)-PV.x<=0 t(0)-Pvv.t<=0 clk-t(0)<=50 clk-PLRI.t<=0 clk-PA.x<=0 PAVI.t-clk<=150 PLRI.t-PPVARP.t<=0 PPVARP.t-PVRP.t<=0 PVRP.t-PV.x<=0 PA.x-PAVI.t<-100 PV.x-Pvv.t<=0 Pvv.t-clk<=0 

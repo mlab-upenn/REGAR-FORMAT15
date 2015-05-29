@@ -1,0 +1,181 @@
+%!PS-Adobe-3.0 EPSF-3.0
+%%Title:   Template 'node1'.
+%%Creator: (Academic) UPPAAL 4.0.9 (rev. 4407), September 2009
+%%Pages: 0
+%%BoundingBox: -121 -49 52 44
+%%EndComments
+
+% Basic coordinate transformation.
+0.5 0.5 scale
+
+% Move the origin.
+0 -9 translate
+
+% Size of graphical elements.
+/vertex-radius 12 def
+/vertex-urgent-radius 5 def
+/vertex-commit-radius 5 def
+/vertex-init-radius 8 def
+/vertex-lw 1.2 def
+/edge-lw 1.0 def
+
+% Color setting of graphical elements.
+/black { 0 0 0 setrgbcolor } def
+/vertex-fill-col { 0.647 0.686 0.803 setrgbcolor} def
+/vertex-ol-col { black } def
+/urgent-ol-col { black } def
+/commit-ol-col { black } def
+/initial-ol-col { black } def
+/state-name-col { 0.549 0.2196 0.3882 setrgbcolor } def
+/inv-col { 0.6549 0.2588 0.6588 setrgbcolor } def
+/select-col { 0.6392 0.6588 0.2588 setrgbcolor } def
+/guard-col { 0.2588 0.6588 0.2824 setrgbcolor } def
+/sync-col { 0.2588 0.6275 0.6588 setrgbcolor } def
+/assign-col { 0.2588 0.2588 0.6588 setrgbcolor } def
+/trans-col { black } def
+
+% Draw (filled) vertex at given position.
+/vertex { 
+   2 copy
+   vertex-fill-col
+   newpath vertex-lw setlinewidth 
+   /vertex-radius load 0 360 arc fill
+   vertex-ol-col
+   /vertex-radius load 0 360 arc stroke
+} def
+
+% Mark vertex as urgent.
+/urgent { 
+   urgent-ol-col
+   newpath vertex-lw setlinewidth 
+   /vertex-urgent-radius load 150 30 arc stroke 
+} def
+
+% Mark vertex as committed.
+/commit { 
+   commit-ol-col
+   newpath vertex-lw setlinewidth 
+   /vertex-commit-radius load 50 310 arc stroke 
+} def
+
+% Mark vertex as initial.
+/initial { 
+   initial-ol-col
+   newpath vertex-lw setlinewidth 
+   /vertex-init-radius load 0 360 arc stroke 
+} def
+
+% Vertices.
+% Font used for vertex names and invariants.
+/Helvetica-Bold findfont 14 scalefont setfont
+-136 -72 vertex
+   -168 -54 moveto state-name-col (RRP) show
+   -232 -78 moveto inv-col (t<=Trrp_max) show
+0 -72 vertex
+   8 -54 moveto state-name-col (ERP) show
+   16 -78 moveto inv-col (t<=Terp_max) show
+0 40 vertex
+   0 40 commit
+   8 58 moveto state-name-col (temp) show
+   0 -14 moveto inv-col () show
+-136 40 vertex
+   -136 40 initial
+   -168 58 moveto state-name-col (Rest) show
+   -240 42 moveto inv-col (t<=Trest_max) show
+
+% Edges.
+% Font used for selects, guards, syncs and assigns.
+/Helvetica findfont 14 scalefont setfont
+newpath edge-lw setlinewidth
+   trans-col
+   -136.0 52.0  moveto
+   -136.0 70.0 lineto
+   -136.0 80.0 -136.0 80.0 -126.0 80.0 curveto   -10.0 80.0 lineto
+   0.0 80.0 0.0 80.0 0.0 70.0 curveto   0.0 53.0  lineto
+stroke
+newpath edge-lw setlinewidth
+   trans-col
+   2.5881905555725098 62.65925598144531   moveto
+   0.0 53.0   lineto
+   -2.5881905555725098 62.65925598144531   lineto
+stroke
+   0 -14 moveto select-col () show
+   -112 82 moveto guard-col (t>Trest_min) show
+   0 -14 moveto sync-col () show
+   -88 66 moveto assign-col (t=0) show
+newpath edge-lw setlinewidth
+   trans-col
+   -126.7368392944336 -64.37151336669922   moveto
+   -10.035093307495117 31.73580551147461   lineto
+stroke
+newpath edge-lw setlinewidth
+   trans-col
+   -19.136699676513672 27.593246459960938   moveto
+   -10.035093307495117 31.73580551147461   lineto
+   -15.846035957336426 23.597442626953125   lineto
+stroke
+   0 -14 moveto select-col () show
+   0 -14 moveto guard-col () show
+   -112 2 moveto sync-col (Act_node?) show
+   -88 -14 moveto assign-col (t=0) show
+newpath edge-lw setlinewidth
+   trans-col
+   -136.0 -60.0   moveto
+   -136.0 27.0   lineto
+stroke
+newpath edge-lw setlinewidth
+   trans-col
+   -138.58819580078125 17.340742111206055   moveto
+   -136.0 27.0   lineto
+   -133.41180419921875 17.340742111206055   lineto
+stroke
+   0 -14 moveto select-col () show
+   -208 -6 moveto guard-col (t>Trrp_min) show
+   0 -14 moveto sync-col () show
+   -160 -22 moveto assign-col (t=0) show
+newpath edge-lw setlinewidth
+   trans-col
+   -12.0 -72.0   moveto
+   -123.0 -72.0   lineto
+stroke
+newpath edge-lw setlinewidth
+   trans-col
+   -113.34074401855469 -74.58818817138672   moveto
+   -123.0 -72.0   lineto
+   -113.34074401855469 -69.41181182861328   lineto
+stroke
+   0 -14 moveto select-col () show
+   -96 -62 moveto guard-col (t>Terp_min) show
+   0 -14 moveto sync-col () show
+   -72 -86 moveto assign-col (t=0) show
+newpath edge-lw setlinewidth
+   trans-col
+   0.0 28.0   moveto
+   0.0 -59.0   lineto
+stroke
+newpath edge-lw setlinewidth
+   trans-col
+   2.5881905555725098 -49.34074401855469   moveto
+   0.0 -59.0   lineto
+   -2.5881905555725098 -49.34074401855469   lineto
+stroke
+   0 -14 moveto select-col () show
+   0 -14 moveto guard-col () show
+   0 -14 moveto sync-col (Act_path!) show
+   0 -14 moveto assign-col () show
+newpath edge-lw setlinewidth
+   trans-col
+   -124.0 40.0   moveto
+   -13.0 40.0   lineto
+stroke
+newpath edge-lw setlinewidth
+   trans-col
+   -22.659257888793945 42.588191986083984   moveto
+   -13.0 40.0   lineto
+   -22.659257888793945 37.411808013916016   lineto
+stroke
+   0 -14 moveto select-col () show
+   0 -14 moveto guard-col () show
+   -104 42 moveto sync-col (Act_node?) show
+   -80 26 moveto assign-col (t=0) show
+%%EOF
